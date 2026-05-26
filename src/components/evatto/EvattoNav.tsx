@@ -69,7 +69,7 @@ function HamburgerIcon({ open }: { open: boolean }) {
   }, [open]);
 
   return (
-    <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden>
+    <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden className="transition-transform duration-300 group-hover:scale-110">
       <line ref={topRef} x1="0" y1="2"  x2="18" y2="2"  stroke="#1A1A1A" strokeWidth="1.6" strokeLinecap="round" />
       <line ref={midRef} x1="0" y1="6"  x2="18" y2="6"  stroke="#1A1A1A" strokeWidth="1.6" strokeLinecap="round" />
       <line ref={botRef} x1="0" y1="10" x2="18" y2="10" stroke="#1A1A1A" strokeWidth="1.6" strokeLinecap="round" />
@@ -83,16 +83,17 @@ export default function EvattoNav() {
   const [scrolled,  setScrolled]  = useState(false);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
 
-  const headerRef  = useRef<HTMLElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const linksRef   = useRef<HTMLDivElement>(null);
-  const sideRef    = useRef<HTMLDivElement>(null);
+  const headerRef   = useRef<HTMLElement>(null);
+  const overlayRef  = useRef<HTMLDivElement>(null);
+  const linksRef    = useRef<HTMLDivElement>(null);
+  const sideRef     = useRef<HTMLDivElement>(null);
+  const hoverPillRef = useRef<HTMLDivElement>(null);
 
   // ── Entrance on load ──────────────────────────────────────
   useEffect(() => {
     gsap.fromTo(headerRef.current,
-      { opacity: 0, y: -24 },
-      { opacity: 1, y: 0, duration: 0.9, delay: 0.4, ease: "power3.out" }
+      { opacity: 0, y: -40, scale: 0.95 },
+      { opacity: 1, y: 0, scale: 1, duration: 1.1, delay: 0.4, ease: "power4.out" }
     );
   }, []);
 
@@ -100,7 +101,7 @@ export default function EvattoNav() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     const st = ScrollTrigger.create({
-      start: "top+=80 top",
+      start: "top+=50 top",
       onEnter:      () => setScrolled(true),
       onLeaveBack:  () => setScrolled(false),
     });
@@ -119,15 +120,15 @@ export default function EvattoNav() {
       // Panel slides in from the right
       gsap.fromTo(overlay,
         { x: "100%", opacity: 0 },
-        { x: "0%",   opacity: 1, duration: 0.65, ease: "power4.inOut" }
+        { x: "0%",   opacity: 1, duration: 0.7, ease: "power4.inOut" }
       );
 
       // Stagger in nav items
       const items = linksRef.current?.querySelectorAll(".nav-item");
       if (items) {
         gsap.fromTo(items,
-          { x: 60, opacity: 0 },
-          { x: 0,  opacity: 1, stagger: 0.08, duration: 0.55, ease: "power3.out", delay: 0.28 }
+          { x: 80, opacity: 0 },
+          { x: 0,  opacity: 1, stagger: 0.08, duration: 0.6, ease: "power3.out", delay: 0.3 }
         );
       }
 
@@ -135,14 +136,14 @@ export default function EvattoNav() {
       const sideItems = sideRef.current?.querySelectorAll(".side-item");
       if (sideItems) {
         gsap.fromTo(sideItems,
-          { y: 16, opacity: 0 },
-          { y: 0,  opacity: 1, stagger: 0.06, duration: 0.45, ease: "power3.out", delay: 0.5 }
+          { y: 20, opacity: 0 },
+          { y: 0,  opacity: 1, stagger: 0.06, duration: 0.5, ease: "power3.out", delay: 0.5 }
         );
       }
     } else {
       document.body.style.overflow = "";
       gsap.to(overlay, {
-        x: "100%", opacity: 0, duration: 0.5, ease: "power4.inOut",
+        x: "100%", opacity: 0, duration: 0.55, ease: "power4.inOut",
         onComplete: () => {
           if (overlay) { overlay.style.display = "none"; overlay.style.transform = ""; }
         },
@@ -150,120 +151,205 @@ export default function EvattoNav() {
     }
   }, [open]);
 
+  // ── Desktop hover sliding pill indicator ────────────────
+  const handleLinkEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const target = e.currentTarget;
+    const pill = hoverPillRef.current;
+    if (!pill) return;
+
+    const offsetLeft = target.offsetLeft;
+    const offsetWidth = target.offsetWidth;
+
+    gsap.to(pill, {
+      left: offsetLeft,
+      width: offsetWidth,
+      opacity: 1,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  };
+
+  const handleLinkLeave = () => {
+    const pill = hoverPillRef.current;
+    if (!pill) return;
+    gsap.to(pill, {
+      opacity: 0,
+      duration: 0.25,
+      ease: "power2.inOut",
+    });
+  };
+
   const close = () => { setOpen(false); setActiveIdx(null); };
 
   return (
     <>
-      {/* ── Fixed header ── */}
-      <header
-        ref={headerRef}
-        className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 md:px-12 h-[70px] opacity-0 transition-all duration-500"
-        style={{
-          background: scrolled
-            ? "rgba(253,251,247,0.96)"
-            : "rgba(253,251,247,0.72)",
-          backdropFilter: "blur(20px)",
-          borderBottom: scrolled
-            ? "1px solid rgba(26,26,26,0.10)"
-            : "1px solid rgba(26,26,26,0.05)",
-          boxShadow: scrolled ? "0 2px 24px rgba(0,0,0,0.06)" : "none",
-        }}
-      >
-        {/* Logo */}
-        <a href="/" className="flex items-center gap-2.5 shrink-0 group">
-          <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
-            {[0, 45, 90, 135, 180, 225, 270, 315].map((deg, i) => (
-              <line key={i} x1="11" y1="11"
-                x2={11 + 9 * Math.cos((deg * Math.PI) / 180)}
-                y2={11 + 9 * Math.sin((deg * Math.PI) / 180)}
-                stroke="#1A1A1A" strokeWidth="1.5" strokeLinecap="round" />
-            ))}
-            <circle cx="11" cy="11" r="2" fill="#1A1A1A" />
-          </svg>
-          <span style={{ fontFamily: "var(--font-cormorant)", fontSize: "22px", fontWeight: 600, letterSpacing: "0.04em" }}>
-            Evatto
-          </span>
-        </a>
-
-        {/* Right side */}
-        <div className="flex items-center gap-4">
-          {/* Search — desktop only */}
-          <button
-            className="hidden md:flex items-center gap-1.5 text-xs tracking-wider text-black/50 hover:text-black transition-colors"
-            style={{ fontFamily: "var(--font-inter)" }}
-          >
-            <svg width="14" height="14" viewBox="0 0 15 15" fill="none">
-              <path d="M1 14l3.5-3.5M13 5.5a5.5 5.5 0 11-11 0 5.5 5.5 0 0111 0z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-            </svg>
-            Search
-          </button>
-
-          {/* Book CTA — desktop */}
-          <a
-            href="#"
-            className="hidden md:inline-flex items-center gap-2 rounded-full border px-5 py-2 text-xs font-medium transition-all hover:bg-black hover:text-white"
-            style={{ fontFamily: "var(--font-inter)", borderColor: "rgba(26,26,26,0.22)", letterSpacing: "0.05em" }}
-          >
-            Book a tour
-            <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
-              <path d="M1 9L9 1M9 1H4M9 1v5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+      {/* ── Fixed floating glass header capsule ── */}
+      <div className="fixed top-0 left-0 w-full z-50 px-4 md:px-8 py-4 pointer-events-none">
+        <header
+          ref={headerRef}
+          className="max-w-7xl mx-auto w-full h-[64px] flex items-center justify-between px-6 md:px-8 rounded-full pointer-events-auto transition-all duration-500 ease-out"
+          style={{
+            background: scrolled
+              ? "rgba(253, 251, 247, 0.88)"
+              : "rgba(253, 251, 247, 0.65)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: scrolled
+              ? "1px solid rgba(26, 26, 26, 0.12)"
+              : "1px solid rgba(26, 26, 26, 0.06)",
+            boxShadow: scrolled 
+              ? "0 12px 32px -10px rgba(26, 26, 26, 0.08), 0 4px 12px -5px rgba(26, 26, 26, 0.03)" 
+              : "0 4px 20px -10px rgba(0, 0, 0, 0.02)",
+            transform: scrolled ? "translateY(2px)" : "translateY(0)",
+          }}
+        >
+          {/* Logo with star rotate */}
+          <a href="/" className="flex items-center gap-2.5 shrink-0 group">
+            <div className="relative w-5 h-5 flex items-center justify-center">
+              <svg 
+                width="20" 
+                height="20" 
+                viewBox="0 0 22 22" 
+                fill="none"
+                className="transition-transform duration-700 ease-out group-hover:rotate-180"
+              >
+                {[0, 45, 90, 135, 180, 225, 270, 315].map((deg, i) => (
+                  <line key={i} x1="11" y1="11"
+                    x2={11 + 9 * Math.cos((deg * Math.PI) / 180)}
+                    y2={11 + 9 * Math.sin((deg * Math.PI) / 180)}
+                    stroke="#1A1A1A" strokeWidth="1.6" strokeLinecap="round" />
+                ))}
+                <circle cx="11" cy="11" r="2" fill="#1A1A1A" />
+              </svg>
+            </div>
+            <span 
+              className="text-[#1A1A1A] tracking-wider" 
+              style={{ fontFamily: "var(--font-cormorant)", fontSize: "21px", fontWeight: 600, letterSpacing: "0.03em" }}
+            >
+              Evatto
+            </span>
           </a>
 
-          {/* Hamburger button */}
-          <button
-            onClick={() => setOpen(o => !o)}
-            aria-label={open ? "Close menu" : "Open menu"}
-            className="w-10 h-10 rounded-full border flex items-center justify-center transition-colors hover:bg-black/6 active:scale-95"
-            style={{ borderColor: "rgba(26,26,26,0.18)" }}
+          {/* Center: Premium desktop navigation links with magnetic hover capsule */}
+          <nav 
+            className="hidden lg:flex items-center gap-1.5 relative px-2 py-1 rounded-full border border-black/[0.04]"
+            style={{ background: "rgba(26, 26, 26, 0.03)" }}
           >
-            <HamburgerIcon open={open} />
-          </button>
-        </div>
-      </header>
+            {/* The sliding hover capsule background */}
+            <div 
+              ref={hoverPillRef} 
+              className="absolute top-1 bottom-1 left-0 rounded-full bg-white opacity-0 pointer-events-none" 
+              style={{
+                boxShadow: "0 2px 8px -2px rgba(26, 26, 26, 0.08), 0 1px 3px -1px rgba(26, 26, 26, 0.04)"
+              }}
+            />
+            
+            {NAV_LINKS.map((link) => (
+              <a 
+                href="#" 
+                key={link.label}
+                onMouseEnter={handleLinkEnter}
+                onMouseLeave={handleLinkLeave}
+                className="nav-desktop-link px-4 py-1.5 rounded-full text-xs font-semibold text-black/70 hover:text-black transition-colors relative z-10 tracking-wide"
+                style={{ fontFamily: "var(--font-inter)" }}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* Right side: Search, CTA and Hamburger */}
+          <div className="flex items-center gap-3">
+            {/* Search — desktop only */}
+            <button
+              className="hidden md:flex items-center justify-center w-9 h-9 rounded-full hover:bg-black/5 transition-colors text-black/60 hover:text-black"
+              aria-label="Search"
+            >
+              <svg width="14" height="14" viewBox="0 0 15 15" fill="none">
+                <path d="M1 14l3.5-3.5M13 5.5a5.5 5.5 0 11-11 0 5.5 5.5 0 0111 0z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+            </button>
+
+            {/* Book CTA — desktop */}
+            <a
+              href="#"
+              className="hidden md:inline-flex items-center gap-2 rounded-full px-5 py-2 text-xs font-semibold transition-all bg-black text-white hover:bg-black/85 active:scale-95 shadow-sm"
+              style={{ fontFamily: "var(--font-inter)", letterSpacing: "0.05em" }}
+            >
+              Book a tour
+              <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                <path d="M1 9L9 1M9 1H4M9 1v5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+
+            {/* Hamburger button with custom layout */}
+            <button
+              onClick={() => setOpen(o => !o)}
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="group flex items-center gap-2 h-9 pl-3.5 pr-2.5 rounded-full border border-black/10 hover:border-black/20 hover:bg-black/[0.02] active:scale-95 transition-all duration-300"
+            >
+              <span 
+                className="text-[10px] font-bold tracking-[0.18em] uppercase text-black/70 group-hover:text-black hidden sm:inline"
+                style={{ fontFamily: "var(--font-inter)" }}
+              >
+                Menu
+              </span>
+              <HamburgerIcon open={open} />
+            </button>
+          </div>
+        </header>
+      </div>
 
       {/* ── Full-screen overlay panel ── */}
       <div
         ref={overlayRef}
-        className="fixed inset-0 z-[200] flex flex-row"
+        className="fixed inset-0 z-[200] flex flex-col md:flex-row"
         style={{ background: "#FDFBF7", display: "none" }}
       >
-        {/* Left: large nav links */}
+        {/* Left/Main Side: Nav Links (Scrollable Container) */}
         <div
           ref={linksRef}
-          className="flex-1 flex flex-col justify-between px-8 md:px-16 lg:px-24 pt-8 pb-12 overflow-y-auto"
+          className="flex-1 flex flex-col h-full overflow-y-auto px-6 sm:px-12 md:px-20 lg:px-28 py-6 justify-between"
         >
-          {/* Overlay header */}
-          <div className="flex items-center justify-between h-[62px] shrink-0 mb-4">
-            <span style={{ fontFamily: "var(--font-cormorant)", fontSize: "22px", fontWeight: 600 }}>Evatto</span>
+          {/* Overlay Header */}
+          <div className="flex items-center justify-between h-[64px] shrink-0 border-b border-black/[0.06] mb-8">
+            <a href="/" className="flex items-center gap-2 group" onClick={close}>
+              <span style={{ fontFamily: "var(--font-cormorant)", fontSize: "22px", fontWeight: 600 }}>Evatto</span>
+            </a>
             <button
               onClick={close}
-              className="w-10 h-10 rounded-full border flex items-center justify-center hover:bg-black/6 transition-colors active:scale-95"
-              style={{ borderColor: "rgba(26,26,26,0.18)" }}
+              className="w-10 h-10 rounded-full border border-black/10 flex items-center justify-center hover:bg-black/6 transition-all active:scale-90 duration-300"
               aria-label="Close menu"
             >
-              <HamburgerIcon open={true} />
+              <svg 
+                width="14" 
+                height="14" 
+                viewBox="0 0 14 14" 
+                fill="none" 
+                className="transition-transform duration-500 hover:rotate-180"
+              >
+                <path d="M1 1L13 13M1 13L13 1" stroke="#1A1A1A" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
             </button>
           </div>
 
-          {/* Nav links */}
-          <nav className="flex flex-col flex-1 justify-center gap-0">
+          {/* Nav links block */}
+          <nav className="flex flex-col gap-2 my-auto py-8">
             {NAV_LINKS.map((link, i) => (
               <div
                 key={link.label}
-                className="nav-item opacity-0 border-b group cursor-pointer"
-                style={{ borderColor: "rgba(26,26,26,0.07)" }}
+                className="nav-item opacity-0 border-b border-black/[0.04] group cursor-pointer"
                 onClick={() => setActiveIdx(activeIdx === i ? null : i)}
               >
-                <div className="flex items-center justify-between py-5 md:py-6">
+                <div className="flex items-center justify-between py-4 md:py-5">
                   {/* Giant link text */}
                   <span
                     className="relative overflow-hidden"
                     style={{
                       fontFamily: "var(--font-cormorant)",
-                      fontSize: "clamp(2.2rem, 5.5vw, 4.8rem)",
+                      fontSize: "clamp(1.8rem, 4.5vw, 3.8rem)",
                       fontWeight: 300,
-                      lineHeight: 1.05,
+                      lineHeight: 1.1,
                       color: "#1A1A1A",
                     }}
                   >
@@ -281,41 +367,43 @@ export default function EvattoNav() {
                   <div className="flex items-center gap-3">
                     {link.sub.length > 0 && (
                       <span
-                        style={{ fontFamily: "var(--font-inter)", fontSize: "9px", letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(26,26,26,0.35)" }}
+                        style={{ fontFamily: "var(--font-inter)", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(26,26,26,0.35)", fontWeight: 600 }}
                       >
                         {link.sub.length}
                       </span>
                     )}
                     {link.sub.length > 0 && (
                       <svg
-                        width="14" height="14" viewBox="0 0 14 14" fill="none"
+                        width="12" height="12" viewBox="0 0 14 14" fill="none"
                         className="transition-transform duration-300"
                         style={{ transform: activeIdx === i ? "rotate(180deg)" : "rotate(0deg)" }}
                       >
-                        <path d="M2 4.5L7 9.5L12 4.5" stroke="#1A1A1A" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M2 4.5L7 9.5L12 4.5" stroke="#1A1A1A" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     )}
                   </div>
                 </div>
 
-                {/* Sub-links dropdown */}
+                {/* Sub-links dropdown — styled as clean premium pills */}
                 <div
-                  className="overflow-hidden transition-all duration-400"
+                  className="overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]"
                   style={{
-                    maxHeight: activeIdx === i ? `${link.sub.length * 40}px` : "0px",
-                    transitionTimingFunction: "cubic-bezier(0.76,0,0.24,1)",
+                    maxHeight: activeIdx === i ? `${Math.ceil(link.sub.length / 2) * 56}px` : "0px",
                   }}
                 >
-                  <div className="flex flex-wrap gap-x-6 gap-y-2 pb-5">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pb-6 pt-2">
                     {link.sub.map(s => (
                       <a
                         key={s}
                         href="#"
                         onClick={e => e.stopPropagation()}
-                        className="text-xs hover:text-black transition-colors"
-                        style={{ fontFamily: "var(--font-inter)", color: "rgba(26,26,26,0.45)", letterSpacing: "0.05em" }}
+                        className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-black/[0.04] bg-black/[0.01] hover:bg-black/5 hover:border-black/10 transition-all duration-300 text-[11px] font-medium text-black/60 hover:text-black tracking-wide"
+                        style={{ fontFamily: "var(--font-inter)" }}
                       >
                         {s}
+                        <svg width="8" height="8" viewBox="0 0 10 10" fill="none" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                          <path d="M1 9L9 1M9 1H4M9 1v5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
                       </a>
                     ))}
                   </div>
@@ -325,51 +413,51 @@ export default function EvattoNav() {
           </nav>
 
           {/* Bottom CTAs */}
-          <div className="nav-item opacity-0 flex flex-wrap gap-3 pt-8">
-            <a href="#" className="btn-pill btn-pill-outline-dark">Book a tour</a>
-            <a href="#" className="btn-pill btn-pill-solid">Schedule visit</a>
+          <div className="nav-item opacity-0 flex flex-wrap gap-3 pt-6 mt-4 border-t border-black/[0.06] shrink-0">
+            <a href="#" className="btn-pill btn-pill-outline-dark text-xs py-2.5 px-6">Book a tour</a>
+            <a href="#" className="btn-pill btn-pill-solid text-xs py-2.5 px-6">Schedule visit</a>
           </div>
         </div>
 
-        {/* Right: sidebar info — hidden below lg */}
+        {/* Right Side: Sidebar Info (Fixed Width, hidden below lg) */}
         <div
           ref={sideRef}
-          className="hidden lg:flex flex-col justify-between w-[300px] xl:w-[340px] border-l px-10 pt-[90px] pb-12"
-          style={{ borderColor: "rgba(26,26,26,0.07)", background: "#F5F2EC" }}
+          className="hidden lg:flex flex-col justify-between w-[320px] xl:w-[360px] border-l px-12 pt-[90px] pb-12 shrink-0"
+          style={{ borderColor: "rgba(26,26,26,0.06)", background: "#F5F2EC" }}
         >
           {/* Location */}
           <div>
-            <p className="side-item opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "9px", letterSpacing: "0.35em", textTransform: "uppercase", color: "rgba(26,26,26,0.4)", marginBottom: "12px" }}>
+            <p className="side-item opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "9px", letterSpacing: "0.35em", textTransform: "uppercase", color: "rgba(26,26,26,0.4)", marginBottom: "12px", fontWeight: 700 }}>
               Our location
             </p>
-            <p className="side-item opacity-0" style={{ fontFamily: "var(--font-cormorant)", fontSize: "1.6rem", fontWeight: 300, color: "#1A1A1A", lineHeight: 1.3 }}>
+            <p className="side-item opacity-0" style={{ fontFamily: "var(--font-cormorant)", fontSize: "1.5rem", fontWeight: 300, color: "#1A1A1A", lineHeight: 1.35 }}>
               123 Grand Pavilion<br />New York, NY 10001
             </p>
           </div>
 
           {/* Contact */}
           <div>
-            <p className="side-item opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "9px", letterSpacing: "0.35em", textTransform: "uppercase", color: "rgba(26,26,26,0.4)", marginBottom: "12px" }}>
+            <p className="side-item opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "9px", letterSpacing: "0.35em", textTransform: "uppercase", color: "rgba(26,26,26,0.4)", marginBottom: "12px", fontWeight: 700 }}>
               Get in touch
             </p>
             <a href="mailto:hello@evatto.com" className="side-item opacity-0 block hover:opacity-70 transition-opacity" style={{ fontFamily: "var(--font-cormorant)", fontSize: "1.35rem", fontWeight: 300, color: "#1A1A1A" }}>
               hello@evatto.com
             </a>
-            <a href="tel:+12125550100" className="side-item opacity-0 block mt-1 hover:opacity-70 transition-opacity" style={{ fontFamily: "var(--font-inter)", fontSize: "12px", color: "rgba(26,26,26,0.55)" }}>
+            <a href="tel:+12125550100" className="side-item opacity-0 block mt-2.5 hover:opacity-70 transition-opacity" style={{ fontFamily: "var(--font-inter)", fontSize: "12px", color: "rgba(26,26,26,0.55)" }}>
               +1 (212) 555-0100
             </a>
           </div>
 
           {/* Social */}
           <div>
-            <p className="side-item opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "9px", letterSpacing: "0.35em", textTransform: "uppercase", color: "rgba(26,26,26,0.4)", marginBottom: "14px" }}>
+            <p className="side-item opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "9px", letterSpacing: "0.35em", textTransform: "uppercase", color: "rgba(26,26,26,0.4)", marginBottom: "14px", fontWeight: 700 }}>
               Follow us
             </p>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2.5">
               {SOCIAL.map(s => (
                 <a key={s} href="#"
-                  className="side-item opacity-0 text-xs hover:opacity-70 transition-opacity w-fit"
-                  style={{ fontFamily: "var(--font-inter)", color: "rgba(26,26,26,0.55)", letterSpacing: "0.08em" }}
+                  className="side-item opacity-0 text-xs hover:opacity-70 transition-opacity w-fit tracking-wide"
+                  style={{ fontFamily: "var(--font-inter)", color: "rgba(26,26,26,0.55)", letterSpacing: "0.05em" }}
                 >
                   {s}
                 </a>
