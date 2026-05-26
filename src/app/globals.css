@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #FDFBF7;
+  --color-dark: #0e0f11;
+  --color-sage: #D4DEC9;
+  --font-cormorant: "Cormorant Garamond", serif;
+  --font-inter: "Inter", sans-serif;
+}
+
+:root {
+  --background: #FDFBF7;
+  --foreground: #1A1A1A;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter);
+  overflow-x: hidden;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #FDFBF7; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #1A1A1A; }
+
+/* Font utility */
+.font-cormorant { font-family: var(--font-cormorant); }
+
+/* Char mask for hero slide-up */
+.char-mask { overflow: hidden; display: inline-block; }
+.char-inner { display: inline-block; transform: translateY(110%); }
+.word-wrap { overflow: hidden; display: inline-block; }
+
+/* Pill buttons */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border-radius: 9999px;
+  font-size: 12.5px;
+  font-family: var(--font-inter);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: background 0.3s cubic-bezier(0.16,1,0.3,1), color 0.3s, border-color 0.3s;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-pill-outline-dark {
+  border: 1px solid rgba(26,26,26,0.28);
+  color: #1A1A1A;
+  background: transparent;
+}
+.btn-pill-outline-dark:hover { background: #1A1A1A; color: #FDFBF7; border-color: #1A1A1A; }
+
+.btn-pill-outline-light {
+  border: 1px solid rgba(253,251,247,0.4);
+  color: #FDFBF7;
+  background: transparent;
+}
+.btn-pill-outline-light:hover { background: #FDFBF7; color: #1A1A1A; border-color: #FDFBF7; }
+
+.btn-pill-solid {
+  background: #1A1A1A;
+  color: #FDFBF7;
+  border: 1px solid #1A1A1A;
+}
+.btn-pill-solid:hover { background: transparent; color: #1A1A1A; }
+
+/* Infinite marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 24s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+
+/* Hero scroll indicator line */
+@keyframes scrollLine {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(200%); opacity: 0; }
+}
+
+/* Event card scroll dot */
+@keyframes scrollDot {
+  0%   { transform: translateY(0); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(14px); opacity: 0; }
+}
+
+/* Image hover zoom utility */
+.hover-zoom { transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.hover-zoom:hover { transform: scale(1.06); }
+
+/* Remove cursor on desktop for interactive elements */
+@media (min-width: 768px) {
+  a, button, [data-cursor] { cursor: none !important; }
+}
