@@ -23,15 +23,44 @@ export default function EvattoBlog() {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(headerRef.current?.querySelectorAll(".h-el") ?? [], { opacity: 0, y: 24 }, {
-        opacity: 1, y: 0, stagger: 0.1, duration: 0.8, ease: "power3.out",
-        scrollTrigger: { trigger: headerRef.current, start: "top 82%", once: true },
-      });
+      // Header elements reveal
+      gsap.fromTo(headerRef.current?.querySelectorAll(".h-el") ?? [], 
+        { opacity: 0, y: 30 }, 
+        {
+          opacity: 1, 
+          y: 0, 
+          stagger: 0.1, 
+          duration: 0.85, 
+          ease: "power3.out",
+          scrollTrigger: { trigger: headerRef.current, start: "top 82%", once: true },
+        }
+      );
 
-      gsap.fromTo(cardsRef.current?.querySelectorAll(".blog-card") ?? [], { opacity: 0, y: 45 }, {
-        opacity: 1, y: 0, stagger: 0.14, duration: 0.85, ease: "power3.out",
-        scrollTrigger: { trigger: cardsRef.current, start: "top 85%", once: true },
-      });
+      // Staggered luxury skew-reveal for blog cards
+      gsap.fromTo(cardsRef.current?.querySelectorAll(".blog-card") ?? [], 
+        { opacity: 0, y: 80, skewY: 2.5, scale: 0.96 }, 
+        {
+          opacity: 1, 
+          y: 0, 
+          skewY: 0, 
+          scale: 1,
+          stagger: 0.14, 
+          duration: 1.1, 
+          ease: "power4.out",
+          scrollTrigger: { trigger: cardsRef.current, start: "top 85%", once: true },
+        }
+      );
+
+      // Buttery smooth, hardware-accelerated infinite marquee loop
+      const track = sectionRef.current?.querySelector(".marquee-track");
+      if (track) {
+        gsap.to(track, {
+          xPercent: -50,
+          ease: "none",
+          duration: 20,
+          repeat: -1,
+        });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -55,11 +84,28 @@ export default function EvattoBlog() {
         <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-7">
           {POSTS.map((p, i) => (
             <article key={i} className="blog-card group opacity-0 cursor-pointer">
-              <div className="relative overflow-hidden rounded-2xl mb-5" style={{ aspectRatio: "4/3" }}>
-                <img src={p.img} alt={p.title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108" loading="lazy" />
-                <span className="absolute top-4 left-4 rounded-full px-3 py-1.5 backdrop-blur-md" style={{ fontFamily: "var(--font-inter)", fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.15em", background: "rgba(253,251,247,0.88)", color: "#1A1A1A" }}>{p.cat}</span>
+              <div className="relative overflow-hidden rounded-2xl mb-5 aspect-[4/3]">
+                <img 
+                  src={p.img} 
+                  alt={p.title} 
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" 
+                  loading="lazy" 
+                />
+                <span 
+                  className="absolute top-4 left-4 rounded-full px-3 py-1.5 backdrop-blur-md" 
+                  style={{ 
+                    fontFamily: "var(--font-inter)", 
+                    fontSize: "9px", 
+                    textTransform: "uppercase", 
+                    letterSpacing: "0.15em", 
+                    background: "rgba(253,251,247,0.88)", 
+                    color: "#1A1A1A" 
+                  }}
+                >
+                  {p.cat}
+                </span>
               </div>
-              <h3 className="group-hover:opacity-70 transition-opacity" style={{ fontFamily: "var(--font-cormorant)", fontSize: "1.45rem", fontWeight: 500, color: "#1A1A1A", lineHeight: 1.3, marginBottom: "12px" }}>{p.title}</h3>
+              <h3 className="group-hover:opacity-75 transition-opacity" style={{ fontFamily: "var(--font-cormorant)", fontSize: "1.45rem", fontWeight: 500, color: "#1A1A1A", lineHeight: 1.3, marginBottom: "12px" }}>{p.title}</h3>
               <div className="flex items-center justify-between">
                 <span style={{ fontFamily: "var(--font-inter)", fontSize: "11px", color: "rgba(26,26,26,0.4)" }}>{p.date}</span>
                 <span className="flex items-center gap-1" style={{ fontFamily: "var(--font-inter)", fontSize: "11px", color: "rgba(26,26,26,0.4)" }}>
@@ -72,12 +118,12 @@ export default function EvattoBlog() {
       </div>
 
       {/* Marquee — trusted partners */}
-      <div className="mt-20 overflow-hidden" style={{ borderTop: "1px solid rgba(26,26,26,0.07)", paddingTop: "40px" }}>
+      <div className="mt-24 overflow-hidden" style={{ borderTop: "1px solid rgba(26,26,26,0.07)", paddingTop: "40px" }}>
         <p className="text-center mb-8" style={{ fontFamily: "var(--font-inter)", fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.38em", color: "rgba(26,26,26,0.3)" }}>Trusted partners who chose us</p>
-        <div className="relative overflow-hidden">
-          <div className="marquee-track">
+        <div className="relative w-full overflow-hidden whitespace-nowrap">
+          <div className="marquee-track inline-block whitespace-nowrap">
             {[...LOGOS, ...LOGOS].map((logo, i) => (
-              <span key={i} className="inline-flex items-center whitespace-nowrap mx-10" style={{ fontFamily: "var(--font-cormorant)", fontSize: "1.6rem", fontWeight: 300, color: "rgba(26,26,26,0.2)" }}>
+              <span key={i} className="inline-flex items-center whitespace-nowrap mx-10" style={{ fontFamily: "var(--font-cormorant)", fontSize: "1.6rem", fontWeight: 300, color: "rgba(26,26,26,0.25)" }}>
                 {logo}
                 <span className="mx-8 text-base" style={{ color: "rgba(26,26,26,0.12)" }}>✦</span>
               </span>

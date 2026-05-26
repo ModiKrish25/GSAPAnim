@@ -2,6 +2,7 @@
 
 import EvattoNav from "@/components/evatto/EvattoNav";
 import EvattoHero from "@/components/evatto/EvattoHero";
+import EvattoShowreel from "@/components/evatto/EvattoShowreel";
 import EvattoIntro from "@/components/evatto/EvattoIntro";
 import EvattoEventCards from "@/components/evatto/EvattoEventCards";
 import EvattoVenues from "@/components/evatto/EvattoVenues";
@@ -13,31 +14,33 @@ import EvattoFooter from "@/components/evatto/EvattoFooter";
 export default function Home() {
   return (
     <div className="bg-[#FDFBF7]">
-      {/* Fixed Navigation */}
       <EvattoNav />
 
-      {/* 1. Hero — fullscreen bg image, per-char headline slide-up */}
+      {/* 1. Hero */}
       <EvattoHero />
 
-      {/* 2. Gallery — full-width mosaic: 3 from top + 3 from bottom, scrub reversible */}
+      {/* 2. ★ CINEMATIC IRIS SHOWREEL — pinned scroll scene transitions */}
+      <EvattoShowreel />
+
+      {/* 3. Gallery mosaic — 3 from top / 3 from bottom merge */}
       <EvattoIntro />
 
-      {/* 3. Event Cards — tilted deck that fans out on scroll */}
+      {/* 4. Featured event cards — drop, fan, 3D flip */}
       <EvattoEventCards />
 
-      {/* 4. Venues — dark bg, pinned horizontal scroll */}
+      {/* 5. Venues — horizontal scroll */}
       <EvattoVenues />
 
-      {/* 5. Immersive 3D Dream Stage — interactive 3D perspective mood visualizer & liquid portal cursor */}
+      {/* 6. Dream Stage — 3D mood visualiser */}
       <EvattoDreamStage />
 
-      {/* 6. CTA — sage green, corner images float in */}
+      {/* 7. CTA */}
       <EvattoCTA />
 
-      {/* 7. Blog — 3-col grid + infinite marquee */}
+      {/* 8. Blog */}
       <EvattoBlog />
 
-      {/* 8. Footer — dark bg, giant outlined text */}
+      {/* 9. Footer */}
       <EvattoFooter />
     </div>
   );

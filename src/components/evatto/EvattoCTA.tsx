@@ -20,31 +20,88 @@ export default function EvattoCTA() {
     if (typeof window === "undefined") return;
     gsap.registerPlugin(ScrollTrigger);
 
+    let positionCardsHandler: () => void = () => {};
+
     const ctx = gsap.context(() => {
-      // Corner images fly in from their respective corners
-      imgRefs.current.forEach((el, i) => {
-        if (!el) return;
-        gsap.fromTo(el,
-          { opacity: 0, x: CORNERS[i].from.x, y: CORNERS[i].from.y, scale: 0.88 },
-          {
-            opacity: 1, x: 0, y: 0, scale: 1,
-            duration: 1.1, ease: "power3.out", delay: i * 0.08,
-            scrollTrigger: { trigger: sectionRef.current, start: "top 75%", once: true },
-          }
-        );
+      const parent = sectionRef.current;
+      if (!parent) return;
+
+      const imgs = imgRefs.current.filter(Boolean) as HTMLDivElement[];
+
+      // Centering calculations: dynamically offsets each corner card from its natural CSS position
+      // so it is mathematically centered inside the viewport space at starting scroll
+      positionCardsHandler = () => {
+        const parentRect = parent.getBoundingClientRect();
+        const pCenterX = parentRect.width / 2;
+        const pCenterY = parentRect.height / 2;
+
+        imgs.forEach((el, i) => {
+          const elRect = el.getBoundingClientRect();
+          const elCenterX = el.offsetLeft + elRect.width / 2;
+          const elCenterY = el.offsetTop + elRect.height / 2;
+
+          const deltaX = pCenterX - elCenterX;
+          const deltaY = pCenterY - elCenterY;
+
+          // Set starting position at the exact center, completely overlapping
+          gsap.set(el, {
+            x: deltaX,
+            y: deltaY,
+            scale: 0.15,
+            opacity: 0,
+            transformOrigin: "center center",
+          });
+        });
+      };
+
+      // Set initial coordinates
+      positionCardsHandler();
+
+      // Master scrub timeline: as you scroll, cards fly outward from the center to their corners!
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: parent,
+          start: "top 95%",    // begins as section enters from bottom
+          end: "bottom 30%",   // ends when bottom of section reaches 30% of screen height
+          scrub: 1.5,          // elastic smooth scroll scrub tracking
+        }
       });
 
-      // Central text
+      // Staggered card release
+      imgs.forEach((el, i) => {
+        tl.to(el, {
+          x: 0,
+          y: 0,
+          scale: 1,
+          opacity: 1,
+          duration: 1,
+          ease: "power2.out",
+        }, i * 0.05); // slightly stagger the launch for organic flare
+      });
+
+      // Central text rise
       const tlines = textRef.current?.querySelectorAll(".t-line");
       if (tlines) {
-        gsap.fromTo(tlines, { opacity: 0, y: 22 }, {
-          opacity: 1, y: 0, stagger: 0.1, duration: 0.8, ease: "power3.out",
-          scrollTrigger: { trigger: sectionRef.current, start: "top 78%", once: true },
-        });
+        gsap.fromTo(tlines, 
+          { opacity: 0, y: 30 }, 
+          {
+            opacity: 1, 
+            y: 0, 
+            stagger: 0.08, 
+            duration: 0.75, 
+            ease: "power2.out",
+            scrollTrigger: { trigger: parent, start: "top 75%", once: true },
+          }
+        );
       }
     }, sectionRef);
 
-    return () => ctx.revert();
+    window.addEventListener("resize", positionCardsHandler);
+
+    return () => {
+      ctx.revert();
+      window.removeEventListener("resize", positionCardsHandler);
+    };
   }, []);
 
   return (

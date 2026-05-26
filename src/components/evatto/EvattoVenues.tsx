@@ -87,14 +87,17 @@ export default function EvattoVenues() {
   }, []);
 
   return (
-    <section ref={sectionRef} style={{ background: "#0e0f11", overflow: "hidden" }}>
-      <div className="max-w-full">
+    <section
+      ref={sectionRef}
+      style={{ background: "#0e0f11", overflow: "hidden", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center" }}
+    >
+      <div className="w-full flex-1 flex flex-col justify-center py-6">
         {/* Header */}
-        <div ref={headerRef} className="px-6 md:px-14 pt-20 md:pt-28 pb-14">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
+        <div ref={headerRef} className="px-6 md:px-14 pb-8 shrink-0">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-              <p className="h-line opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.35em", color: "rgba(253,251,247,0.35)", marginBottom: "14px" }}>Our spaces</p>
-              <h2 className="h-line opacity-0" style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.2rem, 5vw, 5rem)", fontWeight: 300, color: "#FDFBF7", maxWidth: "520px", lineHeight: 1.1 }}>Explore our event spaces</h2>
+              <p className="h-line opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.35em", color: "rgba(253,251,247,0.35)", marginBottom: "12px" }}>Our spaces</p>
+              <h2 className="h-line opacity-0" style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.2rem, 5vw, 4.5rem)", fontWeight: 300, color: "#FDFBF7", maxWidth: "520px", lineHeight: 1.1 }}>Explore our event spaces</h2>
             </div>
             <a href="#" className="h-line btn-pill btn-pill-outline-light self-start opacity-0">
               View all spaces <ArrowUpRight size={13} />
@@ -102,22 +105,26 @@ export default function EvattoVenues() {
           </div>
         </div>
 
-        {/* Horizontal track */}
-        <div ref={trackRef} className="flex flex-col md:flex-row gap-5 px-6 md:px-14 pb-20 w-full md:w-max" style={{ willChange: "transform" }}>
+        {/* Horizontal track — vertically centered cards */}
+        <div
+          ref={trackRef}
+          className="flex flex-col md:flex-row gap-6 px-6 md:px-14 w-full md:w-max items-center justify-center"
+          style={{ willChange: "transform" }}
+        >
           {VENUES.map((v) => (
             <div
               key={v.id}
               className="venue-card shrink-0 rounded-3xl overflow-hidden relative group cursor-pointer"
-              style={{ width: "100%", height: "580px", minWidth: "340px", maxWidth: "100%", }} // mobile full-width
+              style={{ width: "100%", height: "480px", minWidth: "320px", maxWidth: "100%" }}
             >
               {/* Override width for desktop */}
-              <style>{`.venue-card { } @media(min-width:768px){ .venue-card { width: 460px !important; height: 580px !important; } }`}</style>
+              <style>{`@media(min-width:768px){ .venue-card { width: 420px !important; height: 480px !important; } }`}</style>
               <img src={v.image} alt={v.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
               <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(14,15,17,0.95) 0%, rgba(14,15,17,0.35) 55%, transparent 100%)" }} />
-              <div className="absolute inset-0 p-8 flex flex-col justify-end">
+              <div className="absolute inset-0 p-6 flex flex-col justify-end">
                 <p style={{ fontFamily: "var(--font-inter)", fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.22em", color: "rgba(253,251,247,0.4)", marginBottom: "8px" }}>{v.style}</p>
-                <h3 style={{ fontFamily: "var(--font-cormorant)", fontSize: "1.9rem", fontWeight: 300, color: "#FDFBF7", marginBottom: "16px" }}>{v.name}</h3>
-                <div className="rounded-2xl p-4 mb-5" style={{ background: "rgba(253,251,247,0.06)", border: "1px solid rgba(253,251,247,0.1)", backdropFilter: "blur(8px)" }}>
+                <h3 style={{ fontFamily: "var(--font-cormorant)", fontSize: "1.75rem", fontWeight: 300, color: "#FDFBF7", marginBottom: "12px" }}>{v.name}</h3>
+                <div className="rounded-2xl p-4 mb-4" style={{ background: "rgba(253,251,247,0.06)", border: "1px solid rgba(253,251,247,0.1)", backdropFilter: "blur(8px)" }}>
                   <div className="grid grid-cols-2 gap-3" style={{ fontFamily: "var(--font-inter)", fontSize: "11px" }}>
                     <div><p style={{ color: "rgba(253,251,247,0.35)", marginBottom: "3px" }}>Capacity</p><p style={{ color: "rgba(253,251,247,0.85)" }}>{v.capacity}</p></div>
                     <div><p style={{ color: "rgba(253,251,247,0.35)", marginBottom: "3px" }}>Best for</p><p style={{ color: "rgba(253,251,247,0.85)" }}>{v.bestFor}</p></div>
