@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
@@ -179,22 +180,37 @@ export default function EvattoNav() {
     });
   };
 
+  const pathname = usePathname();
   const close = () => { setOpen(false); setActiveIdx(null); };
 
   const handleNavClick = (e: React.MouseEvent, label: string) => {
     e.preventDefault();
     if (typeof window === "undefined") return;
 
-    if (label.toLowerCase() === "home") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else if (label.toLowerCase() === "pages") {
-      document.getElementById("events")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else if (label.toLowerCase() === "venue space") {
-      document.getElementById("venues")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else if (label.toLowerCase() === "blog") {
-      document.getElementById("blog")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else if (label.toLowerCase() === "contact") {
-      window.dispatchEvent(new CustomEvent("open-book-tour"));
+    const targetIdMap: Record<string, string> = {
+      pages: "events",
+      "venue space": "venues",
+      blog: "blog",
+    };
+
+    const targetId = targetIdMap[label.toLowerCase()];
+
+    if (pathname !== "/") {
+      if (label.toLowerCase() === "home") {
+        window.location.href = "/";
+      } else if (targetId) {
+        window.location.href = `/#${targetId}`;
+      } else if (label.toLowerCase() === "contact") {
+        window.location.href = "/?book=true";
+      }
+    } else {
+      if (label.toLowerCase() === "home") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else if (targetId) {
+        document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (label.toLowerCase() === "contact") {
+        window.dispatchEvent(new CustomEvent("open-book-tour"));
+      }
     }
   };
 

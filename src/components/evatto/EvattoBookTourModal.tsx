@@ -22,6 +22,16 @@ export default function EvattoBookTourModal() {
     };
 
     window.addEventListener("open-book-tour", handleOpen);
+
+    // Auto open if url contains book=true
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("book") === "true") {
+      handleOpen();
+      // Clean up parameter without reloading
+      const cleanUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+
     return () => window.removeEventListener("open-book-tour", handleOpen);
   }, []);
 

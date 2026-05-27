@@ -75,7 +75,7 @@ export default function EvattoBlog() {
             <p className="h-el opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.35em", color: "rgba(26,26,26,0.4)", marginBottom: "12px" }}>Our blog</p>
             <h2 className="h-el opacity-0" style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.2rem, 5vw, 5rem)", fontWeight: 300, color: "#1A1A1A" }}>Your event, our insights</h2>
           </div>
-          <a href="#" className="h-el btn-pill btn-pill-outline-dark self-start opacity-0">
+          <a href="/blog" className="h-el btn-pill btn-pill-outline-dark self-start opacity-0 cursor-pointer">
             View all blogs <ArrowUpRight size={13} />
           </a>
         </div>

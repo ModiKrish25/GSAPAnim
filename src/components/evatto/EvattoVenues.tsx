@@ -100,7 +100,7 @@ export default function EvattoVenues() {
               <p className="h-line opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.35em", color: "rgba(253,251,247,0.35)", marginBottom: "12px" }}>Our spaces</p>
               <h2 className="h-line opacity-0" style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.2rem, 5vw, 4.5rem)", fontWeight: 300, color: "#FDFBF7", maxWidth: "520px", lineHeight: 1.1 }}>Explore our event spaces</h2>
             </div>
-            <a href="#" className="h-line btn-pill btn-pill-outline-light self-start opacity-0">
+            <a href="/spaces" className="h-line btn-pill btn-pill-outline-light self-start opacity-0 cursor-pointer">
               View all spaces <ArrowUpRight size={13} />
             </a>
           </div>
@@ -132,7 +132,7 @@ export default function EvattoVenues() {
                     <div className="col-span-2"><p style={{ color: "rgba(253,251,247,0.35)", marginBottom: "3px" }}>Features</p><p style={{ color: "rgba(253,251,247,0.85)" }}>{v.features}</p></div>
                   </div>
                 </div>
-                <a href="#" className="flex items-center gap-2 group/btn w-fit">
+                <a href={`/spaces/${v.id}`} className="flex items-center gap-2 group/btn w-fit cursor-pointer">
                   <span className="w-9 h-9 rounded-full border flex items-center justify-center transition-colors group-hover/btn:bg-white" style={{ borderColor: "rgba(253,251,247,0.3)" }}>
                     <ArrowUpRight size={14} className="text-white group-hover/btn:text-black transition-colors" />
                   </span>
