@@ -63,6 +63,7 @@ export default function EvattoLiquidPortal() {
         scale: 6.5,
         borderRadius: "0%",
         duration: 1,
+        force3D: true,
         ease: "power2.inOut",
       }, 0.1);
 
@@ -70,6 +71,7 @@ export default function EvattoLiquidPortal() {
       tl.to(overlay, {
         opacity: 0.1,
         duration: 0.8,
+        force3D: true,
       }, 0.2);
 
     }, containerRef);
@@ -128,7 +130,7 @@ export default function EvattoLiquidPortal() {
         {/* Ambient Overlay inside the lens */}
         <div 
           ref={overlayRef}
-          className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none transition-opacity duration-500" 
+          className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" 
         />
 
         {/* Lens reflection highlight */}

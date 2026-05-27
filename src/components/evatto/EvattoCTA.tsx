@@ -111,7 +111,7 @@ export default function EvattoCTA() {
         <div
           key={i}
           ref={el => { imgRefs.current[i] = el; }}
-          className={`absolute ${c.pos} ${c.w} ${c.ratio} rounded-2xl overflow-hidden shadow-xl opacity-0 z-10`}
+          className={`absolute ${c.pos} ${c.w} ${c.ratio} rounded-2xl overflow-hidden shadow-xl opacity-0 z-10 hidden md:block`}
         >
           <img src={c.src} alt="" className="w-full h-full object-cover" loading="lazy" />
         </div>
@@ -126,10 +126,13 @@ export default function EvattoCTA() {
         <p className="t-line opacity-0 mt-5" style={{ fontFamily: "var(--font-inter)", fontSize: "13px", color: "rgba(26,26,26,0.55)", maxWidth: "380px", lineHeight: 1.65 }}>
           Create your unforgettable events with us. From intimate gatherings to grand celebrations, we have the perfect space.
         </p>
-        <a href="#" className="t-line btn-pill btn-pill-solid mt-9 opacity-0">
+        <button 
+          onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("open-book-tour")); }}
+          className="t-line btn-pill btn-pill-solid mt-9 opacity-0 cursor-pointer"
+        >
           Let&apos;s get started
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 11.5L11.5 1.5M11.5 1.5H5.5M11.5 1.5V7.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        </a>
+        </button>
       </div>
     </div>
   );

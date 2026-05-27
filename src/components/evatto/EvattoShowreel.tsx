@@ -75,41 +75,41 @@ export default function EvattoShowreel() {
       });
 
       /* Progress bar fills across full duration */
-      tl.to(progressRef.current, { scaleX: 1, ease: "none", duration: 4 }, 0);
+      tl.to(progressRef.current, { scaleX: 1, ease: "none", duration: 4, force3D: true }, 0);
 
       /* Scene 0 image slow Ken Burns throughout */
-      tl.to(imgs[0], { scale: 1.0, ease: "none", duration: 4 }, 0);
+      tl.to(imgs[0], { scale: 1.0, ease: "none", duration: 4, force3D: true }, 0);
 
       /* ──── SCENE 0 → 1 ──── */
       tl.to(texts[0].querySelectorAll(".reel-line"), {
-        y: -60, opacity: 0, stagger: 0.06, duration: 0.28, ease: "power2.in",
+        y: -60, opacity: 0, stagger: 0.06, duration: 0.28, ease: "power2.in", force3D: true
       }, 0.05);
 
       tl.to(layers[1], {
         clipPath: `circle(150% at ${SCENES[1].origin})`,
-        duration: 0.75, ease: "power2.inOut",
+        duration: 0.75, ease: "power2.inOut", force3D: true
       }, 0.25);
 
-      tl.to(imgs[1], { scale: 1.0, duration: 0.75, ease: "power2.out" }, 0.25);
+      tl.to(imgs[1], { scale: 1.0, duration: 0.75, ease: "power2.out", force3D: true }, 0.25);
 
       tl.to(texts[1].querySelectorAll(".reel-line"), {
-        y: 0, opacity: 1, stagger: 0.08, duration: 0.45, ease: "power3.out",
+        y: 0, opacity: 1, stagger: 0.08, duration: 0.45, ease: "power3.out", force3D: true
       }, 0.85);
 
       /* ──── SCENE 1 → 2 ──── */
       tl.to(texts[1].querySelectorAll(".reel-line"), {
-        y: -60, opacity: 0, stagger: 0.06, duration: 0.28, ease: "power2.in",
+        y: -60, opacity: 0, stagger: 0.06, duration: 0.28, ease: "power2.in", force3D: true
       }, 1.9);
 
       tl.to(layers[2], {
         clipPath: `circle(150% at ${SCENES[2].origin})`,
-        duration: 0.75, ease: "power2.inOut",
+        duration: 0.75, ease: "power2.inOut", force3D: true
       }, 2.1);
 
-      tl.to(imgs[2], { scale: 1.0, duration: 0.75, ease: "power2.out" }, 2.1);
+      tl.to(imgs[2], { scale: 1.0, duration: 0.75, ease: "power2.out", force3D: true }, 2.1);
 
       tl.to(texts[2].querySelectorAll(".reel-line"), {
-        y: 0, opacity: 1, stagger: 0.08, duration: 0.45, ease: "power3.out",
+        y: 0, opacity: 1, stagger: 0.08, duration: 0.45, ease: "power3.out", force3D: true
       }, 2.75);
 
     }, sectionRef);

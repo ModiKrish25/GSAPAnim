@@ -39,7 +39,7 @@ const cardsData = [
     ),
     bg: "#f5f0ec",
     description: "Milestones deserve an unforgettable celebration",
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&q=80",
+    image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80",
     alt: "Graduation ceremony",
   },
   {
@@ -154,6 +154,7 @@ export default function EvattoEventCards() {
           scale: 1,
           duration: 0.8,
           stagger: 0.08,
+          force3D: true,
           ease: "back.out(1.2)",
         }, 0.1);
 
@@ -163,6 +164,7 @@ export default function EvattoEventCards() {
             x: finalX[i],
             rotation: finalRot[i],
             duration: 0.9,
+            force3D: true,
             ease: "power2.inOut",
           }, 0.5 + i * 0.05);
         });
@@ -172,6 +174,7 @@ export default function EvattoEventCards() {
           tl.to(card, {
             rotationY: 180, // rotate Y axis from 0 to 180
             duration: 0.8,
+            force3D: true,
             ease: "power2.inOut",
           }, 0.9 + i * 0.1);
         });
@@ -218,6 +221,7 @@ export default function EvattoEventCards() {
   return (
     <section
       ref={containerRef}
+      id="events"
       className="relative min-h-[90vh] md:min-h-screen flex flex-col items-center justify-start pt-24 pb-20 overflow-hidden"
       style={{ backgroundColor: "#FDFBF7" }}
     >

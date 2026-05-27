@@ -181,6 +181,23 @@ export default function EvattoNav() {
 
   const close = () => { setOpen(false); setActiveIdx(null); };
 
+  const handleNavClick = (e: React.MouseEvent, label: string) => {
+    e.preventDefault();
+    if (typeof window === "undefined") return;
+
+    if (label.toLowerCase() === "home") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (label.toLowerCase() === "pages") {
+      document.getElementById("events")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else if (label.toLowerCase() === "venue space") {
+      document.getElementById("venues")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else if (label.toLowerCase() === "blog") {
+      document.getElementById("blog")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else if (label.toLowerCase() === "contact") {
+      window.dispatchEvent(new CustomEvent("open-book-tour"));
+    }
+  };
+
   return (
     <>
       {/* ── Fixed floating glass header capsule ── */}
@@ -248,9 +265,10 @@ export default function EvattoNav() {
               <a 
                 href="#" 
                 key={link.label}
+                onClick={e => handleNavClick(e, link.label)}
                 onMouseEnter={handleLinkEnter}
                 onMouseLeave={handleLinkLeave}
-                className="nav-desktop-link px-4 py-1.5 rounded-full text-xs font-semibold text-black/70 hover:text-black transition-colors relative z-10 tracking-wide"
+                className="nav-desktop-link px-4 py-1.5 rounded-full text-xs font-semibold text-black/70 hover:text-black transition-colors relative z-10 tracking-wide cursor-pointer"
                 style={{ fontFamily: "var(--font-inter)" }}
               >
                 {link.label}
@@ -271,16 +289,16 @@ export default function EvattoNav() {
             </button>
 
             {/* Book CTA — desktop */}
-            <a
-              href="#"
-              className="hidden md:inline-flex items-center gap-2 rounded-full px-5 py-2 text-xs font-semibold transition-all bg-black text-white hover:bg-black/85 active:scale-95 shadow-sm"
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent("open-book-tour"))}
+              className="hidden md:inline-flex items-center gap-2 rounded-full px-5 py-2 text-xs font-semibold transition-all bg-black text-white hover:bg-black/85 active:scale-95 shadow-sm cursor-pointer"
               style={{ fontFamily: "var(--font-inter)", letterSpacing: "0.05em" }}
             >
               Book a tour
               <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
                 <path d="M1 9L9 1M9 1H4M9 1v5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </a>
+            </button>
 
             {/* Hamburger button with custom layout */}
             <button
@@ -335,12 +353,19 @@ export default function EvattoNav() {
 
           {/* Nav links block */}
           <nav className="flex flex-col gap-2 my-auto py-8">
-            {NAV_LINKS.map((link, i) => (
-              <div
-                key={link.label}
-                className="nav-item opacity-0 border-b border-black/[0.04] group cursor-pointer"
-                onClick={() => setActiveIdx(activeIdx === i ? null : i)}
-              >
+             {NAV_LINKS.map((link, i) => (
+               <div
+                 key={link.label}
+                 className="nav-item opacity-0 border-b border-black/[0.04] group cursor-pointer"
+                 onClick={(e) => {
+                   if (link.sub.length > 0) {
+                     setActiveIdx(activeIdx === i ? null : i);
+                   } else {
+                     close();
+                     handleNavClick(e, link.label);
+                   }
+                 }}
+               >
                 <div className="flex items-center justify-between py-4 md:py-5">
                   {/* Giant link text */}
                   <span
@@ -396,8 +421,21 @@ export default function EvattoNav() {
                       <a
                         key={s}
                         href="#"
-                        onClick={e => e.stopPropagation()}
-                        className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-black/[0.04] bg-black/[0.01] hover:bg-black/5 hover:border-black/10 transition-all duration-300 text-[11px] font-medium text-black/60 hover:text-black tracking-wide"
+                        onClick={e => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          close();
+                          if (s === "Schedule visit") {
+                            window.dispatchEvent(new CustomEvent("open-book-tour"));
+                          } else if (s === "About us" || s === "Event" || s === "Gallery" || s === "Pricing") {
+                            document.getElementById("events")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                          } else if (["Executive Hall", "Garden Courtyard", "Forever Pavilion", "Garden Veranda"].includes(s)) {
+                            document.getElementById("venues")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                          } else if (s === "All posts" || s === "Blog detail") {
+                            document.getElementById("blog")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }
+                        }}
+                        className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-black/[0.04] bg-black/[0.01] hover:bg-black/5 hover:border-black/10 transition-all duration-300 text-[11px] font-medium text-black/60 hover:text-black tracking-wide cursor-pointer"
                         style={{ fontFamily: "var(--font-inter)" }}
                       >
                         {s}
@@ -414,8 +452,18 @@ export default function EvattoNav() {
 
           {/* Bottom CTAs */}
           <div className="nav-item opacity-0 flex flex-wrap gap-3 pt-6 mt-4 border-t border-black/[0.06] shrink-0">
-            <a href="#" className="btn-pill btn-pill-outline-dark text-xs py-2.5 px-6">Book a tour</a>
-            <a href="#" className="btn-pill btn-pill-solid text-xs py-2.5 px-6">Schedule visit</a>
+            <button 
+              onClick={() => { close(); window.dispatchEvent(new CustomEvent("open-book-tour")); }}
+              className="btn-pill btn-pill-outline-dark text-xs py-2.5 px-6 cursor-pointer"
+            >
+              Book a tour
+            </button>
+            <button 
+              onClick={() => { close(); window.dispatchEvent(new CustomEvent("open-book-tour")); }}
+              className="btn-pill btn-pill-solid text-xs py-2.5 px-6 cursor-pointer"
+            >
+              Schedule visit
+            </button>
           </div>
         </div>
 

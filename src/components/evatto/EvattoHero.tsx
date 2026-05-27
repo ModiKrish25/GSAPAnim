@@ -56,8 +56,15 @@ export default function EvattoHero() {
 
     // Bg parallax
     gsap.to(bgRef.current, {
-      yPercent: 20, ease: "none",
-      scrollTrigger: { trigger: sectionRef.current, start: "top top", end: "bottom top", scrub: true },
+      yPercent: 18, 
+      ease: "none",
+      force3D: true,
+      scrollTrigger: { 
+        trigger: sectionRef.current, 
+        start: "top top", 
+        end: "bottom top", 
+        scrub: 1.1,
+      },
     });
 
     return () => { ScrollTrigger.getAll().forEach(s => s.kill()); };
@@ -72,7 +79,7 @@ export default function EvattoHero() {
 
       {/* Background */}
       <div ref={bgRef} className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url('https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=90&w=2200')`, willChange: "transform" }} />
+        style={{ backgroundImage: `url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=90&w=2200')`, willChange: "transform" }} />
 
       {/* Gradient overlay */}
       <div ref={overlayRef} className="absolute inset-0"
@@ -109,10 +116,13 @@ export default function EvattoHero() {
 
         {/* CTAs */}
         <div ref={ctaRef} className="flex flex-wrap gap-3 opacity-0">
-          <a href="#" className="btn-pill btn-pill-outline-light">
+          <button 
+            onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("open-book-tour")); }}
+            className="btn-pill btn-pill-outline-light"
+          >
             Book a tour
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 11.5L11.5 1.5M11.5 1.5H5.5M11.5 1.5V7.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </a>
+          </button>
           <a href="#" className="btn-pill btn-pill-outline-light">
             Explore the venue
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 11.5L11.5 1.5M11.5 1.5H5.5M11.5 1.5V7.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>

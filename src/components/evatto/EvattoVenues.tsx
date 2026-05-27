@@ -89,6 +89,7 @@ export default function EvattoVenues() {
   return (
     <section
       ref={sectionRef}
+      id="venues"
       style={{ background: "#0e0f11", overflow: "hidden", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center" }}
     >
       <div className="w-full flex-1 flex flex-col justify-center py-6">

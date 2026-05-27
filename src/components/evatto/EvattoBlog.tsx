@@ -67,7 +67,7 @@ export default function EvattoBlog() {
   }, []);
 
   return (
-    <section ref={sectionRef} style={{ background: "#FDFBF7" }} className="py-28 md:py-36 overflow-hidden">
+    <section ref={sectionRef} id="blog" style={{ background: "#FDFBF7" }} className="py-28 md:py-36 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-14">
         {/* Header */}
         <div ref={headerRef} className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">

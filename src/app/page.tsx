@@ -12,6 +12,7 @@ import EvattoDreamStage from "@/components/evatto/EvattoDreamStage";
 import EvattoCTA from "@/components/evatto/EvattoCTA";
 import EvattoBlog from "@/components/evatto/EvattoBlog";
 import EvattoFooter from "@/components/evatto/EvattoFooter";
+import EvattoBookTourModal from "@/components/evatto/EvattoBookTourModal";
 
 export default function Home() {
   return (
@@ -50,6 +51,9 @@ export default function Home() {
 
       {/* 11. Footer */}
       <EvattoFooter />
+
+      {/* 12. ★ PRIVATE TOUR BOOKING MODAL */}
+      <EvattoBookTourModal />
     </div>
   );
 }

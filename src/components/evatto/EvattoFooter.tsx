@@ -46,7 +46,7 @@ const socials = ["Instagram", "Behance", "Dribbble", "Facebook", "Twitter"];
 
 export default function EvattoFooter() {
   return (
-    <footer className="bg-[#0e0f11] text-[#FDFBF7] overflow-hidden">
+    <footer id="footer" className="bg-[#0e0f11] text-[#FDFBF7] overflow-hidden">
       {/* Main footer content */}
       <div className="max-w-7xl mx-auto px-6 md:px-14 pt-20 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
