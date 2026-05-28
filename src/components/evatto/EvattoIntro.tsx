@@ -101,7 +101,7 @@ export default function EvattoIntro() {
           trigger: canvasRef.current,
           start: "top 90%",
           end:   "bottom 55%",
-          scrub: 1.8,
+          scrub: 0.5,
         },
       });
 
@@ -156,15 +156,35 @@ export default function EvattoIntro() {
       style={{ background: "#FDFBF7", overflow: "hidden" }}
       className="w-full"
     >
-      {/* ── Absolute-positioned overlapping mosaic canvas ───── */}
+      {/* ── Mobile image grid (hidden on md+) ──────────────── */}
+      <div className="block md:hidden px-6 pt-10 pb-4">
+        <div className="grid grid-cols-2 gap-3">
+          {[...TOP_GROUP, ...BOT_GROUP].slice(0, 4).map((img, i) => (
+            <div
+              key={i}
+              className="rounded-2xl overflow-hidden"
+              style={{ aspectRatio: "3/4" }}
+            >
+              <img
+                src={img.src}
+                alt={img.alt}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Desktop absolute-positioned overlapping mosaic canvas (hidden on mobile) ───── */}
       <div
         ref={canvasRef}
+        className="hidden md:block"
         style={{
           position: "relative",
           width: "100%",
-          /* Height scales with viewport width to keep proportions */
           height: "clamp(520px, 75vw, 860px)",
-          overflow: "visible",   /* allow slight shadow bleed */
+          overflow: "visible",
         }}
       >
         {/* TOP GROUP */}
@@ -221,7 +241,7 @@ export default function EvattoIntro() {
       {/* ── Stats row with count-up ──────────────────────────── */}
       <div
         ref={statsRef}
-        className="grid grid-cols-2 md:grid-cols-4 gap-8 px-6 md:px-14 py-16 md:py-20"
+        className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 px-6 md:px-14 py-12 md:py-20"
         style={{
           maxWidth: "1380px",
           margin: "0 auto",
@@ -231,7 +251,7 @@ export default function EvattoIntro() {
       >
         {STATS.map((s, i) => (
           <div key={i} className="stat-item opacity-0">
-            <p style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.8rem,5vw,4.5rem)", fontWeight: 300, color: "#1A1A1A", lineHeight: 1 }}>
+            <p style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.4rem,5vw,4.5rem)", fontWeight: 300, color: "#1A1A1A", lineHeight: 1 }}>
               <span ref={el => { numRefs.current[i] = el; }}>0{s.suffix}</span>
             </p>
             <p style={{ fontFamily: "var(--font-inter)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.18em", color: "rgba(26,26,26,0.45)", marginTop: "8px" }}>

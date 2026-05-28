@@ -56,32 +56,46 @@ export default function EvattoDreamStage() {
     const container = containerRef.current;
     if (!container) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const { left, top, width, height } = container.getBoundingClientRect();
-      
-      // Calculate normalized coordinates (-1 to 1)
-      const x = ((clientX - left) / width) * 2 - 1;
-      const y = ((clientY - top) / height) * 2 - 1;
+    // Cache the bounding rect — only re-read on resize, not every mousemove
+    let cachedRect = container.getBoundingClientRect();
+    let rafId: number | null = null;
+    let pendingX = 0;
+    let pendingY = 0;
 
-      // 3D rotation based on mouse coordinates
+    const applyTilt = () => {
+      rafId = null;
+      const x = ((pendingX - cachedRect.left) / cachedRect.width) * 2 - 1;
+      const y = ((pendingY - cachedRect.top) / cachedRect.height) * 2 - 1;
+
       gsap.to(cardsContainerRef.current, {
-        rotateY: x * 15, // tilt left-right
-        rotateX: -y * 15, // tilt up-down
-        duration: 0.8,
+        rotateY: x * 12,
+        rotateX: -y * 12,
+        duration: 0.9,
         ease: "power2.out",
         transformPerspective: 1000,
+        overwrite: "auto",
       });
 
-      // Liquid cursor follow
       if (liquidCursorRef.current) {
         gsap.to(liquidCursorRef.current, {
-          x: clientX,
-          y: clientY,
-          duration: 0.2,
+          x: pendingX,
+          y: pendingY,
+          duration: 0.18,
           ease: "power1.out",
+          overwrite: "auto",
         });
       }
+    };
+
+    // Throttle to rAF — eliminates per-frame getBoundingClientRect reflow
+    const handleMouseMove = (e: MouseEvent) => {
+      pendingX = e.clientX;
+      pendingY = e.clientY;
+      if (!rafId) rafId = requestAnimationFrame(applyTilt);
+    };
+
+    const handleResize = () => {
+      cachedRect = container.getBoundingClientRect();
     };
 
     const handleMouseEnter = () => {
@@ -91,24 +105,28 @@ export default function EvattoDreamStage() {
     };
 
     const handleMouseLeave = () => {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
       if (liquidCursorRef.current) {
         gsap.to(liquidCursorRef.current, { opacity: 0, scale: 0.1, duration: 0.3 });
       }
-      // Reset 3D tilt
       gsap.to(cardsContainerRef.current, {
         rotateY: 0,
         rotateX: 0,
         duration: 1.2,
         ease: "power3.out",
+        overwrite: "auto",
       });
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
     container.addEventListener("mouseenter", handleMouseEnter);
     container.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", handleResize);
       container.removeEventListener("mouseenter", handleMouseEnter);
       container.removeEventListener("mouseleave", handleMouseLeave);
     };
@@ -135,17 +153,19 @@ export default function EvattoDreamStage() {
       color: string;
     }> = [];
 
-    // Create stable points
+    // Fewer particles on mobile for better perf
+    const particleCount = window.innerWidth < 768 ? 30 : 60;
+
     const initParticles = () => {
       particles.length = 0;
-      for (let i = 0; i < 70; i++) {
+      for (let i = 0; i < particleCount; i++) {
         particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          size: Math.random() * 3 + 1,
-          speedY: -(Math.random() * 0.8 + 0.2),
-          speedX: (Math.random() - 0.5) * 0.5,
-          opacity: Math.random() * 0.7 + 0.3,
+          size: Math.random() * 2.5 + 0.5,
+          speedY: -(Math.random() * 0.6 + 0.15),
+          speedX: (Math.random() - 0.5) * 0.4,
+          opacity: Math.random() * 0.6 + 0.2,
           color: activeMood.particleColor,
         });
       }
@@ -156,19 +176,18 @@ export default function EvattoDreamStage() {
     const animate = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Draw dynamic stars/particles
+      // Batch: set fillStyle once (all particles share same color)
+      ctx.fillStyle = activeMood.particleColor;
+
       particles.forEach((p) => {
+        ctx.globalAlpha = p.opacity;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.opacity;
         ctx.fill();
 
-        // Move upwards (floating drift)
         p.y += p.speedY;
         p.x += p.speedX;
 
-        // Wrap around screen
         if (p.y < 0) {
           p.y = height;
           p.x = Math.random() * width;
@@ -177,6 +196,9 @@ export default function EvattoDreamStage() {
           p.x = Math.random() * width;
         }
       });
+
+      // Reset globalAlpha to avoid bleed into other canvas ops
+      ctx.globalAlpha = 1;
 
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -190,7 +212,7 @@ export default function EvattoDreamStage() {
       initParticles();
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
 
     return () => {
       cancelAnimationFrame(animationFrameId);
@@ -354,7 +376,6 @@ export default function EvattoDreamStage() {
             </div>
           </div>
 
-          {/* Dynamic 3D Spatial Deck */}
           <div className="lg:col-span-7 flex justify-center items-center py-8">
             <div 
               ref={cardsContainerRef}
@@ -362,7 +383,7 @@ export default function EvattoDreamStage() {
                 transformStyle: "preserve-3d",
                 perspective: 1000,
               }}
-              className="flex justify-center items-center gap-6 md:gap-8 w-full max-w-[580px]"
+              className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 md:gap-8 w-full max-w-[580px]"
             >
               {MOODS.map((mood, idx) => {
                 const isActive = mood.id === activeMood.id;
@@ -371,7 +392,7 @@ export default function EvattoDreamStage() {
                     key={mood.id}
                     ref={el => { cardRefs.current[idx] = el; }}
                     onClick={() => switchMood(mood)}
-                    className="relative cursor-pointer transition-all duration-500 rounded-3xl overflow-hidden flex-1 group"
+                    className={`relative cursor-pointer transition-all duration-500 rounded-3xl overflow-hidden flex-1 group w-full mood-card-${mood.id}`}
                     style={{
                       height: isActive ? "380px" : "320px",
                       transform: `translateZ(${isActive ? "60px" : "0px"})`,
@@ -382,6 +403,16 @@ export default function EvattoDreamStage() {
                       willChange: "transform, height",
                     }}
                   >
+                    {/* Dynamic CSS override tag for small screen vertical stacking */}
+                    <style>{`
+                      @media (max-width: 639px) {
+                        .mood-card-${mood.id} {
+                          height: ${isActive ? "170px" : "120px"} !important;
+                          transform: none !important;
+                        }
+                      }
+                    `}</style>
+
                     {/* Image backdrop */}
                     <img 
                       src={mood.image} 
@@ -418,7 +449,7 @@ export default function EvattoDreamStage() {
         </div>
 
         {/* Feature points */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 pt-8 border-t border-white/10 mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pt-8 border-t border-white/10 mt-6">
           <div className="flex items-center gap-3">
             <ShieldCheck className="w-5 h-5" style={{ color: activeMood.accentColor }} />
             <span className="text-xs uppercase tracking-wider text-gray-400 font-medium">100% Configurable Spacing</span>
@@ -427,7 +458,7 @@ export default function EvattoDreamStage() {
             <Sparkles className="w-5 h-5" style={{ color: activeMood.accentColor }} />
             <span className="text-xs uppercase tracking-wider text-gray-400 font-medium">L-Acoustics Sound System</span>
           </div>
-          <div className="flex items-center gap-3 col-span-2 md:col-span-1">
+          <div className="flex items-center gap-3">
             <Calendar className="w-5 h-5" style={{ color: activeMood.accentColor }} />
             <span className="text-xs uppercase tracking-wider text-gray-400 font-medium">Interactive Projection Mapping</span>
           </div>

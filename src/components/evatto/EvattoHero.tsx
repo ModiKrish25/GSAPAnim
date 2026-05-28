@@ -63,7 +63,7 @@ export default function EvattoHero() {
         trigger: sectionRef.current, 
         start: "top top", 
         end: "bottom top", 
-        scrub: 1.1,
+        scrub: 0.4,
       },
     });
 

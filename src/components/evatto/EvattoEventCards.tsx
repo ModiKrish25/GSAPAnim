@@ -134,7 +134,7 @@ export default function EvattoEventCards() {
             trigger: containerRef.current,
             start: "top top",      // start pinning when top of section hits top of screen
             end: "+=1200",         // scroll distance for the animations to complete
-            scrub: 1.2,            // smooth tracking
+            scrub: 0.5,            // smooth tracking
             pin: true,             // pin the section!
             anticipatePin: 1,
           },
@@ -187,7 +187,7 @@ export default function EvattoEventCards() {
             trigger: containerRef.current,
             start: "top top",
             end: "+=1000",
-            scrub: 1.2,
+            scrub: 0.5,
             pin: true,
             anticipatePin: 1,
           },
@@ -222,13 +222,23 @@ export default function EvattoEventCards() {
     <section
       ref={containerRef}
       id="events"
-      className="relative min-h-[90vh] md:min-h-screen flex flex-col items-center justify-start pt-24 pb-20 overflow-hidden"
+      className="relative min-h-[90vh] md:min-h-screen flex flex-col items-center justify-start pt-20 md:pt-24 pb-16 md:pb-20 overflow-hidden"
       style={{ backgroundColor: "#FDFBF7" }}
     >
+      {/* Responsive card size overrides */}
+      <style>{`
+        @media (max-width: 480px) {
+          .event-card-inner { width: 200px !important; height: 280px !important; margin-left: -100px !important; }
+        }
+        @media (min-width: 481px) and (max-width: 767px) {
+          .event-card-inner { width: 230px !important; height: 320px !important; margin-left: -115px !important; }
+        }
+      `}</style>
+
       {/* Heading */}
       <h2
         ref={titleRef}
-        className="font-cormorant font-light text-5xl md:text-7xl text-gray-900 mb-28 tracking-tight text-center opacity-0"
+        className="font-cormorant font-light text-4xl sm:text-5xl md:text-7xl text-gray-900 mb-20 md:mb-28 tracking-tight text-center opacity-0 px-6"
       >
         Featured Event
       </h2>
@@ -239,11 +249,11 @@ export default function EvattoEventCards() {
           <div
             key={card.id}
             ref={(el) => { cardRefs.current[i] = el; }}
-            className="absolute shadow-lg rounded-3xl"
+            className="absolute shadow-lg rounded-3xl event-card-inner"
             style={{
               width: 260,
               height: 360,
-              transformStyle: "preserve-3d", // standard 3D context
+              transformStyle: "preserve-3d",
               perspective: 1200,
               top: 0,
               left: "50%",

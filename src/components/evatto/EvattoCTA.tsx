@@ -63,7 +63,7 @@ export default function EvattoCTA() {
           trigger: parent,
           start: "top 95%",    // begins as section enters from bottom
           end: "bottom 30%",   // ends when bottom of section reaches 30% of screen height
-          scrub: 1.5,          // elastic smooth scroll scrub tracking
+          scrub: 0.5,          // instantaneous scroll scrub tracking
         }
       });
 
@@ -118,12 +118,12 @@ export default function EvattoCTA() {
       ))}
 
       {/* Central content */}
-      <div ref={textRef} className="relative z-20 text-center px-8 py-40 md:py-52 flex flex-col items-center">
+      <div ref={textRef} className="relative z-20 text-center px-6 sm:px-8 py-20 sm:py-32 md:py-52 flex flex-col items-center">
         <p className="t-line opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.35em", color: "rgba(26,26,26,0.45)", marginBottom: "18px" }}>Get started</p>
-        <h2 className="t-line opacity-0" style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(3rem, 8vw, 7.5rem)", fontWeight: 300, color: "#1A1A1A", lineHeight: 1.0, maxWidth: "700px" }}>
+        <h2 className="t-line opacity-0" style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.6rem, 8vw, 7.5rem)", fontWeight: 300, color: "#1A1A1A", lineHeight: 1.0, maxWidth: "700px" }}>
           Ready to host with us?
         </h2>
-        <p className="t-line opacity-0 mt-5" style={{ fontFamily: "var(--font-inter)", fontSize: "13px", color: "rgba(26,26,26,0.55)", maxWidth: "380px", lineHeight: 1.65 }}>
+        <p className="t-line opacity-0 mt-5" style={{ fontFamily: "var(--font-inter)", fontSize: "13px", color: "rgba(26,26,26,0.55)", maxWidth: "440px", lineHeight: 1.65 }}>
           Create your unforgettable events with us. From intimate gatherings to grand celebrations, we have the perfect space.
         </p>
         <button 

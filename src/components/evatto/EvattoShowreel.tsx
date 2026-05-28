@@ -69,7 +69,7 @@ export default function EvattoShowreel() {
           start: "top top",
           end: "+=3000",
           pin: true,
-          scrub: 1.4,
+          scrub: 0.5,
           anticipatePin: 1,
         },
       });
@@ -148,7 +148,7 @@ export default function EvattoShowreel() {
           {/* Text content */}
           <div
             ref={el => { textRefs.current[i] = el; }}
-            className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-6"
+            className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4 sm:px-8 md:px-6"
           >
             {/* Scene badge */}
             <p

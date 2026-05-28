@@ -31,7 +31,7 @@ export default function EvattoTextScroller() {
             trigger: parent,
             start: "top bottom",
             end: "bottom top",
-            scrub: 1.6,
+            scrub: 0.5,
           }
         }
       );
@@ -45,20 +45,13 @@ export default function EvattoTextScroller() {
             trigger: parent,
             start: "top bottom",
             end: "bottom top",
-            scrub: 1.6,
+            scrub: 0.5,
           }
         }
       );
 
-      // Subtle floating perspective wiggle
-      gsap.to(parent, {
-        rotateX: 18,
-        rotateY: -8,
-        duration: 4,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
+      // NOTE: No infinite rotation tween on the parent — the static 3D perspective
+      // is handled purely via CSS @media query to avoid style conflicts and layout cost.
 
     }, sectionRef);
 
@@ -68,16 +61,23 @@ export default function EvattoTextScroller() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full overflow-hidden py-20 md:py-32 flex flex-col justify-center gap-6 md:gap-10 select-none"
+      className="relative w-full overflow-hidden py-16 md:py-32 flex flex-col justify-center gap-4 md:gap-10 select-none evatto-text-scroller"
       style={{
         background: "#0e0f11",
-        perspective: "1200px",
-        transformStyle: "preserve-3d",
-        transform: "rotateX(15deg) rotateY(-5deg) rotateZ(-3deg)",
         borderTop: "1px solid rgba(255, 255, 255, 0.05)",
         borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
       }}
     >
+      {/* Apply 3D perspective only on md+ — avoid clipping on mobile */}
+      <style>{`
+        @media (min-width: 768px) {
+          .evatto-text-scroller {
+            perspective: 1200px;
+            transform-style: preserve-3d;
+            transform: rotateX(15deg) rotateY(-5deg) rotateZ(-3deg);
+          }
+        }
+      `}</style>
       {/* Background soft ambient spot */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-40 mix-blend-screen"

@@ -108,7 +108,27 @@ body {
 .hover-zoom { transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .hover-zoom:hover { transform: scale(1.06); }
 
-/* Remove cursor on desktop for interactive elements */
+/* GPU promotion hints for GSAP-animated containers */
+.will-change-transform {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Isolate repaint scope for heavy animated sections */
+.evatto-text-scroller,
+#events,
+#venues,
+#blog {
+  contain: layout style;
+}
+
+/* Smooth scroll for the whole page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fix: remove cursor:none from interactive elements — it was hiding the pointer on clicks */
 @media (min-width: 768px) {
-  a, button, [data-cursor] { cursor: none !important; }
+  a, button, [data-cursor] { cursor: pointer; }
 }

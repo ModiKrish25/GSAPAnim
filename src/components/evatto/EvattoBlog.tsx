@@ -81,7 +81,7 @@ export default function EvattoBlog() {
         </div>
 
         {/* Cards */}
-        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-7">
+        <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7">
           {POSTS.map((p, i) => (
             <article key={i} className="blog-card group opacity-0 cursor-pointer">
               <div className="relative overflow-hidden rounded-2xl mb-5 aspect-[4/3]">

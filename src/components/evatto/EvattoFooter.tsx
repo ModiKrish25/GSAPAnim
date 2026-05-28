@@ -92,7 +92,7 @@ export default function EvattoFooter() {
           </div>
 
           {/* Right: utility links + contact + social */}
-          <div className="md:col-span-6 grid grid-cols-2 gap-8">
+          <div className="md:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-8">
             {/* Utility col 1 */}
             <div>
               <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-[#FDFBF7]/30 mb-5">Pages</p>

@@ -47,7 +47,7 @@ export default function EvattoVenues() {
           scrollTrigger: {
             trigger: sectionRef.current,
             pin: true,
-            scrub: 1.2,
+            scrub: 0.5,
             start: "top top",
             end: () => `+=${trackW}`,
             invalidateOnRefresh: true,
@@ -90,15 +90,27 @@ export default function EvattoVenues() {
     <section
       ref={sectionRef}
       id="venues"
-      style={{ background: "#0e0f11", overflow: "hidden", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center" }}
+      className="overflow-hidden flex flex-col justify-center"
+      style={{ background: "#0e0f11" }}
     >
+      {/* Responsive height: natural on mobile, 100vh pinned on desktop */}
+      <style>{`
+        @media (min-width: 768px) {
+          #venues { height: 100vh; }
+        }
+        @media (max-width: 767px) {
+          #venues { min-height: 100svh; padding-bottom: 3rem; }
+          .venue-card { height: 340px !important; width: 100% !important; min-width: 0 !important; }
+        }
+      `}</style>
+
       <div className="w-full flex-1 flex flex-col justify-center py-6">
         {/* Header */}
         <div ref={headerRef} className="px-6 md:px-14 pb-8 shrink-0">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
               <p className="h-line opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.35em", color: "rgba(253,251,247,0.35)", marginBottom: "12px" }}>Our spaces</p>
-              <h2 className="h-line opacity-0" style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.2rem, 5vw, 4.5rem)", fontWeight: 300, color: "#FDFBF7", maxWidth: "520px", lineHeight: 1.1 }}>Explore our event spaces</h2>
+              <h2 className="h-line opacity-0" style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2rem, 5vw, 4.5rem)", fontWeight: 300, color: "#FDFBF7", maxWidth: "520px", lineHeight: 1.1 }}>Explore our event spaces</h2>
             </div>
             <a href="/spaces" className="h-line btn-pill btn-pill-outline-light self-start opacity-0 cursor-pointer">
               View all spaces <ArrowUpRight size={13} />
@@ -109,20 +121,20 @@ export default function EvattoVenues() {
         {/* Horizontal track — vertically centered cards */}
         <div
           ref={trackRef}
-          className="flex flex-col md:flex-row gap-6 px-6 md:px-14 w-full md:w-max items-center justify-center"
+          className="flex flex-col md:flex-row gap-5 px-6 md:px-14 w-full md:w-max items-stretch md:items-center"
           style={{ willChange: "transform" }}
         >
           {VENUES.map((v) => (
             <div
               key={v.id}
               className="venue-card shrink-0 rounded-3xl overflow-hidden relative group cursor-pointer"
-              style={{ width: "100%", height: "480px", minWidth: "320px", maxWidth: "100%" }}
+              style={{ width: "100%", height: "420px", minWidth: "320px", maxWidth: "100%" }}
             >
               {/* Override width for desktop */}
               <style>{`@media(min-width:768px){ .venue-card { width: 420px !important; height: 480px !important; } }`}</style>
               <img src={v.image} alt={v.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
               <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(14,15,17,0.95) 0%, rgba(14,15,17,0.35) 55%, transparent 100%)" }} />
-              <div className="absolute inset-0 p-6 flex flex-col justify-end">
+              <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
                 <p style={{ fontFamily: "var(--font-inter)", fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.22em", color: "rgba(253,251,247,0.4)", marginBottom: "8px" }}>{v.style}</p>
                 <h3 style={{ fontFamily: "var(--font-cormorant)", fontSize: "1.75rem", fontWeight: 300, color: "#FDFBF7", marginBottom: "12px" }}>{v.name}</h3>
                 <div className="rounded-2xl p-4 mb-4" style={{ background: "rgba(253,251,247,0.06)", border: "1px solid rgba(253,251,247,0.1)", backdropFilter: "blur(8px)" }}>

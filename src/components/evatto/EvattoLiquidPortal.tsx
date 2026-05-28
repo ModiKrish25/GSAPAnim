@@ -20,35 +20,35 @@ export default function EvattoLiquidPortal() {
       const overlay = overlayRef.current;
       if (!container || !blob) return;
 
-      // 1. BUTTERY INFINITE FLOATING MORPH
-      // Smoothly morphs the border-radius corners like a floating oil droplet in liquid
-      gsap.to(blob, {
+      // 1. BUTTERY INFINITE FLOATING MORPH — force3D keeps element on GPU layer
+      const morphTl = gsap.timeline({ repeat: -1, yoyo: true });
+      morphTl.to(blob, {
         borderRadius: "42% 58% 70% 30% / 45% 45% 55% 55%",
         duration: 3,
-        repeat: -1,
-        yoyo: true,
         ease: "sine.inOut",
-      });
-
-      gsap.to(blob, {
+        force3D: true,
+      })
+      .to(blob, {
         borderRadius: "70% 30% 52% 48% / 60% 40% 60% 40%",
-        duration: 4,
-        delay: 1.5,
-        repeat: -1,
-        yoyo: true,
+        duration: 3.5,
         ease: "sine.inOut",
+        force3D: true,
       });
 
       // 2. SCROLL PORTAL EXPANSION
-      // As you scroll down, the liquid bubble morphs to fill the screen and transition to the showreel
+      // Tightened scrub to 0.5 for immediate response, and pause looping tweens when inactive
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: "top top",
           end: "+=1200",
           pin: true,
-          scrub: 1.3,
+          scrub: 0.5,
           anticipatePin: 1,
+          onEnter: () => morphTl.resume(),
+          onLeave: () => morphTl.pause(),
+          onEnterBack: () => morphTl.resume(),
+          onLeaveBack: () => morphTl.pause(),
         }
       });
 
@@ -118,12 +118,14 @@ export default function EvattoLiquidPortal() {
           transformOrigin: "center center",
         }}
       >
-        {/* Portal preview media */}
+      {/* Portal preview media — no CSS transition, GSAP owns all transforms */}
         <div 
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-105"
+          className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1519741347686-c1e0aadf4611?auto=format&fit=crop&q=85&w=1200')",
             filter: "brightness(0.72)",
+            transform: "scale(1.05)",
+            willChange: "transform",
           }}
         />
 
