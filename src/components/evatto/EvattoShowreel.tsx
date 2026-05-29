@@ -9,9 +9,9 @@ const SCENES = [
     num: "01",
     category: "Weddings & Ceremonies",
     title: "Where\nLove Begins",
-    image: "https://images.unsplash.com/photo-1519741347686-c1e0aadf4611?auto=format&fit=crop&q=85&w=1920",
+    image: "/showreel-wedding.jpg",
     accent: "#D4AF37",
-    origin: "50% 50%",
+    origin: "50% 45%",
   },
   {
     num: "02",

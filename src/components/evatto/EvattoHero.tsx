@@ -77,13 +77,13 @@ export default function EvattoHero() {
     <section ref={sectionRef} className="relative w-full flex flex-col justify-end overflow-hidden"
       style={{ height: "100svh", minHeight: "640px" }}>
 
-      {/* Background */}
-      <div ref={bgRef} className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=90&w=2200')`, willChange: "transform" }} />
+      {/* Background — Indian wedding floral chandelier */}
+      <div ref={bgRef} className="absolute inset-0 bg-cover bg-top bg-no-repeat"
+        style={{ backgroundImage: `url('/hero-bg.jpg')`, willChange: "transform" }} />
 
-      {/* Gradient overlay */}
+      {/* Gradient overlay — neutral dark tint to complement elegant table setting */}
       <div ref={overlayRef} className="absolute inset-0"
-        style={{ background: "linear-gradient(to top, rgba(10,8,6,0.88) 0%, rgba(10,8,6,0.38) 55%, rgba(10,8,6,0.08) 100%)", opacity: 0 }} />
+        style={{ background: "linear-gradient(to top, rgba(10,8,6,0.95) 0%, rgba(10,8,6,0.45) 50%, rgba(10,8,6,0.15) 100%)", opacity: 0 }} />
 
       {/* Content */}
       <div className="relative z-10 px-6 md:px-14 pb-14 md:pb-20 w-full" style={{ maxWidth: "1380px", margin: "0 auto" }}>
