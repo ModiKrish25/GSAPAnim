@@ -9,6 +9,7 @@ import EvattoEventCards from "@/components/evatto/EvattoEventCards";
 import EvattoVenues from "@/components/evatto/EvattoVenues";
 import EvattoTextScroller from "@/components/evatto/EvattoTextScroller";
 import EvattoDreamStage from "@/components/evatto/EvattoDreamStage";
+import EvattoTestimonials from "@/components/evatto/EvattoTestimonials";
 import EvattoCTA from "@/components/evatto/EvattoCTA";
 import EvattoBlog from "@/components/evatto/EvattoBlog";
 import EvattoFooter from "@/components/evatto/EvattoFooter";
@@ -43,7 +44,10 @@ export default function Home() {
       {/* 8. Dream Stage — 3D mood visualiser */}
       <EvattoDreamStage />
 
-      {/* 9. CTA — flying centered-to-corner images */}
+      {/* 9. Testimonials */}
+      <EvattoTestimonials />
+
+      {/* 10. CTA — flying centered-to-corner images */}
       <EvattoCTA />
 
       {/* 10. Blog — staggered skew cards and looping partners marquee */}

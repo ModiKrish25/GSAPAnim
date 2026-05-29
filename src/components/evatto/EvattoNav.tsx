@@ -27,9 +27,10 @@ export function LetterHover({ text, className = "" }: { text: string; className?
 }
 
 const NAV_LINKS = [
-  { label: "Home",        sub: ["Home 1", "Home 2"] },
+  { label: "Home",        sub: [] },
   { label: "Pages",       sub: ["About us", "Event", "Gallery", "Pricing", "Schedule visit"] },
   { label: "Venue space", sub: ["Executive Hall", "Garden Courtyard", "Forever Pavilion", "Garden Veranda"] },
+  { label: "Services",    sub: [] },
   { label: "Blog",        sub: ["All posts", "Blog detail"] },
   { label: "Contact",     sub: [] },
 ];
@@ -195,21 +196,21 @@ export default function EvattoNav() {
 
     const targetId = targetIdMap[label.toLowerCase()];
 
-    if (pathname !== "/") {
+    if (label.toLowerCase() === "services") {
+      window.location.href = "/services";
+    } else if (label.toLowerCase() === "contact") {
+      window.location.href = "/contact";
+    } else if (pathname !== "/") {
       if (label.toLowerCase() === "home") {
         window.location.href = "/";
       } else if (targetId) {
         window.location.href = `/#${targetId}`;
-      } else if (label.toLowerCase() === "contact") {
-        window.location.href = "/?book=true";
       }
     } else {
       if (label.toLowerCase() === "home") {
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else if (targetId) {
         document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
-      } else if (label.toLowerCase() === "contact") {
-        window.dispatchEvent(new CustomEvent("open-book-tour"));
       }
     }
   };

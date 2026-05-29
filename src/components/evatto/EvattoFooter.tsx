@@ -149,7 +149,7 @@ export default function EvattoFooter() {
       </div>
 
       {/* Giant outlined marquee text */}
-      <div className="relative overflow-hidden py-6 border-t border-[#FDFBF7]/5">
+      {/* <div className="relative overflow-hidden py-6 border-t border-[#FDFBF7]/5">
         <div className="whitespace-nowrap">
           <span
             className="font-cormorant font-light select-none"
@@ -164,7 +164,7 @@ export default function EvattoFooter() {
             THE STAGE OF DREAMS &nbsp;&nbsp;&nbsp; THE STAGE OF DREAMS &nbsp;&nbsp;&nbsp;
           </span>
         </div>
-      </div>
+      </div> */}
     </footer>
   );
 }
