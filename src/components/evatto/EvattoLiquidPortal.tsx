@@ -28,12 +28,12 @@ export default function EvattoLiquidPortal() {
         ease: "sine.inOut",
         force3D: true,
       })
-      .to(blob, {
-        borderRadius: "70% 30% 52% 48% / 60% 40% 60% 40%",
-        duration: 3.5,
-        ease: "sine.inOut",
-        force3D: true,
-      });
+        .to(blob, {
+          borderRadius: "70% 30% 52% 48% / 60% 40% 60% 40%",
+          duration: 3.5,
+          ease: "sine.inOut",
+          force3D: true,
+        });
 
       // 2. SCROLL PORTAL EXPANSION
       // Tightened scrub to 0.5 for immediate response, and pause looping tweens when inactive
@@ -86,7 +86,7 @@ export default function EvattoLiquidPortal() {
       style={{ height: "100vh", background: "#FDFBF7" }}
     >
       {/* Background Soft Glow */}
-      <div 
+      <div
         className="absolute inset-0 z-0 opacity-80"
         style={{
           background: "radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 60%)"
@@ -94,8 +94,8 @@ export default function EvattoLiquidPortal() {
       />
 
       {/* Central Floating Header */}
-      <div 
-        ref={textRef} 
+      <div
+        ref={textRef}
         className="absolute top-20 text-center px-6 z-20 pointer-events-none"
         style={{ fontFamily: "var(--font-inter)" }}
       >
@@ -118,11 +118,11 @@ export default function EvattoLiquidPortal() {
           transformOrigin: "center center",
         }}
       >
-      {/* Portal preview media — no CSS transition, GSAP owns all transforms */}
-        <div 
+        {/* Portal preview media — no CSS transition, GSAP owns all transforms */}
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1519741347686-c1e0aadf4611?auto=format&fit=crop&q=85&w=1200')",
+            backgroundImage: "url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=85&w=1300')",
             filter: "brightness(0.72)",
             transform: "scale(1.05)",
             willChange: "transform",
@@ -130,13 +130,13 @@ export default function EvattoLiquidPortal() {
         />
 
         {/* Ambient Overlay inside the lens */}
-        <div 
+        <div
           ref={overlayRef}
-          className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" 
+          className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"
         />
 
         {/* Lens reflection highlight */}
-        <div 
+        <div
           className="absolute inset-0 pointer-events-none mix-blend-overlay"
           style={{
             background: "linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 50%, rgba(0,0,0,0.2) 100%)"

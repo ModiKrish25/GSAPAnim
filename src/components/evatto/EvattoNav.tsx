@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
@@ -80,6 +80,7 @@ function HamburgerIcon({ open }: { open: boolean }) {
 
 // ── Main Navbar ───────────────────────────────────────────────
 export default function EvattoNav() {
+  const router = useRouter();
   const [open,      setOpen]      = useState(false);
   const [scrolled,  setScrolled]  = useState(false);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
@@ -89,6 +90,25 @@ export default function EvattoNav() {
   const linksRef    = useRef<HTMLDivElement>(null);
   const sideRef     = useRef<HTMLDivElement>(null);
   const hoverPillRef = useRef<HTMLDivElement>(null);
+  const progressRef  = useRef<HTMLDivElement>(null);
+
+  // ── High-performance Scroll Progress Bar ──────────────────
+  useEffect(() => {
+    const handleScroll = () => {
+      const docHeight = document.documentElement.scrollHeight;
+      const winHeight = window.innerHeight;
+      const totalHeight = docHeight - winHeight;
+      const progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
+      if (progressRef.current) {
+        progressRef.current.style.width = `${progress}%`;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // ── Entrance on load ──────────────────────────────────────
   useEffect(() => {
@@ -194,16 +214,16 @@ export default function EvattoNav() {
     const targetId = targetIdMap[label.toLowerCase()];
 
     if (label.toLowerCase() === "services") {
-      window.location.href = "/services";
+      router.push("/services");
     } else if (label.toLowerCase() === "gallery") {
-      window.location.href = "/gallery";
+      router.push("/gallery");
     } else if (label.toLowerCase() === "contact") {
-      window.location.href = "/contact";
+      router.push("/contact");
     } else if (pathname !== "/") {
       if (label.toLowerCase() === "home") {
-        window.location.href = "/";
+        router.push("/");
       } else if (targetId) {
-        window.location.href = `/#${targetId}`;
+        router.push(`/#${targetId}`);
       }
     } else {
       if (label.toLowerCase() === "home") {
@@ -216,6 +236,13 @@ export default function EvattoNav() {
 
   return (
     <>
+      {/* ── High-performance Scroll Progress Bar above Navbar ── */}
+      <div
+        ref={progressRef}
+        className="fixed top-0 left-0 h-[3px] bg-gradient-to-r from-[#1A1A1A] to-[#C5A880] z-[100] pointer-events-none transition-all duration-75 ease-out"
+        style={{ width: "0%" }}
+      />
+
       {/* ── Fixed floating glass header capsule ── */}
       <div className="fixed top-0 left-0 w-full z-50 px-4 md:px-8 py-4 pointer-events-none">
         <header
@@ -267,7 +294,7 @@ export default function EvattoNav() {
                 onClick={e => handleNavClick(e, link.label)}
                 onMouseEnter={handleLinkEnter}
                 onMouseLeave={handleLinkLeave}
-                className="nav-desktop-link px-4 py-1.5 rounded-full text-xs font-semibold text-black/70 hover:text-black transition-colors relative z-10 tracking-wide cursor-pointer"
+                className="nav-desktop-link px-5 py-2 rounded-full text-sm font-semibold text-black/70 hover:text-black transition-colors relative z-10 tracking-wide cursor-pointer"
                 style={{ fontFamily: "var(--font-inter)" }}
               >
                 {link.label}
@@ -275,35 +302,12 @@ export default function EvattoNav() {
             ))}
           </nav>
 
-          {/* Right side: Search, CTA and Hamburger */}
-          <div className="flex items-center gap-3">
-            {/* Search — desktop only */}
-            <button
-              className="hidden md:flex items-center justify-center w-9 h-9 rounded-full hover:bg-black/5 transition-colors text-black/60 hover:text-black"
-              aria-label="Search"
-            >
-              <svg width="14" height="14" viewBox="0 0 15 15" fill="none">
-                <path d="M1 14l3.5-3.5M13 5.5a5.5 5.5 0 11-11 0 5.5 5.5 0 0111 0z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              </svg>
-            </button>
-
-            {/* Book CTA — desktop */}
-            <button
-              onClick={() => window.dispatchEvent(new CustomEvent("open-book-tour"))}
-              className="hidden md:inline-flex items-center gap-2 rounded-full px-5 py-2 text-xs font-semibold transition-all bg-black text-white hover:bg-black/85 active:scale-95 shadow-sm cursor-pointer"
-              style={{ fontFamily: "var(--font-inter)", letterSpacing: "0.05em" }}
-            >
-              Book a tour
-              <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
-                <path d="M1 9L9 1M9 1H4M9 1v5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-
-            {/* Hamburger button with custom layout */}
+          {/* Right side: Balanced layout container containing mobile Hamburger Menu */}
+          <div className="flex items-center justify-end lg:w-[170px]">
             <button
               onClick={() => setOpen(o => !o)}
               aria-label={open ? "Close menu" : "Open menu"}
-              className="group flex items-center gap-2 h-9 pl-3.5 pr-2.5 rounded-full border border-black/10 hover:border-black/20 hover:bg-black/[0.02] active:scale-95 transition-all duration-300"
+              className="lg:hidden group flex items-center gap-2 h-9 pl-3.5 pr-2.5 rounded-full border border-black/10 hover:border-black/20 hover:bg-black/[0.02] active:scale-95 transition-all duration-300 cursor-pointer pointer-events-auto"
             >
               <span 
                 className="text-[10px] font-bold tracking-[0.18em] uppercase text-black/70 group-hover:text-black hidden sm:inline"

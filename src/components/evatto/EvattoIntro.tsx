@@ -4,51 +4,54 @@ import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
-const TOP_GROUP = [
+const SHOWCASE_ITEMS = [
   {
-    src: "https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?auto=format&fit=crop&q=80&w=800",
-    alt: "Woman in scenic field",
-    style: { top: "0%", left: "1%", width: "26%", aspectRatio: "3/4" },
-    rotate: -2,
-    zIndex: 3,
+    id: 1,
+    src: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800",
+    category: "Altars & Mandaps",
+    title: "Grand Floral Archway",
+    desc: "Lush botanical arrangements crafting the absolute dream ceremony backdrop.",
+    aspect: "aspect-[3/4]",
   },
   {
-    src: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=800",
-    alt: "Aerial view of tropical pool",
-    style: { top: "22%", left: "19%", width: "22%", aspectRatio: "4/3" },
-    rotate: 3,
-    zIndex: 4,
+    id: 2,
+    src: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&q=80&w=800",
+    category: "Walkways & Entrances",
+    title: "Enchanted Aisle",
+    desc: "A soft, romantic pathway illuminated by golden candles and fresh pastel petals.",
+    aspect: "aspect-[4/3]",
   },
   {
+    id: 3,
+    src: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=800",
+    category: "Ceiling & Lighting",
+    title: "Imperial Wisteria Canopy",
+    desc: "Extravagant hanging floral installations coupled with glowing fairy lights.",
+    aspect: "aspect-[4/3]",
+  },
+  {
+    id: 4,
+    src: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&q=80&w=800",
+    category: "Table Styling",
+    title: "Candlelit Banquet",
+    desc: "Intimate dining tables set with fine glass, brass, and warm candle arrays.",
+    aspect: "aspect-[3/4]",
+  },
+  {
+    id: 5,
     src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800",
-    alt: "Beach wedding ceremony",
-    style: { top: "54%", left: "8%", width: "22%", aspectRatio: "4/3" },
-    rotate: -1.5,
-    zIndex: 2,
-  },
-];
-
-const BOT_GROUP = [
-  {
-    src: "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&q=80&w=800",
-    alt: "White dome wedding gazebo",
-    style: { top: "3%", left: "43%", width: "28%", aspectRatio: "3/4" },
-    rotate: 0.5,
-    zIndex: 3,
+    category: "Banquet Halls",
+    title: "Golden Royal Stage",
+    desc: "A majestic reception lounge dressed in signature ivory and champagne tones.",
+    aspect: "aspect-[3/4]",
   },
   {
-    src: "https://images.unsplash.com/photo-1519741347686-c1e0aadf4611?auto=format&fit=crop&q=80&w=800",
-    alt: "Beach chair ceremony setup",
-    style: { top: "40%", left: "62%", width: "22%", aspectRatio: "3/4" },
-    rotate: 2,
-    zIndex: 2,
-  },
-  {
-    src: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&q=80&w=800",
-    alt: "Colorful festival celebration",
-    style: { top: "0%", left: "79%", width: "20%", aspectRatio: "3/4" },
-    rotate: -2.5,
-    zIndex: 4,
+    id: 6,
+    src: "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80&w=800",
+    category: "Floral Centerpieces",
+    title: "Blossom Sphere Design",
+    desc: "Breathtaking tall floral structures that elevate conversation and dining drama.",
+    aspect: "aspect-[4/3]",
   },
 ];
 
@@ -59,11 +62,59 @@ const STATS = [
   { end: 15,  decimals: 0, suffix: "+", label: "Years of excellence" },
 ];
 
+function ShowcaseCard({ item }: { item: typeof SHOWCASE_ITEMS[0] }) {
+  return (
+    <div className="showcase-card group relative bg-white p-3.5 rounded-[22px] border border-black/[0.04] shadow-[0_12px_45px_rgba(0,0,0,0.03)] hover:shadow-[0_25px_65px_rgba(0,0,0,0.08)] transition-all duration-500 overflow-hidden cursor-pointer">
+      {/* Image container */}
+      <div className={`w-full ${item.aspect} rounded-[16px] overflow-hidden relative`}>
+        {/* Soft elegant shadow overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+        
+        <img
+          src={item.src}
+          alt={item.title}
+          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform"
+          loading="lazy"
+        />
+      </div>
+
+      {/* Meta details */}
+      <div className="mt-4 px-1 flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <span 
+            className="text-[9px] font-bold tracking-[0.2em] uppercase text-black/35"
+            style={{ fontFamily: "var(--font-inter)" }}
+          >
+            {item.category}
+          </span>
+          <h4 
+            className="font-serif text-[1.25rem] text-black/90 group-hover:text-black transition-colors font-medium mt-0.5"
+            style={{ fontFamily: "var(--font-cormorant)" }}
+          >
+            {item.title}
+          </h4>
+          <p 
+            className="text-xs text-black/50 font-normal mt-1 leading-relaxed"
+            style={{ fontFamily: "var(--font-inter)" }}
+          >
+            {item.desc}
+          </p>
+        </div>
+
+        {/* Elegant Gold Arrow Button */}
+        <div className="w-9 h-9 rounded-full border border-black/10 flex items-center justify-center text-black/60 group-hover:bg-[#C5A880] group-hover:text-white group-hover:border-[#C5A880] transition-all duration-500 shrink-0 mt-1">
+          <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function EvattoIntro() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const canvasRef  = useRef<HTMLDivElement>(null);
-  const topRefs    = useRef<(HTMLDivElement | null)[]>([]);
-  const botRefs    = useRef<(HTMLDivElement | null)[]>([]);
+  const gridRef    = useRef<HTMLDivElement>(null);
   const statsRef   = useRef<HTMLDivElement>(null);
   const numRefs    = useRef<(HTMLSpanElement | null)[]>([]);
 
@@ -71,40 +122,52 @@ export default function EvattoIntro() {
     if (typeof window === "undefined") return;
     gsap.registerPlugin(ScrollTrigger);
 
-    const ctx = gsap.context(() => {
-      const tops = topRefs.current.filter(Boolean) as HTMLDivElement[];
-      const bots = botRefs.current.filter(Boolean) as HTMLDivElement[];
+    const cards = gridRef.current?.querySelectorAll(".showcase-card") ?? [];
+    
+    // Check if we've already animated in this session to make page navigation feel instant and professional
+    const hasAnimated = sessionStorage.getItem("evatto_gallery_animated") === "true";
 
-      // Crisp initial state - avoid huge offscreen distances that cause jitter
-      gsap.set(tops, { y: -300, opacity: 0, force3D: true });
-      gsap.set(bots, { y: 300,  opacity: 0, force3D: true });
+    if (hasAnimated) {
+      // Set showcase cards immediately to their active visible state
+      gsap.set(cards, { y: 0, opacity: 1 });
+      
+      // Set stats immediately to their active count state
+      const statsItems = statsRef.current?.querySelectorAll(".stat-item") ?? [];
+      gsap.set(statsItems, { opacity: 1, y: 0 });
 
-      // Smooth scroll-triggered entrance — NOT scrubbed, just once, with easing
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: canvasRef.current,
-          start: "top 75%",
-          once: true,
-        },
+      STATS.forEach((stat, i) => {
+        const el = numRefs.current[i];
+        if (el) {
+          el.textContent = (stat.decimals > 0
+            ? stat.end.toFixed(stat.decimals)
+            : stat.end.toString()
+          ) + stat.suffix;
+        }
       });
+      return;
+    }
 
-      tl.to(tops, {
-        y: 0,
-        opacity: 1,
-        stagger: 0.12,
-        duration: 1.1,
-        ease: "power3.out",
-        force3D: true,
-      }, 0);
-
-      tl.to(bots, {
-        y: 0,
-        opacity: 1,
-        stagger: 0.12,
-        duration: 1.1,
-        ease: "power3.out",
-        force3D: true,
-      }, 0.1);
+    const ctx = gsap.context(() => {
+      // Smooth staggered entrance for cards
+      gsap.fromTo(
+        cards,
+        { y: 60, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.12,
+          duration: 1.2,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: gridRef.current,
+            start: "top 82%",
+            once: true,
+          },
+          onComplete: () => {
+            sessionStorage.setItem("evatto_gallery_animated", "true");
+          }
+        }
+      );
 
       /* Stats entrance + count-up */
       gsap.fromTo(
@@ -119,6 +182,7 @@ export default function EvattoIntro() {
       STATS.forEach((stat, i) => {
         const el = numRefs.current[i];
         if (!el) return;
+        el.textContent = "0" + stat.suffix;
         const counter = { val: 0 };
         gsap.to(counter, {
           val: stat.end, duration: 2.2, ease: "power2.out",
@@ -141,86 +205,33 @@ export default function EvattoIntro() {
     <section
       ref={sectionRef}
       style={{ background: "#FDFBF7", overflow: "hidden" }}
-      className="w-full"
+      className="w-full pt-16 md:pt-32"
     >
-      {/* Mobile: simple 2-col grid */}
-      <div className="block md:hidden px-6 pt-10 pb-4">
-        <div className="grid grid-cols-2 gap-3">
-          {[...TOP_GROUP, ...BOT_GROUP].slice(0, 4).map((img, i) => (
-            <div
-              key={i}
-              className="rounded-2xl overflow-hidden"
-              style={{ aspectRatio: "3/4" }}
-            >
-              <img
-                src={img.src}
-                alt={img.alt}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
+      {/* 3-Column Luxury Staggered Masonry Grid */}
+      <div
+        ref={gridRef}
+        className="max-w-[1380px] mx-auto px-6 md:px-14 grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14"
+      >
+        {/* Column 1: Staggered Up */}
+        <div className="flex flex-col gap-10 lg:gap-14 md:-translate-y-8">
+          {[SHOWCASE_ITEMS[0], SHOWCASE_ITEMS[1]].map((item) => (
+            <ShowcaseCard key={item.id} item={item} />
           ))}
         </div>
-      </div>
 
-      {/* Desktop: overlapping mosaic */}
-      <div
-        ref={canvasRef}
-        className="hidden md:block"
-        style={{
-          position: "relative",
-          width: "100%",
-          height: "clamp(520px, 75vw, 860px)",
-          overflow: "visible",
-        }}
-      >
-        {TOP_GROUP.map((img, i) => (
-          <div
-            key={`top-${i}`}
-            ref={el => { topRefs.current[i] = el; }}
-            style={{
-              position: "absolute",
-              ...(img.style as React.CSSProperties),
-              zIndex: img.zIndex,
-              borderRadius: "18px",
-              overflow: "hidden",
-              boxShadow: "0 12px 40px rgba(0,0,0,0.14)",
-              transform: `rotate(${img.rotate}deg)`,
-              willChange: "transform, opacity",
-            }}
-          >
-            <img
-              src={img.src}
-              alt={img.alt}
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-              loading="lazy"
-            />
-          </div>
-        ))}
+        {/* Column 2: Centered */}
+        <div className="flex flex-col gap-10 lg:gap-14 md:translate-y-0">
+          {[SHOWCASE_ITEMS[2], SHOWCASE_ITEMS[3]].map((item) => (
+            <ShowcaseCard key={item.id} item={item} />
+          ))}
+        </div>
 
-        {BOT_GROUP.map((img, i) => (
-          <div
-            key={`bot-${i}`}
-            ref={el => { botRefs.current[i] = el; }}
-            style={{
-              position: "absolute",
-              ...(img.style as React.CSSProperties),
-              zIndex: img.zIndex,
-              borderRadius: "18px",
-              overflow: "hidden",
-              boxShadow: "0 12px 40px rgba(0,0,0,0.14)",
-              transform: `rotate(${img.rotate}deg)`,
-              willChange: "transform, opacity",
-            }}
-          >
-            <img
-              src={img.src}
-              alt={img.alt}
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-              loading="lazy"
-            />
-          </div>
-        ))}
+        {/* Column 3: Staggered Down */}
+        <div className="flex flex-col gap-10 lg:gap-14 md:translate-y-8">
+          {[SHOWCASE_ITEMS[4], SHOWCASE_ITEMS[5]].map((item) => (
+            <ShowcaseCard key={item.id} item={item} />
+          ))}
+        </div>
       </div>
 
       {/* Stats row */}
@@ -231,13 +242,13 @@ export default function EvattoIntro() {
           maxWidth: "1380px",
           margin: "0 auto",
           borderTop: "1px solid rgba(26,26,26,0.1)",
-          marginTop: "32px",
+          marginTop: "clamp(120px, 15vw, 180px)",
         }}
       >
         {STATS.map((s, i) => (
           <div key={i} className="stat-item opacity-0">
             <p style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.4rem,5vw,4.5rem)", fontWeight: 300, color: "#1A1A1A", lineHeight: 1 }}>
-              <span ref={el => { numRefs.current[i] = el; }}>0{s.suffix}</span>
+              <span ref={el => { numRefs.current[i] = el; }} />
             </p>
             <p style={{ fontFamily: "var(--font-inter)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.18em", color: "rgba(26,26,26,0.45)", marginTop: "8px" }}>
               {s.label}
