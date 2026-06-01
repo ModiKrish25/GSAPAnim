@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
@@ -22,7 +23,6 @@ export default function EvattoVenues() {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // Header
       const hlines = headerRef.current?.querySelectorAll(".h-line");
       if (hlines) {
         gsap.fromTo(hlines, { opacity: 0, y: 30 }, {
@@ -37,7 +37,6 @@ export default function EvattoVenues() {
         const track = trackRef.current;
         if (!track) return;
 
-        // Wait for layout, then compute scroll distance
         ScrollTrigger.refresh();
         const trackW = track.scrollWidth;
         const viewW = window.innerWidth;
@@ -47,7 +46,7 @@ export default function EvattoVenues() {
           scrollTrigger: {
             trigger: sectionRef.current,
             pin: true,
-            scrub: 0.5,
+            scrub: 0.8,
             start: "top top",
             end: () => `+=${trackW}`,
             invalidateOnRefresh: true,
@@ -56,7 +55,6 @@ export default function EvattoVenues() {
 
         pinTl.to(track, { x: dist, ease: "none" });
 
-        // Cards: scale-up as they enter during horizontal scroll
         const cards = track.querySelectorAll(".venue-card");
         cards.forEach((card) => {
           gsap.fromTo(card, { scale: 0.92, opacity: 0.6 }, {
@@ -93,32 +91,28 @@ export default function EvattoVenues() {
       className="overflow-hidden flex flex-col justify-center"
       style={{ background: "#0e0f11" }}
     >
-      {/* Responsive height: natural on mobile, 100vh pinned on desktop */}
       <style>{`
-        @media (min-width: 768px) {
-          #venues { height: 100vh; }
-        }
+        @media (min-width: 768px) { #venues { height: 100vh; } }
         @media (max-width: 767px) {
           #venues { min-height: 100svh; padding-bottom: 3rem; }
           .venue-card { height: 340px !important; width: 100% !important; min-width: 0 !important; }
         }
+        @media (min-width: 768px) { .venue-card { width: 420px !important; height: 480px !important; } }
       `}</style>
 
       <div className="w-full flex-1 flex flex-col justify-center py-6">
-        {/* Header */}
         <div ref={headerRef} className="px-6 md:px-14 pb-8 shrink-0">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
               <p className="h-line opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.35em", color: "rgba(253,251,247,0.35)", marginBottom: "12px" }}>Our spaces</p>
               <h2 className="h-line opacity-0" style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2rem, 5vw, 4.5rem)", fontWeight: 300, color: "#FDFBF7", maxWidth: "520px", lineHeight: 1.1 }}>Explore our event spaces</h2>
             </div>
-            <a href="/spaces" className="h-line btn-pill btn-pill-outline-light self-start opacity-0 cursor-pointer">
+            <Link href="/gallery" className="h-line btn-pill btn-pill-outline-light self-start opacity-0 cursor-pointer">
               View all spaces <ArrowUpRight size={13} />
-            </a>
+            </Link>
           </div>
         </div>
 
-        {/* Horizontal track — vertically centered cards */}
         <div
           ref={trackRef}
           className="flex flex-col md:flex-row gap-5 px-6 md:px-14 w-full md:w-max items-stretch md:items-center"
@@ -130,8 +124,6 @@ export default function EvattoVenues() {
               className="venue-card shrink-0 rounded-3xl overflow-hidden relative group cursor-pointer"
               style={{ width: "100%", height: "420px", minWidth: "320px", maxWidth: "100%" }}
             >
-              {/* Override width for desktop */}
-              <style>{`@media(min-width:768px){ .venue-card { width: 420px !important; height: 480px !important; } }`}</style>
               <img src={v.image} alt={v.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
               <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(14,15,17,0.95) 0%, rgba(14,15,17,0.35) 55%, transparent 100%)" }} />
               <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
@@ -144,12 +136,12 @@ export default function EvattoVenues() {
                     <div className="col-span-2"><p style={{ color: "rgba(253,251,247,0.35)", marginBottom: "3px" }}>Features</p><p style={{ color: "rgba(253,251,247,0.85)" }}>{v.features}</p></div>
                   </div>
                 </div>
-                <a href={`/spaces/${v.id}`} className="flex items-center gap-2 group/btn w-fit cursor-pointer">
+                <Link href={`/spaces/${v.id}`} className="flex items-center gap-2 group/btn w-fit cursor-pointer">
                   <span className="w-9 h-9 rounded-full border flex items-center justify-center transition-colors group-hover/btn:bg-white" style={{ borderColor: "rgba(253,251,247,0.3)" }}>
                     <ArrowUpRight size={14} className="text-white group-hover/btn:text-black transition-colors" />
                   </span>
                   <span style={{ fontFamily: "var(--font-inter)", fontSize: "11px", color: "rgba(253,251,247,0.6)" }}>View details</span>
-                </a>
+                </Link>
               </div>
             </div>
           ))}

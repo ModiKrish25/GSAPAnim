@@ -42,7 +42,7 @@ export default function Home() {
       <EvattoTextScroller />
 
       {/* 8. Dream Stage — 3D mood visualiser */}
-      <EvattoDreamStage />
+      {/* <EvattoDreamStage /> */}
 
       {/* 9. Testimonials */}
       <EvattoTestimonials />

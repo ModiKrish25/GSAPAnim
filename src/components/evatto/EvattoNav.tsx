@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
@@ -28,10 +29,8 @@ export function LetterHover({ text, className = "" }: { text: string; className?
 
 const NAV_LINKS = [
   { label: "Home",        sub: [] },
-  { label: "Pages",       sub: ["About us", "Event", "Gallery", "Pricing", "Schedule visit"] },
-  { label: "Venue space", sub: ["Executive Hall", "Garden Courtyard", "Forever Pavilion", "Garden Veranda"] },
+  { label: "Gallery",     sub: [] },
   { label: "Services",    sub: [] },
-  { label: "Blog",        sub: ["All posts", "Blog detail"] },
   { label: "Contact",     sub: [] },
 ];
 
@@ -189,8 +188,6 @@ export default function EvattoNav() {
     if (typeof window === "undefined") return;
 
     const targetIdMap: Record<string, string> = {
-      pages: "events",
-      "venue space": "venues",
       blog: "blog",
     };
 
@@ -198,6 +195,8 @@ export default function EvattoNav() {
 
     if (label.toLowerCase() === "services") {
       window.location.href = "/services";
+    } else if (label.toLowerCase() === "gallery") {
+      window.location.href = "/gallery";
     } else if (label.toLowerCase() === "contact") {
       window.location.href = "/contact";
     } else if (pathname !== "/") {
@@ -237,32 +236,15 @@ export default function EvattoNav() {
             transform: scrolled ? "translateY(2px)" : "translateY(0)",
           }}
         >
-          {/* Logo with star rotate */}
-          <a href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="relative w-5 h-5 flex items-center justify-center">
-              <svg 
-                width="20" 
-                height="20" 
-                viewBox="0 0 22 22" 
-                fill="none"
-                className="transition-transform duration-700 ease-out group-hover:rotate-180"
-              >
-                {[0, 45, 90, 135, 180, 225, 270, 315].map((deg, i) => (
-                  <line key={i} x1="11" y1="11"
-                    x2={11 + 9 * Math.cos((deg * Math.PI) / 180)}
-                    y2={11 + 9 * Math.sin((deg * Math.PI) / 180)}
-                    stroke="#1A1A1A" strokeWidth="1.6" strokeLinecap="round" />
-                ))}
-                <circle cx="11" cy="11" r="2" fill="#1A1A1A" />
-              </svg>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+            <div className="relative w-8 h-8 flex items-center justify-center overflow-hidden rounded-md">
+              <img src="/logo.png" alt="Keshar Logo" className="w-full h-full object-contain" />
             </div>
-            <span 
-              className="text-[#1A1A1A] tracking-wider" 
-              style={{ fontFamily: "var(--font-cormorant)", fontSize: "21px", fontWeight: 600, letterSpacing: "0.03em" }}
-            >
-              Evatto
+            <span className="logo">
+              Keshav Event & Decor
             </span>
-          </a>
+          </Link>
 
           {/* Center: Premium desktop navigation links with magnetic hover capsule */}
           <nav 
@@ -348,9 +330,10 @@ export default function EvattoNav() {
         >
           {/* Overlay Header */}
           <div className="flex items-center justify-between h-[64px] shrink-0 border-b border-black/[0.06] mb-8">
-            <a href="/" className="flex items-center gap-2 group" onClick={close}>
-              <span style={{ fontFamily: "var(--font-cormorant)", fontSize: "22px", fontWeight: 600 }}>Evatto</span>
-            </a>
+            <Link href="/" className="flex items-center gap-2 group" onClick={close}>
+              <img src="/logo.png" alt="Keshar Logo" className="w-6 h-6 object-contain" />
+              <span className="logo" style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}>Keshav Event & Decor</span>
+            </Link>
             <button
               onClick={close}
               className="w-10 h-10 rounded-full border border-black/10 flex items-center justify-center hover:bg-black/6 transition-all active:scale-90 duration-300"

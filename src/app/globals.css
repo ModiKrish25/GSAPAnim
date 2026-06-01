@@ -6,11 +6,22 @@
   --color-sage: #D4DEC9;
   --font-cormorant: "Cormorant Garamond", serif;
   --font-inter: "Inter", sans-serif;
+  --font-script: var(--font-allura);
 }
 
 :root {
   --background: #FDFBF7;
   --foreground: #1A1A1A;
+}
+
+.logo {
+  font-family: var(--font-allura), cursive;
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 400;
+  color: #111;
+  line-height: 1;
+  letter-spacing: 0.5px;
+  text-rendering: optimizeLegibility;
 }
 
 * { box-sizing: border-box; }
@@ -132,3 +143,35 @@ html {
 @media (min-width: 768px) {
   a, button, [data-cursor] { cursor: pointer; }
 }
+
+/* Premium image rendering */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Prevent iOS tap highlight flash */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Better text on dark overlays */
+.text-shadow-luxury {
+  text-shadow: 0 1px 12px rgba(0,0,0,0.35);
+}
+
+/* Premium page transitions */
+main {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Responsive logo size */
+.logo {
+  font-size: clamp(1.5rem, 4vw, 3rem) !important;
+}
+@media (max-width: 640px) {
+  .logo { font-size: 1.4rem !important; }
+}
+

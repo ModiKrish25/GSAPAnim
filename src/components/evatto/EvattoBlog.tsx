@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
@@ -23,35 +24,24 @@ export default function EvattoBlog() {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // Header elements reveal
-      gsap.fromTo(headerRef.current?.querySelectorAll(".h-el") ?? [], 
-        { opacity: 0, y: 30 }, 
+      gsap.fromTo(headerRef.current?.querySelectorAll(".h-el") ?? [],
+        { opacity: 0, y: 30 },
         {
-          opacity: 1, 
-          y: 0, 
-          stagger: 0.1, 
-          duration: 0.85, 
-          ease: "power3.out",
+          opacity: 1, y: 0, stagger: 0.1, duration: 0.85, ease: "power3.out",
           scrollTrigger: { trigger: headerRef.current, start: "top 82%", once: true },
         }
       );
 
-      // Staggered luxury skew-reveal for blog cards
-      gsap.fromTo(cardsRef.current?.querySelectorAll(".blog-card") ?? [], 
-        { opacity: 0, y: 80, skewY: 2.5, scale: 0.96 }, 
+      gsap.fromTo(cardsRef.current?.querySelectorAll(".blog-card") ?? [],
+        { opacity: 0, y: 60, scale: 0.97 },
         {
-          opacity: 1, 
-          y: 0, 
-          skewY: 0, 
-          scale: 1,
-          stagger: 0.14, 
-          duration: 1.1, 
-          ease: "power4.out",
+          opacity: 1, y: 0, scale: 1,
+          stagger: 0.14, duration: 1.0, ease: "power3.out",
           scrollTrigger: { trigger: cardsRef.current, start: "top 85%", once: true },
         }
       );
 
-      // Buttery smooth, hardware-accelerated infinite marquee loop
+      // GPU-accelerated marquee
       const track = sectionRef.current?.querySelector(".marquee-track");
       if (track) {
         gsap.to(track, {
@@ -67,40 +57,31 @@ export default function EvattoBlog() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="blog" style={{ background: "#FDFBF7" }} className="py-28 md:py-36 overflow-hidden">
+    <section ref={sectionRef} id="blog" style={{ background: "#FDFBF7" }} className="py-20 md:py-36 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-14">
-        {/* Header */}
         <div ref={headerRef} className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
           <div>
             <p className="h-el opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.35em", color: "rgba(26,26,26,0.4)", marginBottom: "12px" }}>Our blog</p>
             <h2 className="h-el opacity-0" style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.2rem, 5vw, 5rem)", fontWeight: 300, color: "#1A1A1A" }}>Your event, our insights</h2>
           </div>
-          <a href="/blog" className="h-el btn-pill btn-pill-outline-dark self-start opacity-0 cursor-pointer">
-            View all blogs <ArrowUpRight size={13} />
-          </a>
+          <Link href="/gallery" className="h-el btn-pill btn-pill-outline-dark self-start opacity-0 cursor-pointer">
+            View all <ArrowUpRight size={13} />
+          </Link>
         </div>
 
-        {/* Cards */}
         <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7">
           {POSTS.map((p, i) => (
             <article key={i} className="blog-card group opacity-0 cursor-pointer">
               <div className="relative overflow-hidden rounded-2xl mb-5 aspect-[4/3]">
-                <img 
-                  src={p.img} 
-                  alt={p.title} 
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" 
-                  loading="lazy" 
+                <img
+                  src={p.img}
+                  alt={p.title}
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  loading="lazy"
                 />
-                <span 
-                  className="absolute top-4 left-4 rounded-full px-3 py-1.5 backdrop-blur-md" 
-                  style={{ 
-                    fontFamily: "var(--font-inter)", 
-                    fontSize: "9px", 
-                    textTransform: "uppercase", 
-                    letterSpacing: "0.15em", 
-                    background: "rgba(253,251,247,0.88)", 
-                    color: "#1A1A1A" 
-                  }}
+                <span
+                  className="absolute top-4 left-4 rounded-full px-3 py-1.5 backdrop-blur-md"
+                  style={{ fontFamily: "var(--font-inter)", fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.15em", background: "rgba(253,251,247,0.88)", color: "#1A1A1A" }}
                 >
                   {p.cat}
                 </span>
@@ -117,7 +98,7 @@ export default function EvattoBlog() {
         </div>
       </div>
 
-      {/* Marquee — trusted partners */}
+      {/* Partners marquee */}
       <div className="mt-24 overflow-hidden" style={{ borderTop: "1px solid rgba(26,26,26,0.07)", paddingTop: "40px" }}>
         <p className="text-center mb-8" style={{ fontFamily: "var(--font-inter)", fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.38em", color: "rgba(26,26,26,0.3)" }}>Trusted partners who chose us</p>
         <div className="relative w-full overflow-hidden whitespace-nowrap">

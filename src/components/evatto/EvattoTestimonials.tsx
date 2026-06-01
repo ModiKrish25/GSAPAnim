@@ -87,6 +87,15 @@ export default function EvattoTestimonials() {
     setActiveIndex((prev) => (prev === 0 ? TESTIMONIALS.length - 1 : prev - 1));
   };
 
+  // Autoplay functionality
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNext();
+    }, 5000); // 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section
       ref={sectionRef}
