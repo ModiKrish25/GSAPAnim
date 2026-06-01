@@ -241,8 +241,8 @@ export default function EvattoNav() {
             <div className="relative w-8 h-8 flex items-center justify-center overflow-hidden rounded-md">
               <img src="/logo.png" alt="Keshar Logo" className="w-full h-full object-contain" />
             </div>
-            <span className="logo">
-              Keshav Event & Decor
+            <span className="logo" style={{ fontSize: "clamp(1.15rem, 2.2vw, 1.6rem)" }}>
+              Keshar Events & Decor
             </span>
           </Link>
 
@@ -332,7 +332,7 @@ export default function EvattoNav() {
           <div className="flex items-center justify-between h-[64px] shrink-0 border-b border-black/[0.06] mb-8">
             <Link href="/" className="flex items-center gap-2 group" onClick={close}>
               <img src="/logo.png" alt="Keshar Logo" className="w-6 h-6 object-contain" />
-              <span className="logo" style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}>Keshav Event & Decor</span>
+              <span className="logo" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.2rem)" }}>Keshar Events & Decor</span>
             </Link>
             <button
               onClick={close}
