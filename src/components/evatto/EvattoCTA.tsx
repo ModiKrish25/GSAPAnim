@@ -8,7 +8,7 @@ const CORNERS = [
   { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=700", pos: "top-10 left-10 md:top-16 md:left-16", from: { x: -80, y: -60 }, w: "w-48 md:w-64", ratio: "aspect-[3/4]" },
   { src: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=700", pos: "top-10 right-10 md:top-16 md:right-16", from: { x: 80, y: -60 }, w: "w-36 md:w-52", ratio: "aspect-square" },
   { src: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=700", pos: "bottom-10 left-10 md:bottom-16 md:left-16", from: { x: -80, y: 60 }, w: "w-44 md:w-56", ratio: "aspect-[4/3]" },
-  { src: "https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?auto=format&fit=crop&q=80&w=700", pos: "bottom-10 right-10 md:bottom-16 md:right-16", from: { x: 80, y: 60 }, w: "w-36 md:w-44", ratio: "aspect-square" },
+  { src: "https://images.unsplash.com/photo-1541250848049-b4f7141dca3f?auto=format&fit=crop&q=80&w=700", pos: "bottom-10 right-10 md:bottom-16 md:right-16", from: { x: 80, y: 60 }, w: "w-36 md:w-44", ratio: "aspect-square" },
 ];
 
 export default function EvattoCTA() {

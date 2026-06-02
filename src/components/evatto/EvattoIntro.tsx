@@ -247,7 +247,7 @@ export default function EvattoIntro() {
       >
         {STATS.map((s, i) => (
           <div key={i} className="stat-item opacity-0">
-            <p style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.4rem,5vw,4.5rem)", fontWeight: 300, color: "#1A1A1A", lineHeight: 1 }}>
+            <p style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.4rem,5vw,4.5rem)", fontWeight: 300, color: "#1A1A1A", lineHeight: 1, fontVariantNumeric: "lining-nums" }}>
               <span ref={el => { numRefs.current[i] = el; }} />
             </p>
             <p style={{ fontFamily: "var(--font-inter)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.18em", color: "rgba(26,26,26,0.45)", marginTop: "8px" }}>

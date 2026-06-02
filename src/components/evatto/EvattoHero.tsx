@@ -93,13 +93,6 @@ export default function EvattoHero() {
         </h1>
 
         <div ref={ctaRef} className="flex flex-wrap gap-3 opacity-0">
-          <button
-            onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("open-book-tour")); }}
-            className="btn-pill btn-pill-outline-light"
-          >
-            Book a tour
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 11.5L11.5 1.5M11.5 1.5H5.5M11.5 1.5V7.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </button>
           <Link href="/gallery" className="btn-pill btn-pill-outline-light">
             Explore the venue
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 11.5L11.5 1.5M11.5 1.5H5.5M11.5 1.5V7.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>

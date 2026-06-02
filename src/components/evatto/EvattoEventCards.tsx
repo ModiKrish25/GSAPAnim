@@ -72,11 +72,23 @@ const cardsData = [
     label: "Birthday party",
     emoji: "🎂",
     icon: (
-      <svg viewBox="0 0 80 80" className="w-20 h-20" fill="currentColor">
-        <rect x="12" y="30" width="56" height="38" rx="5" />
-        <path d="M28,30 L28,22 Q28,16 35,16 L45,16 Q52,16 52,22 L52,30" fill="none" stroke="currentColor" strokeWidth="3.5" />
-        <line x1="12" y1="48" x2="68" y2="48" stroke="white" strokeWidth="3" />
-        <rect x="34" y="44" width="12" height="8" rx="2" fill="white" />
+      <svg viewBox="0 0 80 80" className="w-20 h-20" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+        {/* Cake base / plate */}
+        <line x1="15" y1="65" x2="65" y2="65" />
+        
+        {/* Tier 1 (Bottom) */}
+        <rect x="22" y="44" width="36" height="21" rx="2" />
+        
+        {/* Tier 2 (Top) */}
+        <rect x="30" y="26" width="20" height="18" rx="2" />
+        
+        {/* Candles */}
+        <line x1="36" y1="16" x2="36" y2="26" />
+        <line x1="44" y1="16" x2="44" y2="26" />
+        
+        {/* Flames */}
+        <path d="M36,9 Q38,13 36,16 Q34,13 36,9" fill="currentColor" stroke="none" />
+        <path d="M44,9 Q46,13 44,16 Q42,13 44,9" fill="currentColor" stroke="none" />
       </svg>
     ),
     bg: "#f5f0ec",
@@ -125,7 +137,7 @@ export default function EvattoEventCards() {
 
       // Desktop layout: cards fully scrub-reversible (drop → spread → flip)
       mm.add("(min-width: 1024px)", () => {
-        const finalX = [-450, -150, 150, 450];
+        const finalX = [-540, -180, 180, 540];
         const finalRot = [-2, -1, 1, 2];
 
         // Pinned scroll-scrub timeline: locks container in place so all cards drop, spread, and flip in the center
@@ -228,10 +240,13 @@ export default function EvattoEventCards() {
       {/* Responsive card size overrides */}
       <style>{`
         @media (max-width: 480px) {
-          .event-card-inner { width: 200px !important; height: 280px !important; margin-left: -100px !important; }
+          .event-card-inner { width: 220px !important; height: 340px !important; margin-left: -110px !important; }
         }
         @media (min-width: 481px) and (max-width: 767px) {
-          .event-card-inner { width: 230px !important; height: 320px !important; margin-left: -115px !important; }
+          .event-card-inner { width: 250px !important; height: 390px !important; margin-left: -125px !important; }
+        }
+        @media (min-width: 768px) and (max-width: 1023px) {
+          .event-card-inner { width: 260px !important; height: 410px !important; margin-left: -130px !important; }
         }
       `}</style>
 
@@ -244,20 +259,20 @@ export default function EvattoEventCards() {
       </h2>
 
       {/* Cards container */}
-      <div className="relative flex items-start justify-center w-full" style={{ height: 420 }}>
+      <div className="relative flex items-start justify-center w-full" style={{ height: 520 }}>
         {cardsData.map((card, i) => (
           <div
             key={card.id}
             ref={(el) => { cardRefs.current[i] = el; }}
             className="absolute shadow-lg rounded-3xl event-card-inner"
             style={{
-              width: 260,
-              height: 360,
+              width: 280,
+              height: 450,
               transformStyle: "preserve-3d",
               perspective: 1200,
               top: 0,
               left: "50%",
-              marginLeft: -130,
+              marginLeft: -140,
               willChange: "transform",
             }}
           >
@@ -306,7 +321,7 @@ export default function EvattoEventCards() {
                 </span>
               </div>
               {/* Photo */}
-              <div className="mx-4 rounded-2xl overflow-hidden flex-1" style={{ maxHeight: 200 }}>
+              <div className="mx-4 rounded-2xl overflow-hidden flex-1" style={{ maxHeight: 250 }}>
                 <img
                   src={card.image}
                   alt={card.alt}

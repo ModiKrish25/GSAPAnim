@@ -263,15 +263,14 @@ export default function EvattoNav() {
             transform: scrolled ? "translateY(2px)" : "translateY(0)",
           }}
         >
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="relative w-8 h-8 flex items-center justify-center overflow-hidden rounded-md">
-              <img src="/logo.png" alt="Keshar Logo" className="w-full h-full object-contain" />
-            </div>
-            <span className="logo" style={{ fontSize: "clamp(1.15rem, 2.2vw, 1.6rem)" }}>
-              Keshar Events & Decor
-            </span>
-          </Link>
+          {/* Left column: Symmetrically-sized Logo container */}
+          <div className="flex items-center lg:w-[180px] shrink-0">
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="relative w-8 h-8 flex items-center justify-center overflow-hidden rounded-md transition-transform duration-500 group-hover:scale-105">
+                <img src="/logo.png" alt="Keshar Logo" className="w-full h-full object-contain" />
+              </div>
+            </Link>
+          </div>
 
           {/* Center: Premium desktop navigation links with magnetic hover capsule */}
           <nav 
@@ -302,8 +301,8 @@ export default function EvattoNav() {
             ))}
           </nav>
 
-          {/* Right side: Balanced layout container containing mobile Hamburger Menu */}
-          <div className="flex items-center justify-end lg:w-[170px]">
+          {/* Right column: Balanced layout container containing mobile Hamburger Menu */}
+          <div className="flex items-center justify-end lg:w-[180px] shrink-0">
             <button
               onClick={() => setOpen(o => !o)}
               aria-label={open ? "Close menu" : "Open menu"}
@@ -335,8 +334,9 @@ export default function EvattoNav() {
           {/* Overlay Header */}
           <div className="flex items-center justify-between h-[64px] shrink-0 border-b border-black/[0.06] mb-8">
             <Link href="/" className="flex items-center gap-2 group" onClick={close}>
-              <img src="/logo.png" alt="Keshar Logo" className="w-6 h-6 object-contain" />
-              <span className="logo" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.2rem)" }}>Keshar Events & Decor</span>
+              <div className="relative w-8 h-8 flex items-center justify-center overflow-hidden rounded-md transition-transform duration-500 group-hover:scale-105">
+                <img src="/logo.png" alt="Keshar Logo" className="w-full h-full object-contain" />
+              </div>
             </Link>
             <button
               onClick={close}

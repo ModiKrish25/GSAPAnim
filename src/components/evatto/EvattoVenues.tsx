@@ -31,54 +31,50 @@ export default function EvattoVenues() {
         });
       }
 
-      const mm = gsap.matchMedia();
+      const track = trackRef.current;
+      if (!track) return;
 
-      mm.add("(min-width: 768px)", () => {
-        const track = trackRef.current;
-        if (!track) return;
+      // Delayed start to ensure correct DOM width calculations
+      const startMarquee = () => {
+        const totalW = track.scrollWidth;
+        const halfW = totalW / 2;
 
-        ScrollTrigger.refresh();
-        const trackW = track.scrollWidth;
-        const viewW = window.innerWidth;
-        const dist = -(trackW - viewW + 112);
+        const loop = gsap.fromTo(track,
+          { x: -halfW },
+          {
+            x: 0,
+            duration: 35, // Adjust speed (smaller is faster, larger is slower)
+            ease: "none",
+            repeat: -1,
+          }
+        );
 
-        const pinTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            pin: true,
-            scrub: 0.8,
-            start: "top top",
-            end: () => `+=${trackW}`,
-            invalidateOnRefresh: true,
-          },
-        });
+        // Smooth play/pause timeScale transition
+        const onEnter = () => {
+          gsap.to(loop, { timeScale: 0, duration: 0.6, ease: "power2.out" });
+        };
+        const onLeave = () => {
+          gsap.to(loop, { timeScale: 1, duration: 0.6, ease: "power2.out" });
+        };
 
-        pinTl.to(track, { x: dist, ease: "none" });
+        track.addEventListener("mouseenter", onEnter);
+        track.addEventListener("mouseleave", onLeave);
+        track.addEventListener("touchstart", onEnter, { passive: true });
+        track.addEventListener("touchend", onLeave, { passive: true });
 
-        const cards = track.querySelectorAll(".venue-card");
-        cards.forEach((card) => {
-          gsap.fromTo(card, { scale: 0.92, opacity: 0.6 }, {
-            scale: 1, opacity: 1,
-            scrollTrigger: {
-              trigger: card,
-              containerAnimation: pinTl.scrollTrigger?.animation,
-              start: "left 90%",
-              end: "left 45%",
-              scrub: true,
-            },
-          });
-        });
-      });
+        return () => {
+          loop.kill();
+          track.removeEventListener("mouseenter", onEnter);
+          track.removeEventListener("mouseleave", onLeave);
+          track.removeEventListener("touchstart", onEnter);
+          track.removeEventListener("touchend", onLeave);
+        };
+      };
 
-      mm.add("(max-width: 767px)", () => {
-        const cards = trackRef.current?.querySelectorAll(".venue-card");
-        if (cards) {
-          gsap.fromTo(cards, { opacity: 0, y: 50 }, {
-            opacity: 1, y: 0, stagger: 0.15, duration: 0.85, ease: "power3.out",
-            scrollTrigger: { trigger: trackRef.current, start: "top 85%", once: true },
-          });
-        }
-      });
+      const cleanupMarquee = startMarquee();
+      return () => {
+        cleanupMarquee?.();
+      };
     }, sectionRef);
 
     return () => ctx.revert();
@@ -92,12 +88,14 @@ export default function EvattoVenues() {
       style={{ background: "#0e0f11" }}
     >
       <style>{`
-        @media (min-width: 768px) { #venues { height: 100vh; } }
-        @media (max-width: 767px) {
-          #venues { min-height: 100svh; padding-bottom: 3rem; }
-          .venue-card { height: 340px !important; width: 100% !important; min-width: 0 !important; }
+        @media (min-width: 768px) { 
+          #venues { height: 100vh; } 
+          .venue-card { width: 420px !important; height: 480px !important; }
         }
-        @media (min-width: 768px) { .venue-card { width: 420px !important; height: 480px !important; } }
+        @media (max-width: 767px) {
+          #venues { min-height: 85svh; padding-bottom: 3rem; }
+          .venue-card { width: 300px !important; height: 380px !important; }
+        }
       `}</style>
 
       <div className="w-full flex-1 flex flex-col justify-center py-6">
@@ -115,14 +113,14 @@ export default function EvattoVenues() {
 
         <div
           ref={trackRef}
-          className="flex flex-col md:flex-row gap-5 px-6 md:px-14 w-full md:w-max items-stretch md:items-center"
+          className="flex flex-row gap-5 px-6 md:px-14 w-max items-center"
           style={{ willChange: "transform" }}
         >
-          {VENUES.map((v) => (
+          {[...VENUES, ...VENUES].map((v, i) => (
             <div
-              key={v.id}
+              key={`${v.id}-${i}`}
               className="venue-card shrink-0 rounded-3xl overflow-hidden relative group cursor-pointer"
-              style={{ width: "100%", height: "420px", minWidth: "320px", maxWidth: "100%" }}
+              style={{ width: "100%", height: "420px", minWidth: "300px", maxWidth: "100%" }}
             >
               <img src={v.image} alt={v.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
               <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(14,15,17,0.95) 0%, rgba(14,15,17,0.35) 55%, transparent 100%)" }} />

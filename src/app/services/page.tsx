@@ -6,6 +6,7 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 import EvattoNav from "@/components/evatto/EvattoNav";
 import EvattoFooter from "@/components/evatto/EvattoFooter";
 import EvattoBookTourModal from "@/components/evatto/EvattoBookTourModal";
+import EvattoProcessTimeline from "@/components/evatto/EvattoProcessTimeline";
 
 const SERVICES = [
   {
@@ -128,6 +129,8 @@ export default function ServicesPage() {
           ))}
         </div>
       </main>
+
+      <EvattoProcessTimeline />
 
       <EvattoFooter />
       <EvattoBookTourModal />

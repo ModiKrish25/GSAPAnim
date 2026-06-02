@@ -5,7 +5,7 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 const PHRASE_1 = "IMAGINE • DESIGN • CELEBRATE • INSPIRE • CREATE • ";
-const PHRASE_2 = "ELEGANCE • GRANDeur • BEAUTY • MOMENTS • FOREVER • ";
+const PHRASE_2 = "ELEGANCE • GRANDEUR • BEAUTY • MOMENTS • FOREVER • ";
 
 export default function EvattoTextScroller() {
   const sectionRef = useRef<HTMLElement>(null);

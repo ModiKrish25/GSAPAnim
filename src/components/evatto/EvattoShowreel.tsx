@@ -16,7 +16,7 @@ const SCENES = [
   {
     num: "02",
     category: "Corporate Galas",
-    title: "Power Meets\nPrevails",
+    title: "Power Meets\nPrestige",
     image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=85&w=1920",
     accent: "#8ecfd4",
     origin: "25% 65%",
