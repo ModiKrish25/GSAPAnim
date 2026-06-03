@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useEffect } from "react";
+import React, { use, useEffect, useState } from "react";
 import EvattoNav from "@/components/evatto/EvattoNav";
 import EvattoFooter from "@/components/evatto/EvattoFooter";
 import EvattoBookTourModal from "@/components/evatto/EvattoBookTourModal";
@@ -61,6 +61,117 @@ const VENUES = [
     details: "A premium tech-focused keynote auditorium. Custom-engineered for dynamic corporate announcements, panel symposiums, and product launches. Features dual towering LED walls and fully integrated directional speakers to provide complete acoustic immersion."
   },
 ];
+
+// ── Seating Layout SVG Toggle ────────────────────────────────────────────────
+type LayoutMode = "banquet" | "theater" | "cocktail";
+
+function BanquetSVG() {
+  const tables = [];
+  for (let row = 0; row < 3; row++) {
+    for (let col = 0; col < 4; col++) {
+      const cx = 55 + col * 80;
+      const cy = 55 + row * 80;
+      const angles = [0, 60, 120, 180, 240, 300];
+      tables.push(
+        <g key={`${row}-${col}`}>
+          <circle cx={cx} cy={cy} r={18} fill="#FDF8EF" stroke="#C5A880" strokeWidth="1.5" />
+          {angles.map((a, i) => {
+            const rad = (a * Math.PI) / 180;
+            return <circle key={i} cx={cx + Math.cos(rad) * 30} cy={cy + Math.sin(rad) * 30} r={7} fill="#f0ece4" stroke="#d4c4a0" strokeWidth="1" />;
+          })}
+        </g>
+      );
+    }
+  }
+  return (
+    <svg viewBox="0 0 375 280" className="w-full" style={{ maxHeight: 220 }}>
+      <rect x="8" y="8" width="359" height="264" rx="10" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="1" />
+      {tables}
+      <text x="187" y="270" textAnchor="middle" style={{ fontFamily: "var(--font-inter)", fontSize: 9, fill: "rgba(0,0,0,0.35)", letterSpacing: 2 }}>BANQUET LAYOUT — 12 TABLES · 72 SEATS</text>
+    </svg>
+  );
+}
+
+function TheaterSVG() {
+  const rows = [];
+  for (let row = 0; row < 5; row++) {
+    const y = 40 + row * 36;
+    const seatsPerRow = 8 + (row % 2);
+    for (let col = 0; col < seatsPerRow; col++) {
+      const x = 20 + col * (330 / seatsPerRow);
+      rows.push(<rect key={`${row}-${col}`} x={x} y={y} width={28} height={22} rx={4} fill="#f0ece4" stroke="#C5A880" strokeWidth="1.2" />);
+    }
+  }
+  return (
+    <svg viewBox="0 0 375 250" className="w-full" style={{ maxHeight: 220 }}>
+      <rect x="8" y="8" width="359" height="234" rx="10" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="1" />
+      <rect x="100" y="18" width="175" height="16" rx="4" fill="#C5A880" opacity="0.35" />
+      <text x="187" y="29" textAnchor="middle" style={{ fontFamily: "var(--font-inter)", fontSize: 7.5, fill: "#8a6a40", letterSpacing: 1 }}>STAGE</text>
+      {rows}
+      <text x="187" y="246" textAnchor="middle" style={{ fontFamily: "var(--font-inter)", fontSize: 9, fill: "rgba(0,0,0,0.35)", letterSpacing: 2 }}>THEATER LAYOUT — 5 ROWS · 43 SEATS</text>
+    </svg>
+  );
+}
+
+function CocktailSVG() {
+  const spots = [
+    [60,55],[180,45],[305,60],[40,130],[130,120],[220,115],[320,125],
+    [80,200],[175,195],[290,205],[150,155],[250,160],
+  ];
+  return (
+    <svg viewBox="0 0 375 250" className="w-full" style={{ maxHeight: 220 }}>
+      <rect x="8" y="8" width="359" height="234" rx="10" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="1" />
+      {spots.map(([cx, cy], i) => (
+        <g key={i}>
+          <circle cx={cx} cy={cy} r={16} fill="#FDF8EF" stroke="#C5A880" strokeWidth="1.5" />
+          <circle cx={cx} cy={cy} r={7} fill="#C5A880" opacity="0.35" />
+        </g>
+      ))}
+      <text x="187" y="246" textAnchor="middle" style={{ fontFamily: "var(--font-inter)", fontSize: 9, fill: "rgba(0,0,0,0.35)", letterSpacing: 2 }}>COCKTAIL LAYOUT — 12 HIGH-TOPS · STANDING</text>
+    </svg>
+  );
+}
+
+function SeatingLayoutToggle() {
+  const [mode, setMode] = useState<LayoutMode>("banquet");
+  const modes: { val: LayoutMode; label: string }[] = [
+    { val: "banquet",  label: "Banquet"  },
+    { val: "theater",  label: "Theater"  },
+    { val: "cocktail", label: "Cocktail" },
+  ];
+  return (
+    <div className="bg-white border border-black/[0.04] shadow-[0_20px_50px_rgba(0,0,0,0.03)] rounded-[2.5rem] p-8 md:p-10">
+      <h3 className="font-cormorant text-2xl font-medium text-black mb-2">Layout Planner</h3>
+      <p style={{ fontFamily: "var(--font-inter)", fontSize: "12px", color: "rgba(0,0,0,0.45)", marginBottom: 20 }}>
+        Visualise how the space adapts to different event formats.
+      </p>
+      {/* Mode pills */}
+      <div className="flex gap-2 mb-6">
+        {modes.map(m => (
+          <button
+            key={m.val}
+            onClick={() => setMode(m.val)}
+            style={{
+              fontFamily: "var(--font-inter)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.06em",
+              padding: "7px 16px", borderRadius: 50, cursor: "pointer", transition: "all 0.3s",
+              background: mode === m.val ? "#1A1A1A" : "rgba(0,0,0,0.03)",
+              color: mode === m.val ? "#FDFBF7" : "rgba(0,0,0,0.5)",
+              border: mode === m.val ? "1px solid #1A1A1A" : "1px solid rgba(0,0,0,0.08)",
+            }}
+          >
+            {m.label}
+          </button>
+        ))}
+      </div>
+      {/* SVG diagram */}
+      <div style={{ transition: "opacity 0.3s" }}>
+        {mode === "banquet"  && <BanquetSVG />}
+        {mode === "theater"  && <TheaterSVG />}
+        {mode === "cocktail" && <CocktailSVG />}
+      </div>
+    </div>
+  );
+}
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -197,6 +308,9 @@ export default function SpaceDetailPage({ params }: PageProps) {
                 </button>
 
               </div>
+
+              {/* Seating Layout Planner */}
+              <SeatingLayoutToggle />
 
             </div>
 

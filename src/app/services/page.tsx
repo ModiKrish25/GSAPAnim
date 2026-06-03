@@ -7,6 +7,9 @@ import EvattoNav from "@/components/evatto/EvattoNav";
 import EvattoFooter from "@/components/evatto/EvattoFooter";
 import EvattoBookTourModal from "@/components/evatto/EvattoBookTourModal";
 import EvattoProcessTimeline from "@/components/evatto/EvattoProcessTimeline";
+import EvattoEstimator from "@/components/evatto/EvattoEstimator";
+import EvattoFAQ from "@/components/evatto/EvattoFAQ";
+import EvattoCardDesigner from "@/components/evatto/EvattoCardDesigner";
 
 const SERVICES = [
   {
@@ -130,7 +133,10 @@ export default function ServicesPage() {
         </div>
       </main>
 
+      <EvattoEstimator />
       <EvattoProcessTimeline />
+      <EvattoFAQ />
+      <EvattoCardDesigner />
 
       <EvattoFooter />
       <EvattoBookTourModal />
