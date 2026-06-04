@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
-import { Sparkles, Type, Paintbrush, Layers, Download } from "lucide-react";
+import { Sparkles, Type, Paintbrush, Layers, Download, Printer } from "lucide-react";
 
 // Themes definition
 const THEMES = [
@@ -178,6 +178,281 @@ export default function EvattoCardDesigner() {
     };
   }, []);
 
+  const downloadCard = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1200;
+    canvas.height = 1680;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let gradient = ctx.createLinearGradient(0, 0, 1200, 1680);
+    if (selectedTheme === "golden-night") {
+      gradient.addColorStop(0, "#111317");
+      gradient.addColorStop(1, "#1c1f24");
+    } else if (selectedTheme === "emerald-garden") {
+      gradient.addColorStop(0, "#091a12");
+      gradient.addColorStop(1, "#153826");
+    } else if (selectedTheme === "midnight-royal") {
+      gradient.addColorStop(0, "#0b0d19");
+      gradient.addColorStop(1, "#161a35");
+    } else if (selectedTheme === "pure-ivory") {
+      gradient.addColorStop(0, "#f7f5f0");
+      gradient.addColorStop(1, "#ffffff");
+    } else if (selectedTheme === "rose-gold") {
+      gradient.addColorStop(0, "#f7ece8");
+      gradient.addColorStop(1, "#ecd5cc");
+    } else if (selectedTheme === "champagne") {
+      gradient.addColorStop(0, "#f3ede2");
+      gradient.addColorStop(1, "#e5d9c2");
+    } else if (selectedTheme === "ruby-gala") {
+      gradient.addColorStop(0, "#2b0811");
+      gradient.addColorStop(1, "#4c1120");
+    } else if (selectedTheme === "sapphire-stars") {
+      gradient.addColorStop(0, "#05162e");
+      gradient.addColorStop(1, "#0d2a54");
+    } else {
+      gradient.addColorStop(0, "#111317");
+      gradient.addColorStop(1, "#1c1f24");
+    }
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 1200, 1680);
+
+    const margin = 50;
+    ctx.strokeStyle = theme.borderColor;
+    ctx.lineWidth = 6;
+    ctx.strokeRect(margin, margin, 1200 - 2 * margin, 1680 - 2 * margin);
+
+    if (selectedBorder === "royal") {
+      ctx.strokeStyle = theme.borderColor;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(margin + 20, margin + 20, 1200 - 2 * (margin + 20), 1680 - 2 * (margin + 20));
+    } else if (selectedBorder === "corners") {
+      ctx.strokeStyle = theme.borderColor;
+      ctx.lineWidth = 8;
+      const len = 60;
+      const cornerMargin = margin + 15;
+      ctx.beginPath();
+      ctx.moveTo(cornerMargin + len, cornerMargin);
+      ctx.lineTo(cornerMargin, cornerMargin);
+      ctx.lineTo(cornerMargin, cornerMargin + len);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(1200 - cornerMargin - len, cornerMargin);
+      ctx.lineTo(1200 - cornerMargin, cornerMargin);
+      ctx.lineTo(1200 - cornerMargin, cornerMargin + len);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cornerMargin + len, 1680 - cornerMargin);
+      ctx.lineTo(cornerMargin, 1680 - cornerMargin);
+      ctx.lineTo(cornerMargin, 1680 - cornerMargin - len);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(1200 - cornerMargin - len, 1680 - cornerMargin);
+      ctx.lineTo(1200 - cornerMargin, 1680 - cornerMargin);
+      ctx.lineTo(1200 - cornerMargin, 1680 - cornerMargin - len);
+      ctx.stroke();
+    } else if (selectedBorder === "floral") {
+      ctx.fillStyle = theme.borderColor;
+      ctx.globalAlpha = 0.25;
+      ctx.beginPath();
+      ctx.arc(margin + 30, margin + 30, 80, 0, Math.PI * 0.5);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(1200 - margin - 30, 1680 - margin - 30, 80, Math.PI, Math.PI * 1.5);
+      ctx.fill();
+      ctx.globalAlpha = 1.0;
+    }
+
+    ctx.textAlign = "center";
+    ctx.fillStyle = theme.subColor;
+    ctx.font = "bold 26px Arial, sans-serif";
+    ctx.fillText("YOU ARE INVITED", 600, 300);
+
+    ctx.strokeStyle = theme.borderColor;
+    ctx.lineWidth = 2;
+    ctx.globalAlpha = 0.35;
+    ctx.beginPath();
+    ctx.moveTo(560, 340);
+    ctx.lineTo(640, 340);
+    ctx.stroke();
+    ctx.globalAlpha = 1.0;
+
+    ctx.fillStyle = theme.textColor;
+    const isItalic = selectedFont === "script";
+    ctx.font = `${isItalic ? "italic" : ""} 80px ${selectedFont === "sans" ? "Arial" : "Georgia"}`;
+    ctx.fillText(headline || "Names", 600, 680);
+
+    ctx.fillStyle = theme.subColor;
+    ctx.font = "italic 32px Georgia, serif";
+    ctx.fillText("Together with their families", 600, 800);
+
+    ctx.fillStyle = theme.textColor;
+    ctx.font = "bold 28px Arial, sans-serif";
+    ctx.fillText((subtext || "Date").toUpperCase(), 600, 1150);
+
+    ctx.fillStyle = theme.subColor;
+    ctx.font = "26px Arial, sans-serif";
+    ctx.fillText(venue || "Venue Location", 600, 1220);
+
+    const link = document.createElement("a");
+    link.download = `invitation_${headline.toLowerCase().replace(/[^a-z0-9]/g, "_")}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  };
+
+  const printCard = () => {
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print Invitation - ${headline}</title>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@400;600&display=swap');
+            body {
+              margin: 0;
+              padding: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              background-color: #ffffff;
+            }
+            .card-print {
+              width: 450px;
+              height: 630px;
+              background: ${theme.cardBg};
+              border-radius: 20px;
+              padding: 4px;
+              box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              box-sizing: border-box;
+            }
+            .inner-border {
+              width: 100%;
+              height: 100%;
+              border-radius: 16px;
+              border: 1.5px solid ${theme.borderColor};
+              padding: 40px 30px;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              align-items: center;
+              box-sizing: border-box;
+              position: relative;
+            }
+            .divider {
+              width: 16px;
+              height: 1px;
+              background: ${theme.borderColor};
+              opacity: 0.35;
+              margin: 10px auto 0 auto;
+            }
+            .sub-title {
+              font-family: 'Inter', sans-serif;
+              font-size: 10px;
+              letter-spacing: 0.45em;
+              text-transform: uppercase;
+              color: ${theme.subColor};
+              font-weight: 600;
+              text-align: center;
+            }
+            .headline {
+              font-family: ${font.id === "sans" ? "'Inter', sans-serif" : "'Cormorant Garamond', serif"};
+              font-style: ${font.fontStyle};
+              font-size: 32px;
+              font-weight: ${font.fontStyle === "italic" ? 300 : 400};
+              color: ${theme.textColor};
+              text-align: center;
+              margin: 0;
+            }
+            .details {
+              font-family: 'Inter', sans-serif;
+              font-size: 10px;
+              letter-spacing: 0.15em;
+              color: ${theme.textColor};
+              font-weight: 600;
+              text-align: center;
+              text-transform: uppercase;
+              margin-bottom: 6px;
+            }
+            .venue {
+              font-family: 'Inter', sans-serif;
+              font-size: 10px;
+              letter-spacing: 0.08em;
+              color: ${theme.subColor};
+              text-align: center;
+            }
+            .floral-accent {
+              position: absolute;
+              inset: 0;
+              overflow: hidden;
+              pointer-events: none;
+              opacity: 0.15;
+            }
+            @media print {
+              body {
+                background: none;
+              }
+              .card-print {
+                box-shadow: none;
+                page-break-inside: avoid;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="card-print">
+            <div class="inner-border">
+              ${selectedBorder === "royal" ? `<div style="position: absolute; inset: 6px; border: 1px solid ${theme.borderColor}; opacity: 0.4; border-radius: 12px;"></div>` : ""}
+              ${selectedBorder === "corners" ? `
+                <div style="position: absolute; top: 10px; left: 10px; width: 12px; height: 12px; border-top: 1.5px solid ${theme.borderColor}; border-left: 1.5px solid ${theme.borderColor}; opacity: 0.7;"></div>
+                <div style="position: absolute; top: 10px; right: 10px; width: 12px; height: 12px; border-top: 1.5px solid ${theme.borderColor}; border-right: 1.5px solid ${theme.borderColor}; opacity: 0.7;"></div>
+                <div style="position: absolute; bottom: 10px; left: 10px; width: 12px; height: 12px; border-bottom: 1.5px solid ${theme.borderColor}; border-left: 1.5px solid ${theme.borderColor}; opacity: 0.7;"></div>
+                <div style="position: absolute; bottom: 10px; right: 10px; width: 12px; height: 12px; border-bottom: 1.5px solid ${theme.borderColor}; border-right: 1.5px solid ${theme.borderColor}; opacity: 0.7;"></div>
+              ` : ""}
+              ${selectedBorder === "floral" ? `
+                <div class="floral-accent">
+                  <svg viewBox="0 0 100 100" style="position: absolute; top: 8px; left: 8px; width: 50px; height: 50px; fill: ${theme.borderColor};">
+                    <path d="M10,10 Q20,15 30,10 Q40,30 20,40 Q15,20 10,10 Z" />
+                  </svg>
+                  <svg viewBox="0 0 100 100" style="position: absolute; bottom: 8px; right: 8px; width: 50px; height: 50px; fill: ${theme.borderColor}; transform: rotate(180deg);">
+                    <path d="M10,10 Q20,15 30,10 Q40,30 20,40 Q15,20 10,10 Z" />
+                  </svg>
+                </div>
+              ` : ""}
+
+              <div>
+                <p class="sub-title">You are Invited</p>
+                <div class="divider"></div>
+              </div>
+
+              <div>
+                <h4 class="headline">${headline}</h4>
+                <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; color: ${theme.subColor}; text-align: center; margin: 12px 0 0 0;">Together with their families</p>
+              </div>
+
+              <div>
+                <p class="details">${subtext}</p>
+                <p class="venue">${venue}</p>
+              </div>
+            </div>
+          </div>
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() { window.close(); }, 500);
+            }
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  };
+
   return (
     <section className="w-full py-24 md:py-32" style={{ background: "#F5F2EC" }}>
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -321,13 +596,23 @@ export default function EvattoCardDesigner() {
               </div>
             </div>
 
-            <button
-              onClick={() => window.print()}
-              className="w-full mt-6 py-4 bg-black hover:bg-black/85 text-[#FDFBF7] font-semibold text-xs uppercase tracking-wider rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
-              style={{ fontFamily: "var(--font-inter)" }}
-            >
-              <Download size={14} /> Print Invitation Card
-            </button>
+            <div className="grid grid-cols-2 gap-3.5 mt-6">
+              <button
+                onClick={downloadCard}
+                className="py-4 bg-black hover:bg-black/85 text-[#FDFBF7] font-semibold text-xs uppercase tracking-wider rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                style={{ fontFamily: "var(--font-inter)" }}
+              >
+                <Download size={13} /> Save PNG
+              </button>
+
+              <button
+                onClick={printCard}
+                className="py-4 bg-transparent border border-black/20 hover:bg-black/[0.02] text-black font-semibold text-xs uppercase tracking-wider rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer font-bold"
+                style={{ fontFamily: "var(--font-inter)" }}
+              >
+                <Printer size={13} /> Print Card
+              </button>
+            </div>
           </div>
 
           {/* Right Column: 3D Interactive Card Preview */}

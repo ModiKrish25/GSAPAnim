@@ -5,6 +5,7 @@ import Link from "next/link";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
+import ScrollReveal from "@/components/evatto/ScrollReveal";
 
 const VENUES = [
   { id: 1, name: "The Strategist Hall",   capacity: "Up to 90 guests",  bestFor: "Board meetings, strategy sessions, corporate", features: "Interactive displays, soundproofing", style: "Sleek, corporate-focused, minimalist", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1400" },
@@ -103,7 +104,13 @@ export default function EvattoVenues() {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
               <p className="h-line opacity-0" style={{ fontFamily: "var(--font-inter)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.35em", color: "rgba(253,251,247,0.35)", marginBottom: "12px" }}>Our spaces</p>
-              <h2 className="h-line opacity-0" style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2rem, 5vw, 4.5rem)", fontWeight: 300, color: "#FDFBF7", maxWidth: "520px", lineHeight: 1.1 }}>Explore our event spaces</h2>
+              <ScrollReveal
+                as="h2"
+                type="words"
+                style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.2rem, 5vw, 4.5rem)", fontWeight: 300, color: "#FDFBF7", maxWidth: "520px", lineHeight: 1.1 }}
+              >
+                Explore our event spaces
+              </ScrollReveal>
             </div>
             <Link href="/gallery" className="h-line btn-pill btn-pill-outline-light self-start opacity-0 cursor-pointer">
               View all spaces <ArrowUpRight size={13} />

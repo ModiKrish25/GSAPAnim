@@ -6,6 +6,7 @@ import EvattoFooter from "@/components/evatto/EvattoFooter";
 import EvattoBookTourModal from "@/components/evatto/EvattoBookTourModal";
 import { ArrowUpRight, Users, Sparkles, SlidersHorizontal, MapPin } from "lucide-react";
 import gsap from "gsap";
+import ScrollReveal from "@/components/evatto/ScrollReveal";
 
 const VENUES = [
   { id: 1, name: "The Strategist Hall",   capacity: "Up to 90 guests",  bestFor: "Board meetings, strategy sessions, corporate", features: "Interactive displays, soundproofing", style: "Sleek, corporate-focused, minimalist", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1400", size: "1,200 sq.ft.", price: "From $1,500/day" },
@@ -49,9 +50,13 @@ export default function SpacesPage() {
             <span className="text-[10px] tracking-[0.4em] uppercase text-black/45 block mb-3 font-semibold" style={{ fontFamily: "var(--font-inter)" }}>
               Timeless Spaces
             </span>
-            <h1 className="font-cormorant text-5xl sm:text-6xl font-light text-black tracking-tight mb-5 leading-tight">
+            <ScrollReveal
+              as="h1"
+              type="words"
+              className="font-cormorant text-5xl sm:text-6xl font-light text-black tracking-tight mb-5 leading-tight"
+            >
               Settings for extraordinary moments
-            </h1>
+            </ScrollReveal>
             <p className="text-sm text-black/55 animate-fade-in" style={{ fontFamily: "var(--font-inter)" }}>
               Explore our architectural masterpieces tailored to inspire. Each hall boasts advanced features, high-end layouts, and absolute premium service.
             </p>

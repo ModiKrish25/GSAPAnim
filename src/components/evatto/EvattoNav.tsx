@@ -173,34 +173,94 @@ export default function EvattoNav() {
   }, [open]);
 
   // ── Desktop hover sliding pill indicator ────────────────
+  const pathname = usePathname();
+
+  const getActiveLinkIndex = () => {
+    if (pathname === "/") return 0;
+    if (pathname.startsWith("/gallery")) return 1;
+    if (pathname.startsWith("/services")) return 2;
+    if (pathname.startsWith("/contact")) return 3;
+    return -1;
+  };
+
+  useEffect(() => {
+    const positionPill = () => {
+      const navLinks = document.querySelectorAll(".nav-desktop-link");
+      const activeIndex = getActiveLinkIndex();
+      const pill = hoverPillRef.current;
+      if (!pill) return;
+
+      if (activeIndex === -1) {
+        gsap.to(pill, { opacity: 0, duration: 0.3, overwrite: "auto" });
+      } else {
+        const activeLink = navLinks[activeIndex] as HTMLAnchorElement;
+        if (activeLink) {
+          gsap.to(pill, {
+            left: activeLink.offsetLeft,
+            width: activeLink.offsetWidth,
+            opacity: 1,
+            duration: 0.35,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
+        }
+      }
+    };
+
+    // Position immediately & after short delays to ensure font/layout stability
+    positionPill();
+    const t1 = setTimeout(positionPill, 100);
+    const t2 = setTimeout(positionPill, 400);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [pathname]);
+
   const handleLinkEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const target = e.currentTarget;
     const pill = hoverPillRef.current;
     if (!pill) return;
 
-    const offsetLeft = target.offsetLeft;
-    const offsetWidth = target.offsetWidth;
-
     gsap.to(pill, {
-      left: offsetLeft,
-      width: offsetWidth,
+      left: target.offsetLeft,
+      width: target.offsetWidth,
       opacity: 1,
       duration: 0.3,
       ease: "power2.out",
+      overwrite: "auto",
     });
   };
 
-  const handleLinkLeave = () => {
+  const handleNavMouseLeave = () => {
+    const navLinks = document.querySelectorAll(".nav-desktop-link");
+    const activeIndex = getActiveLinkIndex();
     const pill = hoverPillRef.current;
     if (!pill) return;
-    gsap.to(pill, {
-      opacity: 0,
-      duration: 0.25,
-      ease: "power2.inOut",
-    });
+
+    if (activeIndex === -1) {
+      gsap.to(pill, {
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+    } else {
+      const activeLink = navLinks[activeIndex] as HTMLAnchorElement;
+      if (activeLink) {
+        gsap.to(pill, {
+          left: activeLink.offsetLeft,
+          width: activeLink.offsetWidth,
+          opacity: 1,
+          duration: 0.3,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+      }
+    }
   };
 
-  const pathname = usePathname();
   const close = () => { setOpen(false); setActiveIdx(null); };
 
   const handleNavClick = (e: React.MouseEvent, label: string) => {
@@ -267,7 +327,7 @@ export default function EvattoNav() {
           <div className="flex items-center lg:w-[180px] shrink-0">
             <Link href="/" className="flex items-center gap-2.5 group">
               <div className="relative w-8 h-8 flex items-center justify-center overflow-hidden rounded-md transition-transform duration-500 group-hover:scale-105">
-                <img src="/logo.png" alt="Keshar Logo" className="w-full h-full object-contain" />
+                <img src="/logo.png" alt="Keshav Logo" className="w-full h-full object-contain" />
               </div>
             </Link>
           </div>
@@ -276,6 +336,7 @@ export default function EvattoNav() {
           <nav 
             className="hidden lg:flex items-center gap-1.5 relative px-2 py-1 rounded-full border border-black/[0.04]"
             style={{ background: "rgba(26, 26, 26, 0.03)" }}
+            onMouseLeave={handleNavMouseLeave}
           >
             {/* The sliding hover capsule background */}
             <div 
@@ -286,19 +347,21 @@ export default function EvattoNav() {
               }}
             />
             
-            {NAV_LINKS.map((link) => (
-              <a 
-                href="#" 
-                key={link.label}
-                onClick={e => handleNavClick(e, link.label)}
-                onMouseEnter={handleLinkEnter}
-                onMouseLeave={handleLinkLeave}
-                className="nav-desktop-link px-5 py-2 rounded-full text-sm font-semibold text-black/70 hover:text-black transition-colors relative z-10 tracking-wide cursor-pointer"
-                style={{ fontFamily: "var(--font-inter)" }}
-              >
-                {link.label}
-              </a>
-            ))}
+            {NAV_LINKS.map((link, idx) => {
+              const isActive = getActiveLinkIndex() === idx;
+              return (
+                <a 
+                  href="#" 
+                  key={link.label}
+                  onClick={e => handleNavClick(e, link.label)}
+                  onMouseEnter={handleLinkEnter}
+                  className={`nav-desktop-link px-5 py-2 rounded-full text-sm font-semibold relative z-10 tracking-wide cursor-pointer transition-colors duration-300 ${isActive ? "text-black" : "text-black/60 hover:text-black"}`}
+                  style={{ fontFamily: "var(--font-inter)" }}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </nav>
 
           {/* Right column: Balanced layout container containing mobile Hamburger Menu */}
@@ -335,7 +398,7 @@ export default function EvattoNav() {
           <div className="flex items-center justify-between h-[64px] shrink-0 border-b border-black/[0.06] mb-8">
             <Link href="/" className="flex items-center gap-2 group" onClick={close}>
               <div className="relative w-8 h-8 flex items-center justify-center overflow-hidden rounded-md transition-transform duration-500 group-hover:scale-105">
-                <img src="/logo.png" alt="Keshar Logo" className="w-full h-full object-contain" />
+                <img src="/logo.png" alt="Keshav Logo" className="w-full h-full object-contain" />
               </div>
             </Link>
             <button

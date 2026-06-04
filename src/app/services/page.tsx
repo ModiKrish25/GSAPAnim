@@ -10,6 +10,10 @@ import EvattoProcessTimeline from "@/components/evatto/EvattoProcessTimeline";
 import EvattoEstimator from "@/components/evatto/EvattoEstimator";
 import EvattoFAQ from "@/components/evatto/EvattoFAQ";
 import EvattoCardDesigner from "@/components/evatto/EvattoCardDesigner";
+import ScrollReveal from "@/components/evatto/ScrollReveal";
+import EvattoBeforeAfter from "@/components/evatto/EvattoBeforeAfter";
+import EvattoTimelineBuilder from "@/components/evatto/EvattoTimelineBuilder";
+import EvattoDecorDesigner from "@/components/evatto/EvattoDecorDesigner";
 
 const SERVICES = [
   {
@@ -90,9 +94,13 @@ export default function ServicesPage() {
           <p className="font-inter text-[11px] uppercase tracking-[0.3em] text-black/40 mb-6 font-semibold">
             Our Expertise
           </p>
-          <h1 className="font-cormorant text-5xl md:text-7xl lg:text-8xl font-light text-[#1A1A1A] leading-tight mb-8">
-            Tailored Luxury <br /> Services
-          </h1>
+          <ScrollReveal
+            as="h1"
+            type="words"
+            className="font-cormorant text-5xl md:text-7xl lg:text-8xl font-light text-[#1A1A1A] leading-tight mb-8"
+          >
+            Tailored Luxury Services
+          </ScrollReveal>
           <p className="font-inter text-sm md:text-base text-black/60 max-w-2xl mx-auto leading-relaxed">
             Every event is a unique story. Our comprehensive suite of services ensures that from conception to execution, your vision is realized with uncompromising quality and elegance.
           </p>
@@ -132,6 +140,10 @@ export default function ServicesPage() {
           ))}
         </div>
       </main>
+
+      <EvattoBeforeAfter />
+      <EvattoTimelineBuilder />
+      <EvattoDecorDesigner />
 
       <EvattoEstimator />
       <EvattoProcessTimeline />

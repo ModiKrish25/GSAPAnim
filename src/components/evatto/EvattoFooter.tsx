@@ -48,9 +48,9 @@ export default function EvattoFooter() {
           <div className="md:col-span-6">
             <div className="flex items-center gap-2 mb-6">
               <div className="relative w-8 h-8 flex items-center justify-center overflow-hidden rounded-md bg-white/10">
-                <img src="/logo.png" alt="Keshar Logo" className="w-full h-full object-contain" />
+                <img src="/logo.png" alt="Keshav Logo" className="w-full h-full object-contain" />
               </div>
-              <span className="logo" style={{ color: "#FDFBF7" }}>Keshar Events & Decor</span>
+              <span className="logo" style={{ color: "#FDFBF7" }}>Keshav Events & Decor</span>
             </div>
 
             <p className="font-inter text-sm text-[#FDFBF7]/45 max-w-sm leading-relaxed mb-10">
@@ -79,8 +79,8 @@ export default function EvattoFooter() {
                 <Link href="tel:+011234567890" className="block font-inter text-sm text-[#FDFBF7]/55 hover:text-[#FDFBF7] transition-colors">
                   +01 123 456 7890
                 </Link>
-                <Link href="mailto:info@kesharevents.com" className="block font-inter text-sm text-[#FDFBF7]/55 hover:text-[#FDFBF7] transition-colors">
-                  info@kesharevents.com
+                <Link href="mailto:info@keshavevents.com" className="block font-inter text-sm text-[#FDFBF7]/55 hover:text-[#FDFBF7] transition-colors">
+                  info@keshavevents.com
                 </Link>
               </div>
               <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-[#FDFBF7]/30 mb-2">Address</p>
@@ -107,7 +107,7 @@ export default function EvattoFooter() {
         {/* Divider */}
         <div className="border-t border-[#FDFBF7]/8 mt-16 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="font-inter text-[11px] text-[#FDFBF7]/25">
-            © 2025 Keshar Events & Decor. All rights reserved.
+            © 2025 Keshav Events & Decor. All rights reserved.
           </p>
           <div className="flex gap-5">
             <Link href="#" className="font-inter text-[11px] text-[#FDFBF7]/25 hover:text-[#FDFBF7]/60 transition-colors">Privacy policy</Link>

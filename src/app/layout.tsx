@@ -21,7 +21,7 @@ const allura = Allura({
 });
 
 export const metadata: Metadata = {
-  title: "Keshar Events & Decor — Venue Management & Event Spaces",
+  title: "Keshav Events & Decor — Venue Management & Event Spaces",
   description: "A modern, sustainable venue management solution built for efficiency—enhancing experiences, optimizing operations, and supporting greener, smarter events.",
 };
 
