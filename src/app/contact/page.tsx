@@ -33,7 +33,7 @@ export default function ContactPage() {
 
       <main className="flex-grow pt-32 md:pt-48 pb-20 relative">
         {/* Subtle background decoration */}
-        <div className="absolute top-0 right-0 w-1/2 h-[80vh] bg-[#F5F2EC] rounded-bl-[120px] pointer-events-none -z-10" />
+        <div className="absolute top-0 right-0 w-1/2 h-[80vh] bg-[#F5F2EC] rounded-bl-[120px] pointer-events-none -z-10 hidden md:block" />
 
         <div ref={containerRef} className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row gap-16 lg:gap-24">
           
@@ -42,8 +42,8 @@ export default function ContactPage() {
             <p className="animate-up font-inter text-[11px] uppercase tracking-[0.3em] text-black/40 mb-6 font-semibold">
               Get In Touch
             </p>
-            <h1 className="animate-up font-cormorant text-5xl md:text-7xl font-light text-[#1A1A1A] leading-tight mb-8">
-              Let&apos;s Plan Your <br /> Masterpiece
+            <h1 className="animate-up font-cormorant text-4xl sm:text-5xl md:text-7xl font-light text-[#1A1A1A] leading-tight mb-8">
+              Let&apos;s Plan Your <br className="hidden sm:block" /> Masterpiece
             </h1>
             <p className="animate-up font-inter text-[13px] md:text-sm text-black/60 leading-relaxed mb-16 max-w-sm">
               Whether you are planning a grand wedding or an intimate corporate retreat, our experts are here to bring your vision to life.
@@ -73,7 +73,7 @@ export default function ContactPage() {
 
           {/* Right Column: Contact Form */}
           <div className="w-full lg:w-7/12 animate-up">
-            <div className="bg-white rounded-3xl p-8 md:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/[0.03]">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 md:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/[0.03]">
               <h3 className="font-cormorant text-3xl mb-8 text-[#1A1A1A] font-light">Send an Inquiry</h3>
               <form className="flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

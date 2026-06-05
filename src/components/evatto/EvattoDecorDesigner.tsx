@@ -53,7 +53,7 @@ export default function EvattoDecorDesigner() {
         </div>
 
         {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Controls Column */}
           <div className="lg:col-span-5 space-y-6">
@@ -163,10 +163,10 @@ export default function EvattoDecorDesigner() {
           </div>
 
           {/* SVG Preview Column */}
-          <div className="lg:col-span-7 bg-[#F5F2EC] rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-black/[0.03] flex items-center justify-center">
+          <div className="lg:col-span-7 bg-[#F5F2EC] rounded-[2rem] md:rounded-[2.5rem] p-5 md:p-8 lg:p-12 shadow-sm border border-black/[0.03] flex items-center justify-center">
             
             {/* The SVG Container */}
-            <div className="relative w-full aspect-square max-w-[420px] bg-white rounded-3xl p-6 shadow-md border border-black/[0.02]">
+            <div className="relative w-full aspect-square max-w-[320px] md:max-w-[380px] lg:max-w-[420px] bg-white rounded-3xl p-4 md:p-6 shadow-md border border-black/[0.02] mx-auto">
               <svg viewBox="0 0 400 400" className="w-full h-full">
                 
                 {/* 1. Dining Table Outline */}

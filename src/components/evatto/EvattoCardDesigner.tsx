@@ -474,7 +474,7 @@ export default function EvattoCardDesigner() {
         </div>
 
         {/* Layout Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start lg:items-center">
           
           {/* Left Column: Editor Form Panel */}
           <div className="lg:col-span-5 space-y-8 bg-white border border-black/[0.04] p-8 md:p-10 rounded-[2.5rem] shadow-sm">
@@ -616,16 +616,17 @@ export default function EvattoCardDesigner() {
           </div>
 
           {/* Right Column: 3D Interactive Card Preview */}
-          <div className="lg:col-span-7 flex justify-center items-center py-8">
+          <div className="lg:col-span-7 flex justify-center items-center py-4 lg:py-8">
             <div
               ref={cardContainerRef}
               style={{
                 width: "100%",
-                maxWidth: "420px",
+                maxWidth: "380px",
                 aspectRatio: "1/1.4",
                 perspective: 1000,
                 cursor: "grab",
               }}
+              className="mx-auto lg:max-w-[420px]"
             >
               {/* The Invitation Card */}
               <div

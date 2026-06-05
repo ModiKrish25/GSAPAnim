@@ -182,7 +182,7 @@ export default function EvattoTimelineBuilder() {
       <div className="max-w-7xl mx-auto px-6 md:px-14">
         
         {/* Title */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 md:gap-6 mb-10 md:mb-16">
           <div className="max-w-2xl">
             <p className="font-inter text-[11px] uppercase tracking-[0.3em] text-black/40 mb-4 font-semibold">
               Event Planning Portal
@@ -201,7 +201,7 @@ export default function EvattoTimelineBuilder() {
 
           <button
             onClick={printSchedule}
-            className="flex items-center gap-2 px-5 py-3 rounded-full border border-black/10 hover:border-black/25 text-xs font-inter font-semibold text-black bg-white hover:bg-black/[0.02] transition-all cursor-pointer shadow-sm active:scale-95 shrink-0"
+            className="flex items-center gap-2 px-5 py-3 rounded-full border border-black/10 hover:border-black/25 text-xs font-inter font-semibold text-black bg-white hover:bg-black/[0.02] transition-all cursor-pointer shadow-sm active:scale-95 shrink-0 whitespace-nowrap self-start md:self-auto"
           >
             <Printer size={13} />
             Print Day-of Schedule
@@ -209,10 +209,10 @@ export default function EvattoTimelineBuilder() {
         </div>
 
         {/* Builder grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
           
           {/* Presets Column */}
-          <div className="lg:col-span-4 bg-white border border-black/[0.04] p-6 md:p-8 rounded-[2rem] shadow-sm flex flex-col gap-5 h-fit">
+          <div className="lg:col-span-4 bg-white border border-black/[0.04] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] shadow-sm flex flex-col gap-5 h-fit">
             <h3 className="font-cormorant text-xl text-black pb-3 border-b border-black/[0.06]">
               Add Program Events
             </h3>
@@ -250,7 +250,7 @@ export default function EvattoTimelineBuilder() {
           </div>
 
           {/* Active Timeline Column */}
-          <div className="lg:col-span-8 bg-[#F5F2EC]/40 border border-black/[0.04] p-6 md:p-10 rounded-[2.5rem] relative min-h-[400px]">
+          <div className="lg:col-span-8 bg-[#F5F2EC]/40 border border-black/[0.04] p-5 md:p-10 rounded-[1.5rem] md:rounded-[2.5rem] relative min-h-[300px] md:min-h-[400px]">
             {schedule.length === 0 ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
                 <Calendar size={36} className="text-black/20 mb-3" />

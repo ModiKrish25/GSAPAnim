@@ -129,7 +129,7 @@ export default function EvattoEstimator() {
 
         {/* Step bar */}
         {step < 4 && (
-          <div className="flex items-center justify-center mb-10">
+          <div className="flex items-center justify-center mb-10 px-2">
             {STEP_LABELS.map((label, i) => (
               <React.Fragment key={i}>
                 <div className="flex flex-col items-center gap-1.5">
@@ -143,12 +143,12 @@ export default function EvattoEstimator() {
                   }}>
                     {i < step ? "✓" : i + 1}
                   </div>
-                  <span style={{ fontFamily: "var(--font-inter)", fontSize: "8.5px", letterSpacing: "0.08em", textTransform: "uppercase", color: i <= step ? "rgba(253,251,247,0.55)" : "rgba(253,251,247,0.2)" }}>
+                  <span className="hidden sm:block" style={{ fontFamily: "var(--font-inter)", fontSize: "8.5px", letterSpacing: "0.08em", textTransform: "uppercase", color: i <= step ? "rgba(253,251,247,0.55)" : "rgba(253,251,247,0.2)" }}>
                     {label}
                   </span>
                 </div>
                 {i < STEP_LABELS.length - 1 && (
-                  <div style={{ flex: 1, maxWidth: 56, height: 1, margin: "0 8px", marginBottom: 20, background: i < step ? GOLD : "rgba(255,255,255,0.08)", transition: "background 0.4s" }} />
+                  <div style={{ flex: 1, maxWidth: 40, height: 1, margin: "0 4px", marginBottom: 20, background: i < step ? GOLD : "rgba(255,255,255,0.08)", transition: "background 0.4s" }} />
                 )}
               </React.Fragment>
             ))}

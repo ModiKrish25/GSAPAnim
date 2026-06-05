@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
@@ -10,7 +10,7 @@ const cardsData = [
     label: "Wedding",
     emoji: "💍",
     icon: (
-      <svg viewBox="0 0 80 80" className="w-20 h-20" fill="none" stroke="currentColor" strokeWidth="3.5">
+      <svg viewBox="0 0 80 80" className="w-16 h-16" fill="none" stroke="currentColor" strokeWidth="3.5">
         <circle cx="30" cy="42" r="16" />
         <circle cx="50" cy="42" r="16" />
         <text x="22" y="26" fontSize="10" fill="currentColor" stroke="none">♥</text>
@@ -19,7 +19,7 @@ const cardsData = [
     ),
     bg: "#e8f5f0",
     description: "Elegant wedding coordination services for your big day",
-    image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80",
+    image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80",
     alt: "Wedding couple",
   },
   {
@@ -27,7 +27,7 @@ const cardsData = [
     label: "Graduation",
     emoji: "🎓",
     icon: (
-      <svg viewBox="0 0 80 80" className="w-20 h-20" fill="currentColor">
+      <svg viewBox="0 0 80 80" className="w-16 h-16" fill="currentColor">
         <polygon points="40,14 70,28 40,42 10,28" />
         <path d="M60,32 L60,52 C60,60 50,66 40,66 C30,66 20,60 20,52 L20,32" fill="none" stroke="currentColor" strokeWidth="3.5" />
         <circle cx="63" cy="33" r="3" />
@@ -44,10 +44,10 @@ const cardsData = [
   },
   {
     id: 3,
-    label: "DJ parties",
+    label: "DJ Parties",
     emoji: "🎉",
     icon: (
-      <svg viewBox="0 0 80 80" className="w-20 h-20" fill="none" stroke="currentColor" strokeWidth="3.5">
+      <svg viewBox="0 0 80 80" className="w-16 h-16" fill="none" stroke="currentColor" strokeWidth="3.5">
         <path d="M24,16 L18,42 Q18,52 28,52 Q38,52 38,42 L32,16 Z" />
         <path d="M48,16 L42,42 Q42,52 52,52 Q62,52 62,42 L56,16 Z" />
         <line x1="28" y1="52" x2="28" y2="64" />
@@ -64,36 +64,27 @@ const cardsData = [
     ),
     bg: "#e8f5f0",
     description: "From cozy small gatherings to large and cool big parties",
-    image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&q=80",
+    image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80",
     alt: "DJ party",
   },
   {
     id: 4,
-    label: "Birthday party",
+    label: "Birthday",
     emoji: "🎂",
     icon: (
-      <svg viewBox="0 0 80 80" className="w-20 h-20" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-        {/* Cake base / plate */}
+      <svg viewBox="0 0 80 80" className="w-16 h-16" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
         <line x1="15" y1="65" x2="65" y2="65" />
-        
-        {/* Tier 1 (Bottom) */}
         <rect x="22" y="44" width="36" height="21" rx="2" />
-        
-        {/* Tier 2 (Top) */}
         <rect x="30" y="26" width="20" height="18" rx="2" />
-        
-        {/* Candles */}
         <line x1="36" y1="16" x2="36" y2="26" />
         <line x1="44" y1="16" x2="44" y2="26" />
-        
-        {/* Flames */}
         <path d="M36,9 Q38,13 36,16 Q34,13 36,9" fill="currentColor" stroke="none" />
         <path d="M44,9 Q46,13 44,16 Q42,13 44,9" fill="currentColor" stroke="none" />
       </svg>
     ),
     bg: "#f5f0ec",
     description: "Celebrate birthdays and showers in style",
-    image: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&q=80",
+    image: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=600&q=80",
     alt: "Birthday party",
   },
 ];
@@ -110,6 +101,26 @@ export default function EvattoEventCards() {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
+  // Mobile state
+  const [active, setActive] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const touchStartX = useRef(0);
+
+  const goTo = (idx: number) => {
+    setActive(idx);
+    setFlipped(false);
+  };
+  const prev = () => goTo((active - 1 + cardsData.length) % cardsData.length);
+  const next = () => goTo((active + 1) % cardsData.length);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(dx) > 50) dx < 0 ? next() : prev();
+  };
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     gsap.registerPlugin(ScrollTrigger);
@@ -118,13 +129,7 @@ export default function EvattoEventCards() {
       const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
 
       // Initial card stack state (placed high above viewport)
-      gsap.set(cards, {
-        y: -300,
-        opacity: 0,
-        scale: 0.6,
-        rotationY: 0,
-      });
-
+      gsap.set(cards, { y: -300, opacity: 0, scale: 0.6, rotationY: 0 });
       cards.forEach((card, i) => {
         gsap.set(card, {
           x: STACKED_POSITIONS[i].x,
@@ -135,70 +140,16 @@ export default function EvattoEventCards() {
 
       const mm = gsap.matchMedia();
 
-      // Desktop layout: cards fully scrub-reversible (drop → spread → flip)
+      // Only run GSAP pinning and timeline animations on Desktop (>= 1024px)
       mm.add("(min-width: 1024px)", () => {
         const finalX = [-540, -180, 180, 540];
         const finalRot = [-2, -1, 1, 2];
 
-        // Pinned scroll-scrub timeline: locks container in place so all cards drop, spread, and flip in the center
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top top",      // start pinning when top of section hits top of screen
-            end: "+=1200",         // scroll distance for the animations to complete
-            scrub: 0.5,            // smooth tracking
-            pin: true,             // pin the section!
-            anticipatePin: 1,
-          },
-        });
-
-        // 1. Title fade (fast, right at start of pin)
-        tl.fromTo(titleRef.current, 
-          { y: -20, opacity: 0 }, 
-          { y: 0, opacity: 1, duration: 0.3 },
-          0
-        );
-
-        // 2. Drop & stack in center (takes 0.0 to 0.4 on scroll-scrub)
-        tl.to(cards, {
-          y: 0,
-          opacity: 1,
-          scale: 1,
-          duration: 0.8,
-          stagger: 0.08,
-          force3D: true,
-          ease: "back.out(1.2)",
-        }, 0.1);
-
-        // 3. Spread out (takes 0.4 to 0.8 on scroll-scrub)
-        cards.forEach((card, i) => {
-          tl.to(card, {
-            x: finalX[i],
-            rotation: finalRot[i],
-            duration: 0.9,
-            force3D: true,
-            ease: "power2.inOut",
-          }, 0.5 + i * 0.05);
-        });
-
-        // 4. Staggered 3D Y-axis flip (takes 0.8 to 1.3 on scroll-scrub)
-        cards.forEach((card, i) => {
-          tl.to(card, {
-            rotationY: 180, // rotate Y axis from 0 to 180
-            duration: 0.8,
-            force3D: true,
-            ease: "power2.inOut",
-          }, 0.9 + i * 0.1);
-        });
-      });
-
-      // Mobile/Tablet responsive layout: also pinned and centered
-      mm.add("(max-width: 1023px)", () => {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: containerRef.current,
             start: "top top",
-            end: "+=1000",
+            end: "+=1200",
             scrub: 0.5,
             pin: true,
             anticipatePin: 1,
@@ -207,121 +158,99 @@ export default function EvattoEventCards() {
 
         tl.fromTo(titleRef.current, { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3 }, 0);
 
-        tl.to(cards, {
-          y: 0,
-          opacity: 1,
-          scale: 1,
-          x: 0,
-          rotation: 0,
-          duration: 0.8,
-          stagger: 0.08,
-        }, 0.1);
+        tl.to(cards, { y: 0, opacity: 1, scale: 1, duration: 0.8, stagger: 0.08, force3D: true, ease: "back.out(1.2)" }, 0.1);
 
-        tl.to(cards, {
-          rotationY: 180,
-          duration: 0.8,
-          stagger: 0.08,
-          ease: "power2.inOut",
-        }, 0.6);
+        cards.forEach((card, i) => {
+          tl.to(card, { x: finalX[i], rotation: finalRot[i], duration: 0.9, force3D: true, ease: "power2.inOut" }, 0.5 + i * 0.05);
+        });
+
+        cards.forEach((card, i) => {
+          tl.to(card, { rotationY: 180, duration: 0.8, force3D: true, ease: "power2.inOut" }, 0.9 + i * 0.1);
+        });
       });
-
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
+  const card = cardsData[active];
+
   return (
-    <section
-      ref={containerRef}
-      id="events"
-      className="relative min-h-[90vh] md:min-h-screen flex flex-col items-center justify-start pt-20 md:pt-24 pb-16 md:pb-20 overflow-hidden"
-      style={{ backgroundColor: "#FDFBF7" }}
-    >
-      {/* Responsive card size overrides */}
-      <style>{`
-        @media (max-width: 480px) {
-          .event-card-inner { width: 220px !important; height: 340px !important; margin-left: -110px !important; }
-        }
-        @media (min-width: 481px) and (max-width: 767px) {
-          .event-card-inner { width: 250px !important; height: 390px !important; margin-left: -125px !important; }
-        }
-        @media (min-width: 768px) and (max-width: 1023px) {
-          .event-card-inner { width: 260px !important; height: 410px !important; margin-left: -130px !important; }
-        }
-      `}</style>
-
-      {/* Heading */}
-      <h2
-        ref={titleRef}
-        className="font-cormorant font-light text-4xl sm:text-5xl md:text-7xl text-gray-900 mb-20 md:mb-28 tracking-tight text-center opacity-0 px-6"
+    <>
+      {/* ── Mobile View: Pure CSS display matching mobile layouts ── */}
+      <section
+        id="events-mobile"
+        className="w-full bg-[#FDFBF7] py-16 px-5 flex flex-col items-center lg:hidden"
       >
-        Featured Event
-      </h2>
+        <p className="font-inter text-[10px] uppercase tracking-[0.3em] text-black/40 mb-3 font-semibold">
+          What we offer
+        </p>
+        <h2 className="font-cormorant font-light text-4xl text-gray-900 mb-10 tracking-tight text-center">
+          Featured Events
+        </h2>
 
-      {/* Cards container */}
-      <div className="relative flex items-start justify-center w-full" style={{ height: 520 }}>
-        {cardsData.map((card, i) => (
+        {/* Card */}
+        <div
+          className="w-full max-w-[340px] mx-auto"
+          style={{ perspective: 1000 }}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
           <div
-            key={card.id}
-            ref={(el) => { cardRefs.current[i] = el; }}
-            className="absolute shadow-lg rounded-3xl event-card-inner"
+            onClick={() => setFlipped((f) => !f)}
+            className="relative w-full cursor-pointer select-none"
             style={{
-              width: 280,
-              height: 450,
+              height: 420,
               transformStyle: "preserve-3d",
-              perspective: 1200,
-              top: 0,
-              left: "50%",
-              marginLeft: -140,
-              willChange: "transform",
+              transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+              transition: "transform 0.65s cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >
-            {/* FRONT: Icon card */}
+            {/* FRONT */}
             <div
-              className="absolute inset-0 rounded-3xl flex flex-col p-6 border border-black/5"
+              className="absolute inset-0 rounded-3xl flex flex-col p-6 border border-black/5 shadow-xl"
               style={{
                 backgroundColor: card.bg,
-                backfaceVisibility: "hidden", // hides front when flipped
+                backfaceVisibility: "hidden",
                 WebkitBackfaceVisibility: "hidden",
-                transform: "rotateY(0deg)", // normal orientation
-                zIndex: 2,
               }}
             >
               <span
-                className="text-xs uppercase tracking-wider font-semibold text-gray-600 flex items-center gap-1.5"
+                className="text-xs uppercase tracking-wider font-semibold text-gray-600 flex items-center gap-1.5 mb-2"
                 style={{ fontFamily: "var(--font-inter)" }}
               >
-                {card.label}{" "}
-                <span className="text-base">{card.emoji}</span>
+                {card.label} <span className="text-base">{card.emoji}</span>
               </span>
               <div className="flex-1 flex items-center justify-center text-gray-800">
                 {card.icon}
               </div>
+              <p
+                className="text-center text-[11px] text-black/40 mt-3"
+                style={{ fontFamily: "var(--font-inter)" }}
+              >
+                Tap to preview →
+              </p>
             </div>
 
-            {/* BACK: Photo card */}
+            {/* BACK */}
             <div
-              className="absolute inset-0 rounded-3xl flex flex-col overflow-hidden border border-black/5"
+              className="absolute inset-0 rounded-3xl flex flex-col overflow-hidden border border-black/5 shadow-xl"
               style={{
                 backgroundColor: card.bg,
-                backfaceVisibility: "hidden", // hides back when front is facing user
+                backfaceVisibility: "hidden",
                 WebkitBackfaceVisibility: "hidden",
-                transform: "rotateY(180deg)", // facing backward natively inside 3D transform space
-                zIndex: 1,
+                transform: "rotateY(180deg)",
               }}
             >
-              {/* Label */}
               <div className="px-5 pt-4 pb-2 flex-shrink-0">
                 <span
                   className="text-xs uppercase tracking-wider font-semibold text-gray-600 flex items-center gap-1.5"
                   style={{ fontFamily: "var(--font-inter)" }}
                 >
-                  {card.label}{" "}
-                  <span className="text-base">{card.emoji}</span>
+                  {card.label} <span className="text-base">{card.emoji}</span>
                 </span>
               </div>
-              {/* Photo */}
-              <div className="mx-4 rounded-2xl overflow-hidden flex-1" style={{ maxHeight: 250 }}>
+              <div className="mx-4 rounded-2xl overflow-hidden flex-1">
                 <img
                   src={card.image}
                   alt={card.alt}
@@ -329,10 +258,9 @@ export default function EvattoEventCards() {
                   loading="lazy"
                 />
               </div>
-              {/* Description */}
               <div className="px-5 py-4 flex-shrink-0">
                 <p
-                  className="text-xs md:text-sm text-gray-700 leading-snug"
+                  className="text-xs text-gray-700 leading-snug"
                   style={{ fontFamily: "var(--font-inter)" }}
                 >
                   {card.description}
@@ -340,8 +268,141 @@ export default function EvattoEventCards() {
               </div>
             </div>
           </div>
-        ))}
-      </div>
-    </section>
+        </div>
+
+        {/* Controls row */}
+        <div className="flex items-center gap-6 mt-8">
+          <button
+            onClick={prev}
+            className="w-10 h-10 rounded-full border border-black/15 flex items-center justify-center text-black/50 hover:bg-black/5 active:scale-95 transition-all cursor-pointer"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+
+          <div className="flex gap-2 items-center">
+            {cardsData.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => goTo(idx)}
+                className={`rounded-full transition-all duration-300 cursor-pointer ${
+                  idx === active
+                    ? "w-6 h-2 bg-gray-900"
+                    : "w-2 h-2 bg-black/20 hover:bg-black/40"
+                }`}
+              />
+            ))}
+          </div>
+
+          <button
+            onClick={next}
+            className="w-10 h-10 rounded-full border border-black/15 flex items-center justify-center text-black/50 hover:bg-black/5 active:scale-95 transition-all cursor-pointer"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        </div>
+
+        {/* All category pills */}
+        <div className="flex flex-wrap gap-2 justify-center mt-6">
+          {cardsData.map((c, idx) => (
+            <button
+              key={c.id}
+              onClick={() => goTo(idx)}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 cursor-pointer border ${
+                idx === active
+                  ? "bg-gray-900 text-white border-gray-900"
+                  : "bg-transparent text-black/50 border-black/10 hover:border-black/25"
+              }`}
+              style={{ fontFamily: "var(--font-inter)" }}
+            >
+              {c.emoji} {c.label}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Desktop View: GSAP Pinned layout, hidden on mobile ── */}
+      <section
+        ref={containerRef}
+        id="events-desktop"
+        className="relative min-h-screen flex-col items-center justify-start pt-24 pb-20 overflow-hidden hidden lg:flex"
+        style={{ backgroundColor: "#FDFBF7" }}
+      >
+        <h2
+          ref={titleRef}
+          className="font-cormorant font-light text-7xl text-gray-900 mb-28 tracking-tight text-center opacity-0 px-6"
+        >
+          Featured Event
+        </h2>
+
+        <div className="relative flex items-start justify-center w-full" style={{ height: 520 }}>
+          {cardsData.map((card, i) => (
+            <div
+              key={card.id}
+              ref={(el) => { cardRefs.current[i] = el; }}
+              className="absolute shadow-lg rounded-3xl"
+              style={{
+                width: 280,
+                height: 450,
+                transformStyle: "preserve-3d",
+                perspective: 1200,
+                top: 0,
+                left: "50%",
+                marginLeft: -140,
+                willChange: "transform",
+              }}
+            >
+              {/* FRONT */}
+              <div
+                className="absolute inset-0 rounded-3xl flex flex-col p-6 border border-black/5"
+                style={{
+                  backgroundColor: card.bg,
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                  transform: "rotateY(0deg)",
+                  zIndex: 2,
+                }}
+              >
+                <span className="text-xs uppercase tracking-wider font-semibold text-gray-600 flex items-center gap-1.5" style={{ fontFamily: "var(--font-inter)" }}>
+                  {card.label} <span className="text-base">{card.emoji}</span>
+                </span>
+                <div className="flex-1 flex items-center justify-center text-gray-800">
+                  {card.icon}
+                </div>
+              </div>
+
+              {/* BACK */}
+              <div
+                className="absolute inset-0 rounded-3xl flex flex-col overflow-hidden border border-black/5"
+                style={{
+                  backgroundColor: card.bg,
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                  transform: "rotateY(180deg)",
+                  zIndex: 1,
+                }}
+              >
+                <div className="px-5 pt-4 pb-2 flex-shrink-0">
+                  <span className="text-xs uppercase tracking-wider font-semibold text-gray-600 flex items-center gap-1.5" style={{ fontFamily: "var(--font-inter)" }}>
+                    {card.label} <span className="text-base">{card.emoji}</span>
+                  </span>
+                </div>
+                <div className="mx-4 rounded-2xl overflow-hidden flex-1" style={{ maxHeight: 250 }}>
+                  <img src={card.image} alt={card.alt} className="w-full h-full object-cover" loading="lazy" />
+                </div>
+                <div className="px-5 py-4 flex-shrink-0">
+                  <p className="text-sm text-gray-700 leading-snug" style={{ fontFamily: "var(--font-inter)" }}>
+                    {card.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
   );
 }

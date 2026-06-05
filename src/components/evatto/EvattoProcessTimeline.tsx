@@ -213,12 +213,12 @@ export default function EvattoProcessTimeline() {
           </div>
 
           {/* ── Right: Timeline column ── */}
-          <div className="lg:w-[64%] flex flex-row">
+          <div className="lg:w-[64%] flex flex-row overflow-x-hidden">
 
             {/* Vertical line + dots ── */}
             <div
               className="relative shrink-0 flex flex-col items-center"
-              style={{ width: "32px", marginRight: "28px" }}
+              style={{ width: "28px", marginRight: "16px" }}
             >
               {/* Faint track background */}
               <div
@@ -272,7 +272,7 @@ export default function EvattoProcessTimeline() {
             </div>
 
             {/* Stage cards ── */}
-            <div className="flex flex-col gap-5 flex-1">
+            <div className="flex flex-col gap-5 flex-1 min-w-0">
               {STAGES.map((stage, i) => (
                 <div
                   key={i}

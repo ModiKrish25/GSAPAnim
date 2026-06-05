@@ -134,14 +134,15 @@ body {
   contain: layout style;
 }
 
-/* Smooth scroll for the whole page */
-html {
-  scroll-behavior: smooth;
-}
-
 /* Fix: remove cursor:none from interactive elements — it was hiding the pointer on clicks */
 @media (min-width: 768px) {
   a, button, [data-cursor] { cursor: pointer; }
+}
+
+/* Critical: prevent horizontal overflow on all screen sizes */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* Premium image rendering */
@@ -175,3 +176,32 @@ main {
   .logo { font-size: 1.4rem !important; }
 }
 
+/* ── Mobile-specific fixes ─────────────────────────────────────── */
+
+/* Ensure no content bleeds past the screen on mobile */
+@media (max-width: 767px) {
+  section { overflow-x: hidden; }
+  
+  /* Estimator selection cards: full width stacking on tiny screens */
+  .estimator-card-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Blog grid: 1 column on very small phones */
+  #blog .grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Prevent text overflow in timeline cards */
+  .timeline-content-card h4 {
+    font-size: 1rem !important;
+  }
+}
+
+/* Ensure smooth transition across all breakpoints */
+@media (max-width: 480px) {
+  .btn-pill {
+    font-size: 11px;
+    padding: 9px 18px;
+  }
+}
