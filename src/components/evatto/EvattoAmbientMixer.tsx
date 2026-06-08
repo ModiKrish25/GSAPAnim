@@ -44,7 +44,16 @@ export default function EvattoAmbientMixer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedTrack, setSelectedTrack] = useState(TRACKS[0]);
   const [selectedLight, setSelectedLight] = useState(LIGHTS[0]);
+  const [volume, setVolume] = useState(0.5);
+  const [audioError, setAudioError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Sync volume state
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
 
   // Sync state transitions when selected track changes
   useEffect(() => {
@@ -54,22 +63,27 @@ export default function EvattoAmbientMixer() {
       audioRef.current.src = selectedTrack.url;
       audioRef.current.load();
       if (playingBefore) {
-        audioRef.current.play().catch(() => setIsPlaying(false));
+        audioRef.current.play().catch(() => {
+          setIsPlaying(false);
+          setAudioError("Tap play again. Mobile browsers block autoplay background audio.");
+        });
       }
     }
   }, [selectedTrack]);
 
   const handleTogglePlay = () => {
     if (!audioRef.current) return;
+    setAudioError(null);
     if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
       audioRef.current.play()
         .then(() => setIsPlaying(true))
-        .catch(() => {
-          // fallback if browser prevents autoplay block
+        .catch((err) => {
+          console.warn("Autoplay / audio block: ", err);
           setIsPlaying(false);
+          setAudioError("Tap play again. Mobile browsers block autoplay background audio.");
         });
     }
   };
@@ -154,6 +168,27 @@ export default function EvattoAmbientMixer() {
                 {isPlaying ? <Pause size={13} /> : <Play size={13} />}
                 {isPlaying ? "Pause Ambient Audio" : "Play Ambient Audio"}
               </button>
+
+              {audioError && (
+                <p className="text-red-500 text-[10px] font-semibold font-inter text-center mt-2 bg-red-50 p-2 rounded-lg">
+                  {audioError}
+                </p>
+              )}
+
+              {/* Volume Slider */}
+              <div className="flex items-center gap-3 mt-4 px-1 select-none">
+                <span className="text-black/45 text-[10px] uppercase font-bold tracking-wider font-inter shrink-0">Volume</span>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.05"
+                  value={volume}
+                  onChange={(e) => setVolume(parseFloat(e.target.value))}
+                  className="w-full h-1 bg-black/10 rounded-lg appearance-none cursor-pointer accent-[#C5A880]"
+                />
+                <span className="text-black/60 text-xs font-semibold font-inter w-8 text-right shrink-0">{Math.round(volume * 100)}%</span>
+              </div>
             </div>
 
             {/* Section 2: Lighting select */}

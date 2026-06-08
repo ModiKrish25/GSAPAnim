@@ -38,16 +38,18 @@ export default function EvattoHero() {
     tl.fromTo(ctaRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 1.65);
     tl.fromTo(indicatorRef.current, { opacity: 0 }, { opacity: 0.65, duration: 0.6 }, 2.1);
 
+    const isMobile = window.innerWidth < 768;
+
     // Bg parallax
     gsap.to(bgRef.current, {
-      yPercent: 18,
+      yPercent: isMobile ? 8 : 18,
       ease: "none",
       force3D: true,
       scrollTrigger: {
         trigger: sectionRef.current,
         start: "top top",
         end: "bottom top",
-        scrub: 0.4,
+        scrub: isMobile ? false : 0.4,
       },
     });
 
@@ -58,7 +60,7 @@ export default function EvattoHero() {
 
   return (
     <section ref={sectionRef} className="relative w-full flex flex-col justify-end overflow-hidden"
-      style={{ height: "100svh", minHeight: "640px" }}>
+      style={{ height: "100svh", minHeight: "clamp(450px, 80vh, 640px)" }}>
 
       <div ref={bgRef} className="absolute inset-0 bg-cover bg-top bg-no-repeat"
         style={{ backgroundImage: `url('/hero-bg.jpg')`, willChange: "transform" }} />

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Sparkles, Check } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 
@@ -31,6 +31,28 @@ export default function EvattoDecorDesigner() {
   const [selectedRunner, setSelectedRunner] = useState(RUNNERS[0]);
   const [selectedCandle, setSelectedCandle] = useState(CANDLES[0]);
 
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [showFloatBtn, setShowFloatBtn] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowFloatBtn(!entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    const target = previewRef.current;
+    if (target) {
+      observer.observe(target);
+    }
+
+    return () => {
+      if (target) observer.unobserve(target);
+    };
+  }, []);
+
   return (
     <section className="py-20 md:py-32 bg-[#FDFBF7] border-t border-black/[0.06]">
       <div className="max-w-7xl mx-auto px-6 md:px-14">
@@ -53,7 +75,7 @@ export default function EvattoDecorDesigner() {
         </div>
 
         {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
           {/* Controls Column */}
           <div className="lg:col-span-5 space-y-6">
@@ -163,7 +185,10 @@ export default function EvattoDecorDesigner() {
           </div>
 
           {/* SVG Preview Column */}
-          <div className="lg:col-span-7 bg-[#F5F2EC] rounded-[2rem] md:rounded-[2.5rem] p-5 md:p-8 lg:p-12 shadow-sm border border-black/[0.03] flex items-center justify-center">
+          <div
+            ref={previewRef}
+            className="lg:col-span-7 lg:sticky lg:top-24 order-first lg:order-last bg-[#F5F2EC] rounded-[2rem] md:rounded-[2.5rem] p-5 md:p-8 lg:p-12 shadow-sm border border-black/[0.03] flex items-center justify-center"
+          >
             
             {/* The SVG Container */}
             <div className="relative w-full aspect-square max-w-[320px] md:max-w-[380px] lg:max-w-[420px] bg-white rounded-3xl p-4 md:p-6 shadow-md border border-black/[0.02] mx-auto">
@@ -286,6 +311,17 @@ export default function EvattoDecorDesigner() {
 
         </div>
       </div>
+
+      {showFloatBtn && (
+        <button
+          onClick={() => previewRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })}
+          className="fixed bottom-6 right-6 z-40 lg:hidden flex items-center gap-2 px-5 py-3.5 rounded-full bg-black text-white text-xs font-semibold uppercase tracking-wider shadow-2xl border border-white/10 active:scale-95 transition-all cursor-pointer"
+          style={{ fontFamily: "var(--font-inter)" }}
+        >
+          <Sparkles size={13} className="text-[#C5A880]" />
+          View Live Render
+        </button>
+      )}
     </section>
   );
 }

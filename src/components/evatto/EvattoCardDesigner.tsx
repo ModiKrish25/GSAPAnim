@@ -103,11 +103,32 @@ export default function EvattoCardDesigner() {
 
   const cardRef = useRef<HTMLDivElement>(null);
   const cardContainerRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [showFloatBtn, setShowFloatBtn] = useState(false);
 
   const theme = THEMES.find(t => t.id === selectedTheme) || THEMES[0];
   const font = FONTS.find(f => f.id === selectedFont) || FONTS[0];
 
-  // 3D perspective tilt effect on mouse movement
+  useEffect(() => {
+    if (typeof window === "undefined" || !("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowFloatBtn(!entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    const target = previewRef.current;
+    if (target) {
+      observer.observe(target);
+    }
+
+    return () => {
+      if (target) observer.unobserve(target);
+    };
+  }, []);
+
+  // 3D perspective tilt effect on mouse movement & touch drag
   useEffect(() => {
     const card = cardRef.current;
     const container = cardContainerRef.current;
@@ -117,6 +138,10 @@ export default function EvattoCardDesigner() {
     let rafId: number | null = null;
     let pendingX = 0;
     let pendingY = 0;
+
+    let isTouchActive = false;
+    let touchStartX = 0;
+    let touchStartY = 0;
 
     const applyTilt = () => {
       rafId = null;
@@ -136,6 +161,7 @@ export default function EvattoCardDesigner() {
     };
 
     const onMouseMove = (e: MouseEvent) => {
+      if (isTouchActive) return;
       pendingX = e.clientX;
       pendingY = e.clientY;
       if (!rafId) rafId = requestAnimationFrame(applyTilt);
@@ -160,9 +186,52 @@ export default function EvattoCardDesigner() {
       });
     };
 
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 0) return;
+      isTouchActive = true;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      cachedRect = container.getBoundingClientRect();
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isTouchActive || e.touches.length === 0) return;
+      const clientX = e.touches[0].clientX;
+      const clientY = e.touches[0].clientY;
+      
+      const deltaX = (clientX - touchStartX) / cachedRect.width;
+      const deltaY = (clientY - touchStartY) / cachedRect.height;
+
+      gsap.to(card, {
+        rotateY: deltaX * 35,
+        rotateX: -deltaY * 35,
+        translateZ: 30,
+        duration: 0.3,
+        ease: "power1.out",
+        transformPerspective: 1000,
+        overwrite: "auto"
+      });
+    };
+
+    const onTouchEnd = () => {
+      isTouchActive = false;
+      gsap.to(card, {
+        rotateY: 0,
+        rotateX: 0,
+        translateZ: 0,
+        duration: 1.2,
+        ease: "power3.out",
+        overwrite: "auto",
+      });
+    };
+
     container.addEventListener("mousemove", onMouseMove, { passive: true });
-    container.addEventListener("mouseenter", onMouseEnter);
-    container.addEventListener("mouseleave", onMouseLeave);
+    container.addEventListener("mouseenter", onMouseEnter, { passive: true });
+    container.addEventListener("mouseleave", onMouseLeave, { passive: true });
+
+    container.addEventListener("touchstart", onTouchStart, { passive: true });
+    container.addEventListener("touchmove", onTouchMove, { passive: true });
+    container.addEventListener("touchend", onTouchEnd, { passive: true });
 
     const onResize = () => {
       cachedRect = container.getBoundingClientRect();
@@ -174,6 +243,9 @@ export default function EvattoCardDesigner() {
       container.removeEventListener("mousemove", onMouseMove);
       container.removeEventListener("mouseenter", onMouseEnter);
       container.removeEventListener("mouseleave", onMouseLeave);
+      container.removeEventListener("touchstart", onTouchStart);
+      container.removeEventListener("touchmove", onTouchMove);
+      container.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("resize", onResize);
     };
   }, []);
@@ -301,156 +373,7 @@ export default function EvattoCardDesigner() {
   };
 
   const printCard = () => {
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
-
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Print Invitation - ${headline}</title>
-          <style>
-            @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@400;600&display=swap');
-            body {
-              margin: 0;
-              padding: 0;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              height: 100vh;
-              background-color: #ffffff;
-            }
-            .card-print {
-              width: 450px;
-              height: 630px;
-              background: ${theme.cardBg};
-              border-radius: 20px;
-              padding: 4px;
-              box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-              box-sizing: border-box;
-            }
-            .inner-border {
-              width: 100%;
-              height: 100%;
-              border-radius: 16px;
-              border: 1.5px solid ${theme.borderColor};
-              padding: 40px 30px;
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-              align-items: center;
-              box-sizing: border-box;
-              position: relative;
-            }
-            .divider {
-              width: 16px;
-              height: 1px;
-              background: ${theme.borderColor};
-              opacity: 0.35;
-              margin: 10px auto 0 auto;
-            }
-            .sub-title {
-              font-family: 'Inter', sans-serif;
-              font-size: 10px;
-              letter-spacing: 0.45em;
-              text-transform: uppercase;
-              color: ${theme.subColor};
-              font-weight: 600;
-              text-align: center;
-            }
-            .headline {
-              font-family: ${font.id === "sans" ? "'Inter', sans-serif" : "'Cormorant Garamond', serif"};
-              font-style: ${font.fontStyle};
-              font-size: 32px;
-              font-weight: ${font.fontStyle === "italic" ? 300 : 400};
-              color: ${theme.textColor};
-              text-align: center;
-              margin: 0;
-            }
-            .details {
-              font-family: 'Inter', sans-serif;
-              font-size: 10px;
-              letter-spacing: 0.15em;
-              color: ${theme.textColor};
-              font-weight: 600;
-              text-align: center;
-              text-transform: uppercase;
-              margin-bottom: 6px;
-            }
-            .venue {
-              font-family: 'Inter', sans-serif;
-              font-size: 10px;
-              letter-spacing: 0.08em;
-              color: ${theme.subColor};
-              text-align: center;
-            }
-            .floral-accent {
-              position: absolute;
-              inset: 0;
-              overflow: hidden;
-              pointer-events: none;
-              opacity: 0.15;
-            }
-            @media print {
-              body {
-                background: none;
-              }
-              .card-print {
-                box-shadow: none;
-                page-break-inside: avoid;
-              }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="card-print">
-            <div class="inner-border">
-              ${selectedBorder === "royal" ? `<div style="position: absolute; inset: 6px; border: 1px solid ${theme.borderColor}; opacity: 0.4; border-radius: 12px;"></div>` : ""}
-              ${selectedBorder === "corners" ? `
-                <div style="position: absolute; top: 10px; left: 10px; width: 12px; height: 12px; border-top: 1.5px solid ${theme.borderColor}; border-left: 1.5px solid ${theme.borderColor}; opacity: 0.7;"></div>
-                <div style="position: absolute; top: 10px; right: 10px; width: 12px; height: 12px; border-top: 1.5px solid ${theme.borderColor}; border-right: 1.5px solid ${theme.borderColor}; opacity: 0.7;"></div>
-                <div style="position: absolute; bottom: 10px; left: 10px; width: 12px; height: 12px; border-bottom: 1.5px solid ${theme.borderColor}; border-left: 1.5px solid ${theme.borderColor}; opacity: 0.7;"></div>
-                <div style="position: absolute; bottom: 10px; right: 10px; width: 12px; height: 12px; border-bottom: 1.5px solid ${theme.borderColor}; border-right: 1.5px solid ${theme.borderColor}; opacity: 0.7;"></div>
-              ` : ""}
-              ${selectedBorder === "floral" ? `
-                <div class="floral-accent">
-                  <svg viewBox="0 0 100 100" style="position: absolute; top: 8px; left: 8px; width: 50px; height: 50px; fill: ${theme.borderColor};">
-                    <path d="M10,10 Q20,15 30,10 Q40,30 20,40 Q15,20 10,10 Z" />
-                  </svg>
-                  <svg viewBox="0 0 100 100" style="position: absolute; bottom: 8px; right: 8px; width: 50px; height: 50px; fill: ${theme.borderColor}; transform: rotate(180deg);">
-                    <path d="M10,10 Q20,15 30,10 Q40,30 20,40 Q15,20 10,10 Z" />
-                  </svg>
-                </div>
-              ` : ""}
-
-              <div>
-                <p class="sub-title">You are Invited</p>
-                <div class="divider"></div>
-              </div>
-
-              <div>
-                <h4 class="headline">${headline}</h4>
-                <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; color: ${theme.subColor}; text-align: center; margin: 12px 0 0 0;">Together with their families</p>
-              </div>
-
-              <div>
-                <p class="details">${subtext}</p>
-                <p class="venue">${venue}</p>
-              </div>
-            </div>
-          </div>
-          <script>
-            window.onload = function() {
-              window.print();
-              setTimeout(function() { window.close(); }, 500);
-            }
-          </script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
+    window.print();
   };
 
   return (
@@ -616,7 +539,7 @@ export default function EvattoCardDesigner() {
           </div>
 
           {/* Right Column: 3D Interactive Card Preview */}
-          <div className="lg:col-span-7 flex justify-center items-center py-4 lg:py-8">
+          <div ref={previewRef} className="lg:col-span-7 flex justify-center items-center py-4 lg:py-8">
             <div
               ref={cardContainerRef}
               style={{
@@ -784,6 +707,84 @@ export default function EvattoCardDesigner() {
         </div>
 
       </div>
+
+      {/* Printable template only visible when printing */}
+      <div className="hidden print:flex print:fixed print:inset-0 print:bg-white print:z-[9999] print:items-center print:justify-center">
+        <div
+          style={{
+            width: "600px",
+            height: "840px",
+            background: theme.cardBg,
+            borderRadius: "20px",
+            border: `3px solid ${theme.borderColor}`,
+            padding: "40px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
+            boxSizing: "border-box",
+            position: "relative",
+          }}
+        >
+          {selectedBorder === "royal" && (
+            <div style={{ position: "absolute", inset: "8px", border: `1px solid ${theme.borderColor}`, opacity: 0.6, borderRadius: "16px" }} />
+          )}
+          {selectedBorder === "corners" && (
+            <>
+              <div style={{ position: "absolute", top: 16, left: 16, width: 20, height: 20, borderTop: `2.5px solid ${theme.borderColor}`, borderLeft: `2.5px solid ${theme.borderColor}`, opacity: 0.8 }} />
+              <div style={{ position: "absolute", top: 16, right: 16, width: 20, height: 20, borderTop: `2.5px solid ${theme.borderColor}`, borderRight: `2.5px solid ${theme.borderColor}`, opacity: 0.8 }} />
+              <div style={{ position: "absolute", bottom: 16, left: 16, width: 20, height: 20, borderBottom: `2.5px solid ${theme.borderColor}`, borderLeft: `2.5px solid ${theme.borderColor}`, opacity: 0.8 }} />
+              <div style={{ position: "absolute", bottom: 16, right: 16, width: 20, height: 20, borderBottom: `2.5px solid ${theme.borderColor}`, borderRight: `2.5px solid ${theme.borderColor}`, opacity: 0.8 }} />
+            </>
+          )}
+          {selectedBorder === "floral" && (
+            <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", opacity: 0.2 }}>
+              <svg viewBox="0 0 100 100" style={{ position: "absolute", top: 12, left: 12, width: 80, height: 80, fill: theme.borderColor }}>
+                <path d="M10,10 Q20,15 30,10 Q40,30 20,40 Q15,20 10,10 Z" />
+              </svg>
+              <svg viewBox="0 0 100 100" style={{ position: "absolute", bottom: 12, right: 12, width: 80, height: 80, fill: theme.borderColor, transform: "rotate(180deg)" }}>
+                <path d="M10,10 Q20,15 30,10 Q40,30 20,40 Q15,20 10,10 Z" />
+              </svg>
+            </div>
+          )}
+
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontFamily: "var(--font-inter)", fontSize: "12px", letterSpacing: "0.45em", textTransform: "uppercase", color: theme.subColor, fontWeight: 600, marginBottom: "20px" }}>
+              You are Invited
+            </p>
+            <div style={{ width: "24px", height: "1px", background: theme.borderColor, opacity: 0.4, margin: "0 auto" }} />
+          </div>
+
+          <div style={{ textAlign: "center", width: "100%" }}>
+            <h4 style={{ fontFamily: font.fontFamily, fontStyle: font.fontStyle, fontSize: "42px", fontWeight: font.fontStyle === "italic" ? 300 : 350, color: theme.textColor, lineHeight: 1.2 }}>
+              {headline || "Names"}
+            </h4>
+            <p style={{ fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontSize: "18px", color: theme.subColor, marginTop: "24px" }}>
+              Together with their families
+            </p>
+          </div>
+
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontFamily: "var(--font-inter)", fontSize: "14px", letterSpacing: "0.15em", color: theme.textColor, fontWeight: 600, textTransform: "uppercase", marginBottom: "8px" }}>
+              {subtext || "Date"}
+            </p>
+            <p style={{ fontFamily: "var(--font-inter)", fontSize: "14px", letterSpacing: "0.08em", color: theme.subColor }}>
+              {venue || "Venue Location"}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {showFloatBtn && (
+        <button
+          onClick={() => previewRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })}
+          className="fixed bottom-6 right-6 z-40 lg:hidden flex items-center gap-2 px-5 py-3.5 rounded-full bg-black text-white text-xs font-semibold uppercase tracking-wider shadow-2xl border border-white/10 active:scale-95 transition-all cursor-pointer"
+          style={{ fontFamily: "var(--font-inter)" }}
+        >
+          <Sparkles size={13} className="text-[#C5A880]" />
+          View Live Preview
+        </button>
+      )}
     </section>
   );
 }

@@ -135,7 +135,12 @@ export default function EvattoNav() {
     if (!overlay) return;
 
     if (open) {
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
       document.body.style.overflow = "hidden";
+      
       gsap.set(overlay, { display: "flex" });
 
       // Panel slides in from the right
@@ -162,7 +167,15 @@ export default function EvattoNav() {
         );
       }
     } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
       document.body.style.overflow = "";
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY) * -1);
+      }
+
       gsap.to(overlay, {
         x: "100%", opacity: 0, duration: 0.55, ease: "power4.inOut",
         onComplete: () => {
@@ -184,6 +197,7 @@ export default function EvattoNav() {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined" && !window.matchMedia("(hover: hover)").matches) return;
     const positionPill = () => {
       const navLinks = document.querySelectorAll(".nav-desktop-link");
       const activeIndex = getActiveLinkIndex();
@@ -219,6 +233,7 @@ export default function EvattoNav() {
   }, [pathname]);
 
   const handleLinkEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window !== "undefined" && !window.matchMedia("(hover: hover)").matches) return;
     const target = e.currentTarget;
     const pill = hoverPillRef.current;
     if (!pill) return;
@@ -234,6 +249,7 @@ export default function EvattoNav() {
   };
 
   const handleNavMouseLeave = () => {
+    if (typeof window !== "undefined" && !window.matchMedia("(hover: hover)").matches) return;
     const navLinks = document.querySelectorAll(".nav-desktop-link");
     const activeIndex = getActiveLinkIndex();
     const pill = hoverPillRef.current;

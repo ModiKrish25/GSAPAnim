@@ -35,13 +35,23 @@ export default function EvattoLiquidPortal() {
           force3D: true,
         });
 
+      const calculateScale = () => {
+        const winW = window.innerWidth;
+        const winH = window.innerHeight;
+        const blobW = window.innerWidth < 640 ? 280 : 360;
+        const screenDiagonal = Math.sqrt(winW * winW + winH * winH);
+        return (screenDiagonal / blobW) * 1.05;
+      };
+
+      const isMobile = window.innerWidth < 768;
+
       // 2. SCROLL PORTAL EXPANSION
       // Tightened scrub to 0.5 for immediate response, and pause looping tweens when inactive
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: "top top",
-          end: "+=1200",
+          end: isMobile ? "+=800" : "+=1200",
           pin: true,
           scrub: 0.5,
           anticipatePin: 1,
@@ -60,7 +70,7 @@ export default function EvattoLiquidPortal() {
 
       // Morph blob to standard rectangle (0% border-radius) and scale to full screen
       tl.to(blob, {
-        scale: 6.5,
+        scale: () => calculateScale(),
         borderRadius: "0%",
         duration: 1,
         force3D: true,
@@ -83,7 +93,7 @@ export default function EvattoLiquidPortal() {
     <div
       ref={containerRef}
       className="relative w-full overflow-hidden flex flex-col items-center justify-center"
-      style={{ height: "100vh", background: "#FDFBF7" }}
+      style={{ height: "100dvh", background: "#FDFBF7" }}
     >
       {/* Background Soft Glow */}
       <div

@@ -234,13 +234,15 @@ export default function EvattoMoodboard() {
                     handleStart(item.id, e.touches[0].clientX, e.touches[0].clientY);
                   }
                 }}
-                className={`absolute rounded-xl bg-white select-none transition-shadow ${
+                className={`moodboard-card absolute rounded-xl bg-white select-none transition-shadow ${
                   isDraggingThis ? "shadow-2xl scale-[1.02]" : "shadow-md hover:shadow-lg"
                 }`}
                 style={{
                   left: `${item.initialX}%`,
                   top: `${item.initialY}%`,
-                  width: `${item.width}px`,
+                  width: `var(--raw-width, ${item.width}px)`,
+                  // @ts-ignore
+                  "--raw-width": `${item.width}px`,
                   transform: `translate3d(${item.x}px, ${item.y}px, 0px) rotate(${item.rotation}deg)`,
                   zIndex: zIndex,
                   cursor: isDraggingThis ? "grabbing" : "grab",
@@ -300,6 +302,14 @@ export default function EvattoMoodboard() {
           })}
         </div>
       </div>
+      <style>{`
+        @media (max-width: 640px) {
+          .moodboard-card {
+            width: calc(var(--raw-width) * 0.65) !important;
+            padding: 8px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

@@ -94,87 +94,7 @@ export default function EvattoTimelineBuilder() {
   const calculatedItems = getCalculatedSchedule();
 
   const printSchedule = () => {
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
-
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Keshav Events - Run of Show Timeline</title>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              padding: 40px;
-              color: #1A1A1A;
-            }
-            .header {
-              text-align: center;
-              border-bottom: 2px solid #C5A880;
-              padding-bottom: 20px;
-              margin-bottom: 40px;
-            }
-            .header h1 {
-              font-size: 28px;
-              margin: 0;
-              font-weight: 300;
-              text-transform: uppercase;
-              letter-spacing: 2px;
-            }
-            .header p {
-              color: #666;
-              font-size: 14px;
-              margin-top: 5px;
-            }
-            .timeline-item {
-              display: flex;
-              border-bottom: 1px solid #eee;
-              padding: 15px 0;
-              align-items: center;
-            }
-            .time {
-              font-weight: bold;
-              width: 180px;
-              color: #C5A880;
-            }
-            .label {
-              flex-grow: 1;
-              font-size: 16px;
-            }
-            .duration {
-              color: #888;
-              font-size: 13px;
-            }
-            @media print {
-              .no-print { display: none; }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h1>Keshav Events & Decor</h1>
-            <p>Custom Day-of Schedule Timeline</p>
-          </div>
-          ${calculatedItems
-            .map(
-              (item) => `
-            <div class="timeline-item">
-              <div class="time">${item.timeString} - ${item.endTimeString}</div>
-              <div class="label">${item.icon} ${item.label}</div>
-              <div class="duration">${item.duration} Min</div>
-            </div>
-          `
-            )
-            .join("")}
-          <script>
-            window.onload = function() {
-              window.print();
-              setTimeout(function() { window.close(); }, 500);
-            }
-          </script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
+    window.print();
   };
 
   return (
@@ -312,6 +232,36 @@ export default function EvattoTimelineBuilder() {
               </div>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Printable schedule container */}
+      <div className="hidden print:block print:fixed print:inset-0 print:bg-white print:z-[9999] print:p-12 print:overflow-y-auto">
+        <div className="text-center border-b-2 border-[#C5A880] pb-6 mb-10">
+          <h1 className="text-2xl font-light uppercase tracking-widest text-[#1A1A1A] font-cormorant">
+            Keshav Events & Decor
+          </h1>
+          <p className="text-xs text-gray-500 font-inter tracking-wider mt-2 uppercase">Custom Day-of Schedule Timeline</p>
+        </div>
+        
+        <div className="space-y-6">
+          {calculatedItems.map((item) => (
+            <div
+              key={item.key}
+              className="flex justify-between items-center border-b border-gray-100 py-4"
+              style={{ fontFamily: "var(--font-inter)" }}
+            >
+              <div className="font-semibold text-sm text-[#C5A880] w-48">
+                {item.timeString} - {item.endTimeString}
+              </div>
+              <div className="flex-grow text-base text-[#1A1A1A]">
+                {item.icon} {item.label}
+              </div>
+              <div className="text-gray-400 text-xs shrink-0">
+                {item.duration} Min
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

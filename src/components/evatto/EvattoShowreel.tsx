@@ -62,12 +62,14 @@ export default function EvattoShowreel() {
 
       gsap.set(progressRef.current, { scaleX: 0, transformOrigin: "left center" });
 
+      const isMobile = window.innerWidth < 768;
+
       /* ── Master pinned scrub timeline ── */
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "+=3000",
+          end: isMobile ? "+=1600" : "+=3000",
           pin: true,
           scrub: 0.5,
           anticipatePin: 1,
@@ -121,7 +123,7 @@ export default function EvattoShowreel() {
     <section
       ref={sectionRef}
       className="relative w-full overflow-hidden"
-      style={{ height: "100vh" }}
+      style={{ height: "100dvh" }}
     >
       {/* Scene layers */}
       {SCENES.map((scene, i) => (

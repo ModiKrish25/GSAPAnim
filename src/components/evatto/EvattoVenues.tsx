@@ -72,9 +72,20 @@ export default function EvattoVenues() {
         };
       };
 
-      const cleanupMarquee = startMarquee();
+      let cleanupMarquee: (() => void) | undefined;
+      const handleResizeAndSetup = () => {
+        if (cleanupMarquee) cleanupMarquee();
+        cleanupMarquee = startMarquee();
+      };
+
+      // Delay slightly to ensure layout and image sizes are fully initialized
+      const timer = setTimeout(handleResizeAndSetup, 200);
+      window.addEventListener("resize", handleResizeAndSetup);
+
       return () => {
+        clearTimeout(timer);
         cleanupMarquee?.();
+        window.removeEventListener("resize", handleResizeAndSetup);
       };
     }, sectionRef);
 
