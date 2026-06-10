@@ -7,6 +7,7 @@ import EvattoNav from "@/components/evatto/EvattoNav";
 import EvattoFooter from "@/components/evatto/EvattoFooter";
 import EvattoBookTourModal from "@/components/evatto/EvattoBookTourModal";
 import ScrollReveal from "@/components/evatto/ScrollReveal";
+import EvattoScrollSlider from "@/components/evatto/EvattoScrollSlider";
 
 const GALLERY_IMAGES = [
   { src: "/gallery_1_floral_1780045656399.png", alt: "Floral Centerpiece", desc: "Intimate Botanical Setting" },
@@ -61,26 +62,21 @@ export default function GalleryPage() {
     <div className="bg-[#FDFBF7] min-h-screen flex flex-col">
       <EvattoNav />
 
-      <main className="flex-grow pt-32 md:pt-48 pb-24">
-        {/* Page Header */}
-        <div ref={headerRef} className="max-w-7xl mx-auto px-6 md:px-12 mb-16 md:mb-24 text-center">
-          <p className="font-inter text-[11px] uppercase tracking-[0.3em] text-black/40 mb-6 font-semibold">
-            Portfolio
-          </p>
-          <ScrollReveal
-            as="h1"
-            type="words"
-            className="font-cormorant text-5xl md:text-7xl lg:text-8xl font-light text-[#1A1A1A] leading-tight mb-8"
-          >
-            Our Recent Works
-          </ScrollReveal>
-          <p className="font-inter text-sm md:text-base text-black/60 max-w-2xl mx-auto leading-relaxed">
-            Explore our curated gallery of unforgettable moments. From grand architectural transformations to the most delicate table settings, we bring every vision to breathtaking reality.
-          </p>
-        </div>
+      {/* Hero Interactive Showcase Slider (Full Screen) */}
+      <EvattoScrollSlider />
 
-        {/* Masonry Grid */}
+      <main className="flex-grow pt-24 pb-24">
+        {/* Masonry Grid Section */}
         <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="text-center mb-16">
+            <p className="font-inter text-[11px] uppercase tracking-[0.3em] text-[#C5A880] mb-4 font-bold">
+              Project Gallery
+            </p>
+            <h2 className="font-cormorant text-4xl md:text-5xl lg:text-6xl font-light text-[#1A1A1A] tracking-wide">
+              Moments We've Crafted
+            </h2>
+          </div>
+          
           <div ref={masonryRef} className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
             {GALLERY_IMAGES.map((img, idx) => (
               <div 

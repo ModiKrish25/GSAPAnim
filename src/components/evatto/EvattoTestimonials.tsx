@@ -64,6 +64,7 @@ export default function EvattoTestimonials() {
 
   const transitionTo = (nextIdx: number) => {
     if (isTransitioningRef.current || nextIdx === activeIndexRef.current) return;
+    if (!quoteRef.current || !authorRef.current) return;
     isTransitioningRef.current = true;
 
     gsap.to([quoteRef.current, authorRef.current], {
@@ -74,6 +75,7 @@ export default function EvattoTestimonials() {
       force3D: true,
       lazy: true,
       onComplete: () => {
+        if (!quoteRef.current || !authorRef.current) return;
         setActiveIndex(nextIdx);
         // Fade in the new content
         gsap.fromTo([quoteRef.current, authorRef.current],
@@ -108,7 +110,13 @@ export default function EvattoTestimonials() {
       handleNext();
     }, 5000); // 5 seconds
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      // Safe cleanup of active animations to prevent async callbacks on unmounted refs
+      if (quoteRef.current || authorRef.current) {
+        gsap.killTweensOf([quoteRef.current, authorRef.current]);
+      }
+    };
   }, []);
 
   return (
