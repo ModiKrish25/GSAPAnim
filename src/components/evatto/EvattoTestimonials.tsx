@@ -28,6 +28,13 @@ export default function EvattoTestimonials() {
   const authorRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const activeIndexRef = useRef(activeIndex);
+  const isTransitioningRef = useRef(false);
+
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     gsap.registerPlugin(ScrollTrigger);
@@ -42,6 +49,8 @@ export default function EvattoTestimonials() {
           y: 0,
           duration: 1,
           ease: "power3.out",
+          force3D: true,
+          lazy: true,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 80%",
@@ -53,38 +62,44 @@ export default function EvattoTestimonials() {
     return () => ctx.revert();
   }, []);
 
-  // Handle crossfade animation
-  useEffect(() => {
-    if (!quoteRef.current || !authorRef.current) return;
+  const transitionTo = (nextIdx: number) => {
+    if (isTransitioningRef.current || nextIdx === activeIndexRef.current) return;
+    isTransitioningRef.current = true;
 
-    const tl = gsap.timeline();
-    
-    // Fade out current
-    tl.to([quoteRef.current, authorRef.current], {
+    gsap.to([quoteRef.current, authorRef.current], {
       opacity: 0,
-      y: -10,
-      duration: 0.4,
+      y: -15,
+      duration: 0.35,
       ease: "power2.in",
+      force3D: true,
+      lazy: true,
+      onComplete: () => {
+        setActiveIndex(nextIdx);
+        // Fade in the new content
+        gsap.fromTo([quoteRef.current, authorRef.current],
+          { opacity: 0, y: 15 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.55,
+            ease: "power2.out",
+            force3D: true,
+            lazy: true,
+            onComplete: () => {
+              isTransitioningRef.current = false;
+            }
+          }
+        );
+      }
     });
-
-    // We swap the text natively in the React render cycle via activeIndex,
-    // but we use GSAP to animate it back in slightly after the state updates.
-    // To synchronize smoothly, we fade in after a brief delay.
-    tl.to([quoteRef.current, authorRef.current], {
-      opacity: 1,
-      y: 0,
-      duration: 0.6,
-      ease: "power2.out",
-      delay: 0.1,
-    });
-  }, [activeIndex]);
+  };
 
   const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+    transitionTo((activeIndexRef.current + 1) % TESTIMONIALS.length);
   };
 
   const handlePrev = () => {
-    setActiveIndex((prev) => (prev === 0 ? TESTIMONIALS.length - 1 : prev - 1));
+    transitionTo(activeIndexRef.current === 0 ? TESTIMONIALS.length - 1 : activeIndexRef.current - 1);
   };
 
   // Autoplay functionality

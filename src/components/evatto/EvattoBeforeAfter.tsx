@@ -6,6 +6,7 @@ import ScrollReveal from "./ScrollReveal";
 export default function EvattoBeforeAfter() {
   const [sliderPosition, setSliderPosition] = useState(50); // percentage (0 - 100)
   const [isDragging, setIsDragging] = useState(false);
+  const [containerWidth, setContainerWidth] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleMove = (clientX: number) => {
@@ -35,9 +36,21 @@ export default function EvattoBeforeAfter() {
     window.addEventListener("mouseup", handleMouseUp);
     window.addEventListener("touchend", handleMouseUp);
 
+    const updateWidth = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.offsetWidth);
+      }
+    };
+    updateWidth();
+    // Delay slightly to handle font/layout settling
+    const t = setTimeout(updateWidth, 100);
+    window.addEventListener("resize", updateWidth);
+
     return () => {
+      clearTimeout(t);
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("touchend", handleMouseUp);
+      window.removeEventListener("resize", updateWidth);
     };
   }, []);
 
@@ -90,7 +103,7 @@ export default function EvattoBeforeAfter() {
             style={{ width: `${sliderPosition}%` }}
           >
             {/* We force the image inside to stay full-width to prevent squishing */}
-            <div className="absolute inset-0 w-full h-full" style={{ width: containerRef.current?.getBoundingClientRect().width || "100%" }}>
+            <div className="absolute inset-0 w-full h-full" style={{ width: containerWidth || "100%" }}>
               <img
                 src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=1600"
                 alt="Transformed decorated venue"

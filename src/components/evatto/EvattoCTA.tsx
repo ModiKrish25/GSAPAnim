@@ -63,7 +63,7 @@ export default function EvattoCTA() {
           trigger: parent,
           start: "top 95%",    // begins as section enters from bottom
           end: "bottom 30%",   // ends when bottom of section reaches 30% of screen height
-          scrub: 0.5,          // instantaneous scroll scrub tracking
+          scrub: 0.8,          // smoothed scroll scrub tracking
         }
       });
 
@@ -76,6 +76,8 @@ export default function EvattoCTA() {
           opacity: 1,
           duration: 1,
           ease: "power2.out",
+          force3D: true,
+          lazy: true,
         }, i * 0.05); // slightly stagger the launch for organic flare
       });
 
@@ -90,6 +92,8 @@ export default function EvattoCTA() {
             stagger: 0.08, 
             duration: 0.75, 
             ease: "power2.out",
+            force3D: true,
+            lazy: true,
             scrollTrigger: { trigger: parent, start: "top 75%", once: true },
           }
         );

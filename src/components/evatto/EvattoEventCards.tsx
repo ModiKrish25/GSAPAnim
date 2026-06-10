@@ -142,30 +142,42 @@ export default function EvattoEventCards() {
 
       // Only run GSAP pinning and timeline animations on Desktop (>= 1024px)
       mm.add("(min-width: 1024px)", () => {
-        const finalX = [-540, -180, 180, 540];
-        const finalRot = [-2, -1, 1, 2];
+        const finalRot = [0, 0, 0, 0];
 
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: containerRef.current,
             start: "top top",
             end: "+=1200",
-            scrub: 0.5,
+            scrub: 0.8,
             pin: true,
             anticipatePin: 1,
           },
         });
 
-        tl.fromTo(titleRef.current, { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3 }, 0);
+        tl.fromTo(titleRef.current, { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, lazy: true }, 0);
 
-        tl.to(cards, { y: 0, opacity: 1, scale: 1, duration: 0.8, stagger: 0.08, force3D: true, ease: "back.out(1.2)" }, 0.1);
+        tl.to(cards, { y: 0, opacity: 1, scale: 1, duration: 0.8, stagger: 0.08, force3D: true, lazy: true, ease: "back.out(1.2)" }, 0.1);
 
         cards.forEach((card, i) => {
-          tl.to(card, { x: finalX[i], rotation: finalRot[i], duration: 0.9, force3D: true, ease: "power2.inOut" }, 0.5 + i * 0.05);
+          tl.to(card, {
+            x: () => {
+              const containerWidth = containerRef.current?.clientWidth || window.innerWidth;
+              const availableWidth = Math.min(containerWidth - 60, 1360);
+              const S = (availableWidth - 280) / 3;
+              const positions = [-1.5 * S, -0.5 * S, 0.5 * S, 1.5 * S];
+              return positions[i];
+            },
+            rotation: finalRot[i],
+            duration: 0.9,
+            force3D: true,
+            lazy: true,
+            ease: "power2.inOut"
+          }, 0.5 + i * 0.05);
         });
 
         cards.forEach((card, i) => {
-          tl.to(card, { rotationY: 180, duration: 0.8, force3D: true, ease: "power2.inOut" }, 0.9 + i * 0.1);
+          tl.to(card, { rotationY: 180, duration: 0.8, force3D: true, lazy: true, ease: "power2.inOut" }, 0.9 + i * 0.1);
         });
       });
     }, containerRef);
@@ -216,7 +228,7 @@ export default function EvattoEventCards() {
               }}
             >
               <span
-                className="text-xs uppercase tracking-wider font-semibold text-gray-600 flex items-center gap-1.5 mb-2"
+                className="text-sm uppercase tracking-widest font-bold text-gray-800 flex items-center gap-1.5 mb-2"
                 style={{ fontFamily: "var(--font-inter)" }}
               >
                 {card.label} <span className="text-base">{card.emoji}</span>
@@ -244,7 +256,7 @@ export default function EvattoEventCards() {
             >
               <div className="px-5 pt-4 pb-2 flex-shrink-0">
                 <span
-                  className="text-xs uppercase tracking-wider font-semibold text-gray-600 flex items-center gap-1.5"
+                  className="text-sm uppercase tracking-widest font-bold text-gray-800 flex items-center gap-1.5"
                   style={{ fontFamily: "var(--font-inter)" }}
                 >
                   {card.label} <span className="text-base">{card.emoji}</span>
@@ -343,7 +355,7 @@ export default function EvattoEventCards() {
             <div
               key={card.id}
               ref={(el) => { cardRefs.current[i] = el; }}
-              className="absolute shadow-lg rounded-3xl"
+              className="absolute shadow-lg rounded-3xl group"
               style={{
                 width: 280,
                 height: 450,
@@ -366,7 +378,7 @@ export default function EvattoEventCards() {
                   zIndex: 2,
                 }}
               >
-                <span className="text-xs uppercase tracking-wider font-semibold text-gray-600 flex items-center gap-1.5" style={{ fontFamily: "var(--font-inter)" }}>
+                <span className="text-sm md:text-base uppercase tracking-widest font-bold text-gray-800 flex items-center gap-1.5" style={{ fontFamily: "var(--font-inter)" }}>
                   {card.label} <span className="text-base">{card.emoji}</span>
                 </span>
                 <div className="flex-1 flex items-center justify-center text-gray-800">
@@ -385,13 +397,13 @@ export default function EvattoEventCards() {
                   zIndex: 1,
                 }}
               >
-                <div className="px-5 pt-4 pb-2 flex-shrink-0">
-                  <span className="text-xs uppercase tracking-wider font-semibold text-gray-600 flex items-center gap-1.5" style={{ fontFamily: "var(--font-inter)" }}>
+                <div className="px-5 pt-4 pb-1 flex-shrink-0">
+                  <span className="text-sm md:text-base uppercase tracking-widest font-bold text-gray-800 flex items-center gap-1.5" style={{ fontFamily: "var(--font-inter)" }}>
                     {card.label} <span className="text-base">{card.emoji}</span>
                   </span>
                 </div>
-                <div className="mx-4 rounded-2xl overflow-hidden flex-1" style={{ maxHeight: 250 }}>
-                  <img src={card.image} alt={card.alt} className="w-full h-full object-cover" loading="lazy" />
+                <div className="mx-4 my-2.5 rounded-2xl overflow-hidden flex-1 transition-all duration-500 ease-out group-hover:scale-[1.02] group-hover:shadow-xl group-hover:-translate-y-1" style={{ maxHeight: 240 }}>
+                  <img src={card.image} alt={card.alt} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" loading="lazy" />
                 </div>
                 <div className="px-5 py-4 flex-shrink-0">
                   <p className="text-sm text-gray-700 leading-snug" style={{ fontFamily: "var(--font-inter)" }}>

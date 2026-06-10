@@ -158,6 +158,8 @@ export default function EvattoIntro() {
           stagger: 0.12,
           duration: 1.2,
           ease: "power4.out",
+          force3D: true,
+          lazy: true,
           scrollTrigger: {
             trigger: gridRef.current,
             start: "top 82%",
@@ -174,7 +176,7 @@ export default function EvattoIntro() {
         statsRef.current?.querySelectorAll(".stat-item") ?? [],
         { opacity: 0, y: 24 },
         {
-          opacity: 1, y: 0, stagger: 0.1, duration: 0.75, ease: "power3.out",
+          opacity: 1, y: 0, stagger: 0.1, duration: 0.75, ease: "power3.out", force3D: true, lazy: true,
           scrollTrigger: { trigger: statsRef.current, start: "top 85%", once: true },
         }
       );

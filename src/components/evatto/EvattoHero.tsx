@@ -27,16 +27,16 @@ export default function EvattoHero() {
     const chars = charRefs.map(r => r.current).filter(Boolean) as HTMLSpanElement[];
     const tl = gsap.timeline({ delay: 0.4 });
 
-    tl.fromTo(bgRef.current, { scale: 1.08 }, { scale: 1, duration: 2.8, ease: "power2.out" }, 0);
-    tl.fromTo(overlayRef.current, { opacity: 0 }, { opacity: 1, duration: 1.6, ease: "power2.inOut" }, 0);
-    tl.fromTo(eyebrowRef.current, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.85, ease: "power3.out" }, 0.55);
+    tl.fromTo(bgRef.current, { scale: 1.08 }, { scale: 1, duration: 2.8, ease: "power2.out", force3D: true, lazy: true }, 0);
+    tl.fromTo(overlayRef.current, { opacity: 0 }, { opacity: 1, duration: 1.6, ease: "power2.inOut", force3D: true, lazy: true }, 0);
+    tl.fromTo(eyebrowRef.current, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.85, ease: "power3.out", force3D: true, lazy: true }, 0.55);
 
     if (chars.length) {
-      tl.to(chars, { y: "0%", duration: 1.1, stagger: 0.018, ease: "power4.out" }, 0.8);
+      tl.to(chars, { y: "0%", duration: 1.1, stagger: 0.018, ease: "power4.out", force3D: true, lazy: true }, 0.8);
     }
 
-    tl.fromTo(ctaRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 1.65);
-    tl.fromTo(indicatorRef.current, { opacity: 0 }, { opacity: 0.65, duration: 0.6 }, 2.1);
+    tl.fromTo(ctaRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", force3D: true, lazy: true }, 1.65);
+    tl.fromTo(indicatorRef.current, { opacity: 0 }, { opacity: 0.65, duration: 0.6, force3D: true, lazy: true }, 2.1);
 
     const isMobile = window.innerWidth < 768;
 
@@ -45,11 +45,12 @@ export default function EvattoHero() {
       yPercent: isMobile ? 8 : 18,
       ease: "none",
       force3D: true,
+      lazy: true,
       scrollTrigger: {
         trigger: sectionRef.current,
         start: "top top",
         end: "bottom top",
-        scrub: isMobile ? false : 0.4,
+        scrub: isMobile ? false : 0.8,
       },
     });
 

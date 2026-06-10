@@ -27,11 +27,13 @@ export default function EvattoTextScroller() {
         {
           xPercent: 10,
           ease: "none",
+          force3D: true,
+          lazy: true,
           scrollTrigger: {
             trigger: parent,
             start: "top bottom",
             end: "bottom top",
-            scrub: 0.5,
+            scrub: 0.8,
           }
         }
       );
@@ -41,11 +43,13 @@ export default function EvattoTextScroller() {
         {
           xPercent: -20,
           ease: "none",
+          force3D: true,
+          lazy: true,
           scrollTrigger: {
             trigger: parent,
             start: "top bottom",
             end: "bottom top",
-            scrub: 0.5,
+            scrub: 0.8,
           }
         }
       );

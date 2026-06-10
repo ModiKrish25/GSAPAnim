@@ -46,14 +46,14 @@ export default function EvattoLiquidPortal() {
       const isMobile = window.innerWidth < 768;
 
       // 2. SCROLL PORTAL EXPANSION
-      // Tightened scrub to 0.5 for immediate response, and pause looping tweens when inactive
+      // Tightened scrub to 0.8 for smooth response, and pause looping tweens when inactive
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: "top top",
           end: isMobile ? "+=800" : "+=1200",
           pin: true,
-          scrub: 0.5,
+          scrub: 0.8,
           anticipatePin: 1,
           onEnter: () => morphTl.resume(),
           onLeave: () => morphTl.pause(),
@@ -65,7 +65,8 @@ export default function EvattoLiquidPortal() {
       tl.to(textRef.current, {
         opacity: 0,
         y: -40,
-        duration: 0.3
+        duration: 0.3,
+        lazy: true
       }, 0);
 
       // Morph blob to standard rectangle (0% border-radius) and scale to full screen
@@ -74,6 +75,7 @@ export default function EvattoLiquidPortal() {
         borderRadius: "0%",
         duration: 1,
         force3D: true,
+        lazy: true,
         ease: "power2.inOut",
       }, 0.1);
 
@@ -82,6 +84,7 @@ export default function EvattoLiquidPortal() {
         opacity: 0.1,
         duration: 0.8,
         force3D: true,
+        lazy: true,
       }, 0.2);
 
     }, containerRef);

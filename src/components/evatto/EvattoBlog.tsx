@@ -27,7 +27,7 @@ export default function EvattoBlog() {
       gsap.fromTo(headerRef.current?.querySelectorAll(".h-el") ?? [],
         { opacity: 0, y: 30 },
         {
-          opacity: 1, y: 0, stagger: 0.1, duration: 0.85, ease: "power3.out",
+          opacity: 1, y: 0, stagger: 0.1, duration: 0.85, ease: "power3.out", force3D: true, lazy: true,
           scrollTrigger: { trigger: headerRef.current, start: "top 82%", once: true },
         }
       );
@@ -36,7 +36,7 @@ export default function EvattoBlog() {
         { opacity: 0, y: 60, scale: 0.97 },
         {
           opacity: 1, y: 0, scale: 1,
-          stagger: 0.14, duration: 1.0, ease: "power3.out",
+          stagger: 0.14, duration: 1.0, ease: "power3.out", force3D: true, lazy: true,
           scrollTrigger: { trigger: cardsRef.current, start: "top 85%", once: true },
         }
       );
@@ -49,6 +49,8 @@ export default function EvattoBlog() {
           ease: "none",
           duration: 20,
           repeat: -1,
+          force3D: true,
+          lazy: true,
         });
       }
     }, sectionRef);
