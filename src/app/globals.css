@@ -281,10 +281,6 @@ section, article, div {
 
 /* ── EvattoFooter ───────────────────────────── */
 @media (max-width: 767px) {
-  /* Hide the SVG sketch on small screens to save space */
-  .footer-svg-panel { display: none !important; }
-  /* Let brand column take full width */
-  .footer-brand-col { grid-column: span 12 !important; }
   /* Stack bottom boxes vertically */
   .footer-bottom-grid {
     grid-template-columns: 1fr !important;
