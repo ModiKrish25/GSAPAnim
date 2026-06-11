@@ -201,8 +201,12 @@ export default function EvattoDecorDesigner() {
                 {/* 2. Plates set around the circular table (6 guest placements) */}
                 {[0, 60, 120, 180, 240, 300].map((angle) => {
                   const rad = (angle * Math.PI) / 180;
-                  const cx = 200 + Math.cos(rad) * 140;
-                  const cy = 200 + Math.sin(rad) * 140;
+                  const cxVal = 200 + Math.cos(rad) * 140;
+                  const cyVal = 200 + Math.sin(rad) * 140;
+                  const cx = cxVal.toFixed(3);
+                  const cy = cyVal.toFixed(3);
+                  const rx = (cxVal - 5).toFixed(3);
+                  const ry = (cyVal - 22).toFixed(3);
                   return (
                     <g key={angle}>
                       {/* Charger Plate */}
@@ -213,8 +217,8 @@ export default function EvattoDecorDesigner() {
                       <circle cx={cx} cy={cy} r="18" fill="none" stroke="#dfba6b" strokeWidth="0.5" opacity="0.6" />
                       {/* Napkin overlay */}
                       <rect
-                        x={cx - 5}
-                        y={cy - 22}
+                        x={rx}
+                        y={ry}
                         width="10"
                         height="44"
                         rx="2"
@@ -254,8 +258,8 @@ export default function EvattoDecorDesigner() {
                   {/* Outer circle of flowers */}
                   {[0, 60, 120, 180, 240, 300].map((angle, idx) => {
                     const rad = (angle * Math.PI) / 180;
-                    const fx = 200 + Math.cos(rad) * 24;
-                    const fy = 200 + Math.sin(rad) * 24;
+                    const fx = (200 + Math.cos(rad) * 24).toFixed(3);
+                    const fy = (200 + Math.sin(rad) * 24).toFixed(3);
                     return (
                       <g key={idx}>
                         <circle cx={fx} cy={fy} r="11" fill={selectedFlower.color} stroke={selectedFlower.accentColor} strokeWidth="1.5" />
@@ -269,8 +273,8 @@ export default function EvattoDecorDesigner() {
                 <g className="transition-all duration-500">
                   {[45, 135, 225, 315].map((angle, idx) => {
                     const rad = (angle * Math.PI) / 180;
-                    const cx = 200 + Math.cos(rad) * 78;
-                    const cy = 200 + Math.sin(rad) * 78;
+                    const cx = (200 + Math.cos(rad) * 78).toFixed(3);
+                    const cy = (200 + Math.sin(rad) * 78).toFixed(3);
                     
                     return (
                       <g key={idx}>

@@ -123,29 +123,6 @@ export default function EvattoIntro() {
     gsap.registerPlugin(ScrollTrigger);
 
     const cards = gridRef.current?.querySelectorAll(".showcase-card") ?? [];
-    
-    // Check if we've already animated in this session to make page navigation feel instant and professional
-    const hasAnimated = sessionStorage.getItem("evatto_gallery_animated") === "true";
-
-    if (hasAnimated) {
-      // Set showcase cards immediately to their active visible state
-      gsap.set(cards, { y: 0, opacity: 1 });
-      
-      // Set stats immediately to their active count state
-      const statsItems = statsRef.current?.querySelectorAll(".stat-item") ?? [];
-      gsap.set(statsItems, { opacity: 1, y: 0 });
-
-      STATS.forEach((stat, i) => {
-        const el = numRefs.current[i];
-        if (el) {
-          el.textContent = (stat.decimals > 0
-            ? stat.end.toFixed(stat.decimals)
-            : stat.end.toString()
-          ) + stat.suffix;
-        }
-      });
-      return;
-    }
 
     const ctx = gsap.context(() => {
       // Smooth staggered entrance for cards
@@ -164,9 +141,6 @@ export default function EvattoIntro() {
             trigger: gridRef.current,
             start: "top 82%",
             once: true,
-          },
-          onComplete: () => {
-            sessionStorage.setItem("evatto_gallery_animated", "true");
           }
         }
       );
@@ -212,7 +186,7 @@ export default function EvattoIntro() {
       {/* 3-Column Luxury Staggered Masonry Grid */}
       <div
         ref={gridRef}
-        className="max-w-[1380px] mx-auto px-6 md:px-14 grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14"
+        className="max-w-[1380px] mx-auto px-6 md:px-14 grid intro-masonry grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14"
       >
         {/* Column 1: Staggered Up */}
         <div className="flex flex-col gap-10 lg:gap-14 md:-translate-y-8">

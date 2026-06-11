@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter, Allura } from "next/font/google";
 import "./globals.css";
+import EvattoPreloader from "@/components/evatto/EvattoPreloader";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -36,6 +37,7 @@ export default function RootLayout({
       className={`${cormorant.variable} ${inter.variable} ${allura.variable} h-full`}
     >
       <body className="min-h-full bg-[#FDFBF7] text-[#1A1A1A] flex flex-col overflow-x-hidden antialiased">
+        <EvattoPreloader />
         <main className="flex-grow relative z-10">{children}</main>
       </body>
     </html>

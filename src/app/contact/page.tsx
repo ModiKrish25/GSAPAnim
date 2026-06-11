@@ -36,7 +36,7 @@ export default function ContactPage() {
         <div className="absolute top-0 right-0 w-1/2 h-[80vh] bg-[#F5F2EC] rounded-bl-[120px] pointer-events-none -z-10 hidden md:block" />
 
         <div ref={containerRef} className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row gap-16 lg:gap-24">
-          
+
           {/* Left Column: Contact Details */}
           <div className="w-full lg:w-5/12 flex flex-col">
             <p className="animate-up font-inter text-[11px] uppercase tracking-[0.3em] text-black/40 mb-6 font-semibold">
@@ -53,7 +53,7 @@ export default function ContactPage() {
               <div className="animate-up">
                 <p className="font-inter text-[10px] uppercase tracking-[0.25em] text-black/40 mb-2 font-bold">Email Us</p>
                 <a href="mailto:hello@evatto.com" className="font-cormorant text-2xl md:text-3xl font-light text-[#1A1A1A] hover:text-[#D4AF37] transition-colors">
-                  hello@evatto.com
+                  hello@keshav.com
                 </a>
               </div>
               <div className="animate-up">
@@ -86,7 +86,7 @@ export default function ContactPage() {
                     <input type="email" className="border-b border-black/10 py-2 bg-transparent focus:outline-none focus:border-black transition-colors text-sm font-inter" placeholder="you@example.com" />
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
                     <label className="font-inter text-xs text-black/60 uppercase tracking-widest font-semibold">Phone</label>

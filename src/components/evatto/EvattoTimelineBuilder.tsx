@@ -1,7 +1,77 @@
 "use client";
-import React, { useState } from "react";
-import { Plus, Trash2, Clock, Printer, Calendar } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Plus, Trash2, Clock, Printer, Calendar, ChevronDown } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
+
+const DURATION_OPTIONS = [
+  { value: 15, label: "15 Min" },
+  { value: 30, label: "30 Min" },
+  { value: 45, label: "45 Min" },
+  { value: 60, label: "1 Hr" },
+  { value: 90, label: "1.5 Hr" },
+  { value: 120, label: "2 Hr" },
+  { value: 180, label: "3 Hr" },
+];
+
+interface DropdownProps {
+  value: number;
+  onChange: (val: number) => void;
+}
+
+function DurationDropdown({ value, onChange }: DropdownProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const currentOption = DURATION_OPTIONS.find((o) => o.value === value) || DURATION_OPTIONS[0];
+
+  return (
+    <div ref={containerRef} className="relative inline-block text-left w-full sm:w-auto">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full sm:w-auto inline-flex justify-between items-center gap-2 pl-4 pr-3 py-2 text-xs font-semibold text-black/70 bg-white border border-black/10 rounded-full hover:border-[#C5A880] hover:text-black focus:outline-none transition-all cursor-pointer min-h-[38px]"
+        style={{ fontFamily: "var(--font-inter)" }}
+      >
+        <span>{currentOption.label}</span>
+        <ChevronDown size={13} className={`text-black/45 transition-transform duration-300 shrink-0 ${isOpen ? "rotate-180 text-[#C5A880]" : ""}`} />
+      </button>
+
+      {isOpen && (
+        <div
+          className="absolute right-0 mt-1.5 w-full sm:w-32 rounded-xl bg-white border border-black/[0.06] shadow-lg focus:outline-none z-50 py-1.5"
+          style={{ fontFamily: "var(--font-inter)" }}
+        >
+          {DURATION_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => {
+                onChange(opt.value);
+                setIsOpen(false);
+              }}
+              className={`w-full text-left px-4 py-2 text-xs font-medium transition-colors cursor-pointer block ${
+                opt.value === value
+                  ? "bg-[#C5A880]/10 text-[#C5A880] font-semibold"
+                  : "text-black/70 hover:bg-black/[0.02] hover:text-black"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface TimelineBlock {
   id: string;
@@ -201,27 +271,15 @@ export default function EvattoTimelineBuilder() {
                       </div>
 
                       {/* Controls */}
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center border border-black/10 rounded-full overflow-hidden bg-transparent">
-                          <select
-                            value={item.duration}
-                            onChange={(e) => updateDuration(item.key, parseInt(e.target.value))}
-                            className="bg-transparent pl-4 pr-6 py-1.5 text-xs font-semibold text-black/70 focus:outline-none cursor-pointer"
-                            style={{ fontFamily: "var(--font-inter)" }}
-                          >
-                            <option value={15}>15 Min</option>
-                            <option value={30}>30 Min</option>
-                            <option value={45}>45 Min</option>
-                            <option value={60}>1 Hr</option>
-                            <option value={90}>1.5 Hr</option>
-                            <option value={120}>2 Hr</option>
-                            <option value={180}>3 Hr</option>
-                          </select>
-                        </div>
+                      <div className="flex items-center gap-3 shrink-0">
+                        <DurationDropdown
+                          value={item.duration}
+                          onChange={(val) => updateDuration(item.key, val)}
+                        />
 
                         <button
                           onClick={() => removeBlock(item.key)}
-                          className="p-2 rounded-full hover:bg-red-50 text-black/35 hover:text-red-500 transition-colors cursor-pointer"
+                          className="p-2 rounded-full hover:bg-red-50 text-black/35 hover:text-red-500 transition-colors cursor-pointer shrink-0"
                         >
                           <Trash2 size={13} />
                         </button>

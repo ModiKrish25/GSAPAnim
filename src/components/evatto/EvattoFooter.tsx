@@ -36,22 +36,14 @@ export default function EvattoFooter() {
       {/* Top Section */}
       <div className="grid grid-cols-1 md:grid-cols-12 border-b border-[#FDFBF7]/8 w-full">
         {/* Left Column: Brand Identity Logo */}
-        <div className="md:col-span-5 flex flex-col justify-center p-10 md:p-16 lg:p-20 border-b md:border-b-0 md:border-r border-[#FDFBF7]/8">
-          <div className="flex items-center gap-2 mb-6">
-            <div className="relative w-8 h-8 flex items-center justify-center overflow-hidden rounded-md bg-white/10">
-              <img src="/logo.png" alt="Keshav Logo" className="w-full h-full object-contain" />
-            </div>
-            <span className="logo text-lg md:text-xl font-semibold text-[#FDFBF7]" style={{ color: "#FDFBF7" }}>
-              Keshav Events & Decor
-            </span>
-          </div>
+        <div className="footer-brand-col md:col-span-5 flex flex-col justify-center p-8 md:p-16 lg:p-20 border-b md:border-b-0 md:border-r border-[#FDFBF7]/8">
           <p className="font-inter text-sm text-[#FDFBF7]/45 max-w-sm leading-relaxed">
             A luxury event management company dedicated to crafting unforgettable celebrations with precision and elegance.
           </p>
         </div>
 
         {/* Right Column: Detailed Event Stage SVG Sketch */}
-        <div className="md:col-span-7 flex items-center justify-center p-8 md:p-12 lg:p-16 bg-[#090a0c]/40 relative overflow-hidden min-h-[300px]">
+        <div className="footer-svg-panel md:col-span-7 flex items-center justify-center p-8 md:p-12 lg:p-16 bg-[#090a0c]/40 relative overflow-hidden min-h-[300px]">
           {/* Subtle grid pattern background */}
           <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: "radial-gradient(#FDFBF7 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
           
@@ -158,7 +150,7 @@ export default function EvattoFooter() {
       </div>
 
       {/* Bottom Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 w-full border-b border-[#FDFBF7]/8">
+      <div className="footer-bottom-grid grid grid-cols-1 md:grid-cols-3 w-full border-b border-[#FDFBF7]/8">
         {/* Box 1: Address */}
         <div className="flex flex-col items-center justify-center p-8 md:p-12 border-b md:border-b-0 md:border-r border-[#FDFBF7]/8 text-center">
           <span className="font-inter text-[9px] font-bold uppercase tracking-[0.3em] text-[#FDFBF7]/35 mb-5">

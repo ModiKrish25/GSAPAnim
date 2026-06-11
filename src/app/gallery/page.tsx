@@ -77,7 +77,7 @@ export default function GalleryPage() {
             </h2>
           </div>
           
-          <div ref={masonryRef} className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+          <div ref={masonryRef} className="gallery-masonry columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
             {GALLERY_IMAGES.map((img, idx) => (
               <div 
                 key={idx} 

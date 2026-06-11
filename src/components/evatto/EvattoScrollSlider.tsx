@@ -115,62 +115,62 @@ function DecorBadge({ letter, badgeTop, badgeBottom, bedroomNum, animKey }: Badg
         style={{ width: "100%", height: "100%" }}
       >
         {/* outer rings */}
-        <circle cx="65" cy="65" r="60" stroke="#8a7d70" strokeWidth="0.75" fill="none" opacity="0.6" />
-        <circle cx="65" cy="65" r="55" stroke="#8a7d70" strokeWidth="0.5"  fill="none" opacity="0.4" />
+        <circle cx="65" cy="65" r="60" stroke="#C5A880" strokeWidth="0.8" fill="none" opacity="0.8" />
+        <circle cx="65" cy="65" r="54" stroke="#C5A880" strokeWidth="0.5" fill="none" opacity="0.5" />
 
         {/* tick marks — precision-fixed for hydration */}
         {Array.from({ length: 24 }).map((_, i) => {
           const rad = ((i * 360) / 24) * (Math.PI / 180);
-          const cx = (65 + 58 * Math.cos(rad)).toFixed(3);
-          const cy = (65 + 58 * Math.sin(rad)).toFixed(3);
+          const cx = (65 + 57 * Math.cos(rad)).toFixed(3);
+          const cy = (65 + 57 * Math.sin(rad)).toFixed(3);
           return (
             <circle
               key={i}
               cx={cx}
               cy={cy}
-              r={i % 3 === 0 ? 1.2 : 0.6}
-              fill="#8a7d70"
-              opacity={i % 3 === 0 ? 0.6 : 0.35}
+              r={i % 3 === 0 ? 1.4 : 0.8}
+              fill="#C5A880"
+              opacity={i % 3 === 0 ? 0.85 : 0.5}
             />
           );
         })}
 
         <defs>
-          <path id={`ta-${animKey}`} d="M 12,65 A 53,53 0 0,1 118,65" />
-          <path id={`ba-${animKey}`} d="M 118,65 A 53,53 0 0,1 12,65" />
+          <path id={`ta-${animKey}`} d="M 16,65 A 49,49 0 0,1 114,65" />
+          <path id={`ba-${animKey}`} d="M 114,65 A 49,49 0 0,1 16,65" />
         </defs>
 
-        <text fontSize="7.5" letterSpacing="3.5" fill="#8a7d70" fontFamily="var(--font-inter),system-ui" fontWeight="500">
+        <text fontSize="8" letterSpacing="2" fill="#2c4a4a" fontFamily="var(--font-inter),system-ui" fontWeight="600">
           <textPath href={`#ta-${animKey}`} startOffset="50%" textAnchor="middle">
             {badgeTop.toUpperCase()}
           </textPath>
         </text>
-        <text fontSize="7.5" letterSpacing="3" fill="#8a7d70" fontFamily="var(--font-inter),system-ui" fontWeight="500">
+        <text fontSize="8" letterSpacing="2" fill="#2c4a4a" fontFamily="var(--font-inter),system-ui" fontWeight="600">
           <textPath href={`#ba-${animKey}`} startOffset="50%" textAnchor="middle">
             {badgeBottom.toUpperCase()}
           </textPath>
         </text>
 
         {/* bedroom / number label */}
-        <text x="65" y="51" textAnchor="middle" fontSize="9" fill="#8a7d70"
-              fontFamily="var(--font-inter),system-ui" fontWeight="400" letterSpacing="1">
+        <text x="65" y="52" textAnchor="middle" fontSize="9" fill="#C5A880"
+              fontFamily="var(--font-inter),system-ui" fontWeight="600" letterSpacing="1">
           {bedroomNum}
         </text>
 
         {/* big letter */}
-        <text x="65" y="79" textAnchor="middle" fontSize="34" fill="#2c4a4a"
-              fontFamily="var(--font-inter),system-ui,serif" fontWeight="600" letterSpacing="-1">
+        <text x="65" y="80" textAnchor="middle" fontSize="35" fill="#2c4a4a"
+              fontFamily="var(--font-inter),system-ui,serif" fontWeight="700" letterSpacing="-1">
           {letter}
         </text>
 
         {/* decorative side lines */}
-        <line x1="38" y1="67" x2="50" y2="67" stroke="#8a7d70" strokeWidth="0.75" opacity="0.5" />
-        <line x1="80" y1="67" x2="92" y2="67" stroke="#8a7d70" strokeWidth="0.75" opacity="0.5" />
+        <line x1="38" y1="67" x2="48" y2="67" stroke="#C5A880" strokeWidth="0.8" opacity="0.6" />
+        <line x1="82" y1="67" x2="92" y2="67" stroke="#C5A880" strokeWidth="0.8" opacity="0.6" />
 
         {/* star */}
         <polygon
           points="65,6 66.2,9.6 70,9.6 67,11.8 68.2,15.4 65,13.2 61.8,15.4 63,11.8 60,9.6 63.8,9.6"
-          fill="#8a7d70" opacity="0.5" transform="scale(0.8) translate(16.25,1)"
+          fill="#C5A880" opacity="0.8" transform="scale(0.8) translate(16.25,1)"
         />
       </svg>
     </div>
@@ -288,7 +288,7 @@ function SlideContent({ slide, animKey, direction }: SlideContentProps) {
   });
 
   return (
-    <div className="flex flex-col items-center justify-between h-full select-none py-10 px-8">
+    <div className="flex flex-col items-center justify-center gap-8 md:gap-12 h-full select-none py-10 px-8">
       {/* Badge at top */}
       <div style={fadeStyle("0s")}>
         <DecorBadge
@@ -552,9 +552,9 @@ export default function EvattoScrollSlider() {
       />
 
       {/* ── Main two-column layout ── */}
-      <div className="absolute flex flex-col md:flex-row items-stretch" style={{ inset: 12 }}>
+      <div className="absolute flex flex-col md:flex-row items-stretch evatto-slider-layout" style={{ inset: 12 }}>
         {/* LEFT — image */}
-        <div className="relative flex-shrink-0 w-full h-[240px] md:h-full md:w-[56%]">
+        <div className="relative flex-shrink-0 w-full h-[240px] md:h-full md:w-[56%] evatto-slider-image-panel">
           <SlideImage
             currentSrc={current.imageUrl}
             currentAlt={current.imageAlt}
@@ -568,7 +568,7 @@ export default function EvattoScrollSlider() {
 
         {/* RIGHT — content */}
         <div
-          className="flex-1 flex flex-col items-center justify-center"
+          className="flex-grow md:flex-1 flex flex-col items-center justify-center evatto-slider-content-panel"
           style={{ paddingLeft: "3%", paddingRight: "3%" }}
         >
           <SlideContent

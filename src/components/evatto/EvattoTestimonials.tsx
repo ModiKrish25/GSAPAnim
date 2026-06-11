@@ -122,7 +122,7 @@ export default function EvattoTestimonials() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full py-24 md:py-40 bg-[#0e0f11] text-[#FDFBF7] flex flex-col items-center justify-center overflow-hidden"
+      className="testimonials-section relative w-full py-24 md:py-40 bg-[#0e0f11] text-[#FDFBF7] flex flex-col items-center justify-center overflow-hidden"
     >
       <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ background: "radial-gradient(circle at center, rgba(212,175,55,0.15) 0%, transparent 70%)" }} />
       
@@ -134,8 +134,8 @@ export default function EvattoTestimonials() {
         <div className="min-h-[220px] md:min-h-[280px] flex flex-col justify-center">
           <p 
             ref={quoteRef}
-            className="font-cormorant font-light text-3xl md:text-5xl lg:text-6xl leading-tight mb-10"
-            style={{ textWrap: "balance" }}
+            className="testimonials-quote font-cormorant font-light text-3xl md:text-5xl lg:text-6xl leading-tight mb-10"
+            style={{ textWrap: "balance" } as React.CSSProperties}
           >
             &quot;{TESTIMONIALS[activeIndex].quote}&quot;
           </p>
